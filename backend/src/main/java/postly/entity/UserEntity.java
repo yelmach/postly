@@ -1,6 +1,12 @@
 package postly.entity;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +23,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
-public class UserEntity {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,6 +72,11 @@ public class UserEntity {
     public UserEntity() {
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
+    }
+
     @PrePersist
     protected void onCreate() {
         LocalDateTime now = LocalDateTime.now();
@@ -96,6 +107,7 @@ public class UserEntity {
         this.lastName = lastName;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
@@ -112,6 +124,7 @@ public class UserEntity {
         this.email = email;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
