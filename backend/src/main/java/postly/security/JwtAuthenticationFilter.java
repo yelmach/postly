@@ -35,23 +35,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String jwt = getJwtToken(request);
 
             if (jwt != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                try {
-                    if (jwtProvider.isValidToken(jwt)) {
-                        String username = jwtProvider.extractUsername(jwt);
-                        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
-                                null, userDetails.getAuthorities());
+                if (jwtProvider.isValidToken(jwt)) {
+                    String username = jwtProvider.extractUsername(jwt);
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                        auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
+                            null, userDetails.getAuthorities());
 
-                        SecurityContextHolder.getContext().setAuthentication(auth);
-                    } else {
-                        request.setAttribute("jwt_error", "Token expired");
-                    }
-                } catch (Exception e) {
-                    logger.error("Cannot set user authentication: " + e.getMessage());
-                    request.setAttribute("jwt_error", e.getMessage());
+                    auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                } else {
+                    request.setAttribute("jwt_error", "Token expired");
                 }
 
             }
