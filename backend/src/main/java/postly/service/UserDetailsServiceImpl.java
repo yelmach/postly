@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Optional<UserEntity> user = userRepository.findByUsernameOrEmail(login);
 
         if (user.isEmpty()) {
-            throw new UnsupportedOperationException("Unimplemented method 'loadUserByUsername'");
+            throw new UsernameNotFoundException("User not found with username or email: " + login);
         }
 
         return user.get();

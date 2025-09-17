@@ -21,7 +21,7 @@ public class JwtProvider {
     @Value("${app.jwt.secretKey}")
     private String secretKey;
 
-    @Value("${app.jwt.expiration}")
+    @Value("${app.jwt.expirationTime}")
     private long expirationTime;
 
     public String generateToken(UserEntity user) {
