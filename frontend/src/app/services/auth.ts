@@ -6,7 +6,7 @@ import { environment } from "@environments/environment";
 import { catchError, Observable, tap, throwError } from "rxjs";
 
 @Injectable({ providedIn: "root" })
-class AuthService {
+export class AuthService {
     private readonly apiUrl = environment.apiUrl;
 
     public currentUser = signal<User | null>(null);
