@@ -10,7 +10,7 @@
                 <h2>Create your account</h2>
             </div>
 
-            <form class="register-form" [formGroup]="registerForm" (submit)="onFormSubmit()">
+            <form class="register-form" [formGroup]="registerForm" (submit)="onFormSubmit($event)">
                 <div class="name-group">
                     <mat-form-field appearance="outline" class="half-width">
                         <mat-label>First Name</mat-label>

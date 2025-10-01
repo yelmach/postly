@@ -47,7 +47,6 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(Role.USER);
         user.setBio(request.bio());
-        user.setProfileUrl(request.profileUrl());
 
         UserEntity savedUser = userRepository.save(user);
 

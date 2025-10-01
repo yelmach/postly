@@ -15,8 +15,6 @@ public record RegisterRequest(
 
         @NotBlank(message = "Password is required") @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters") String password,
 
-        @Size(max = 512, message = "Bio must not exceed 512 characters") String bio,
-
-        @Size(max = 512, message = "Profile URL must not exceed 512 characters") String profileUrl) {
+        @Size(max = 512, message = "Bio must not exceed 512 characters") String bio) {
 
 }

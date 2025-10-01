@@ -29,7 +29,6 @@ export class AuthService {
     }
 
     handleAuthSuccess(response: AuthResponse) {
-        localStorage.setItem("jwt_token", response.token);
-        this.getCurrentUser();
+        localStorage.setItem("jwt_token", response.accessToken);
     }
 }

@@ -65,7 +65,9 @@ export class Register {
   router = inject(Router);
 
 
-  onFormSubmit() {
+  onFormSubmit(e: Event) {
+    e.preventDefault;
+
     if (this.registerForm.invalid) {
       return;
     }
@@ -73,7 +75,6 @@ export class Register {
     this.isLoading.set(true);
 
     const formData: RegisterRequest = this.registerForm.value;
-    console.log(formData)
 
     this.authService.register(formData).subscribe({
       next: () => {
