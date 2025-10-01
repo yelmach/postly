@@ -1,10 +1,14 @@
+import { ApiError, RegisterRequest } from "@/models/auth";
+import { AuthService } from "@/services/auth";
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule, MatLabel } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'register-page',
@@ -16,6 +20,7 @@ import { MatInputModule } from "@angular/material/input";
     MatButtonModule,
     MatIconModule,
     MatLabel,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './register.html',
   styleUrl: './register.scss'
@@ -53,9 +58,33 @@ export class Register {
     bio: new FormControl('', Validators.maxLength(512)),
   })
 
+  hidePassword = signal(true);
+  isLoading = signal(false);
+  errorField = signal('');
+  authService = inject(AuthService);
+  router = inject(Router);
+
+
   onFormSubmit() {
-    console.log("submitted");
-    console.log(this.registerForm)
+    if (this.registerForm.invalid) {
+      return;
+    }
+
+    this.isLoading.set(true);
+
+    const formData: RegisterRequest = this.registerForm.value;
+    console.log(formData)
+
+    this.authService.register(formData).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.router.navigate(['/home']);
+      },
+      error: (errorDetails: ApiError) => {
+        this.isLoading.set(false);
+        this.errorField.set(errorDetails.message);
+      }
+    })
   }
 
   getErrorMessage(fieldName: string): string {
@@ -98,5 +127,9 @@ export class Register {
     }
 
     return '';
+  }
+
+  togglePasswordVisibility() {
+    this.hidePassword.set(!this.hidePassword());
   }
 }
