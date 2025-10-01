@@ -10,43 +10,51 @@
                 <h2>Create your account</h2>
             </div>
 
-            <form class="register-form">
+            <form class="register-form" [formGroup]="registerForm" (submit)="onFormSubmit()">
                 <div class="name-group">
                     <mat-form-field appearance="outline" class="half-width">
                         <mat-label>First Name</mat-label>
-                        <input matInput type="text" placeholder="John" />
+                        <input matInput type="text" placeholder="John" formControlName="firstName" />
+
+                        <mat-error>{{getErrorMessage('firstName')}}</mat-error>
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Last Name</mat-label>
-                        <input matInput type="text" placeholder="Doe" />
+                        <input matInput type="text" placeholder="Doe" formControlName="lastName" />
+                        <mat-error>{{getErrorMessage('lastName')}}</mat-error>
                     </mat-form-field>
                 </div>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Username</mat-label>
-                    <input matInput type="text" placeholder="johndoe" />
+                    <input matInput type="text" placeholder="johndoe" formControlName="username" />
                     <mat-icon matPrefix>alternate_email</mat-icon>
+                    <mat-error>{{getErrorMessage('username')}}</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Email</mat-label>
-                    <input matInput type="email" placeholder="john@example.com" />
+                    <input matInput type="email" placeholder="john@example.com" formControlName="email" />
                     <mat-icon matPrefix>email</mat-icon>
+                    <mat-error>{{getErrorMessage('email')}}</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Password</mat-label>
-                    <input matInput type="password" placeholder="Enter your password" />
+                    <input matInput type="password" placeholder="Enter your password" formControlName="password" />
                     <mat-icon matPrefix>lock</mat-icon>
                     <button mat-icon-button matSuffix type="button">
                         <mat-icon>visibility</mat-icon>
                     </button>
+                    <mat-error>{{getErrorMessage('password')}}</mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Bio (Optional)</mat-label>
-                    <textarea matInput rows="3" placeholder="Tell us about yourself..."></textarea>
+                    <textarea matInput rows="3" placeholder="Tell us about yourself..."
+                        formControlName="bio"></textarea>
+                    <mat-error>{{getErrorMessage('bio')}}</mat-error>
                 </mat-form-field>
 
                 <button matButton="filled" class="submit-btn" type="submit">
