@@ -1,4 +1,4 @@
-import { AuthResponse, RegisterRequest, User } from "@/models/auth";
+import { AuthResponse, LoginRequest, RegisterRequest, User } from "@/models/auth";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
 import { Router } from "@angular/router";
@@ -16,6 +16,12 @@ export class AuthService {
 
     register(registerData: RegisterRequest): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, registerData).pipe(
+            tap(this.handleAuthSuccess)
+        );
+    }
+
+    login(loginData: LoginRequest): Observable<AuthResponse> {
+        return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, loginData).pipe(
             tap(this.handleAuthSuccess)
         );
     }
