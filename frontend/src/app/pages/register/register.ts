@@ -8,7 +8,7 @@ import { MatFormFieldModule, MatLabel } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { Router } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 
 @Component({
   selector: 'register-page',
@@ -21,6 +21,7 @@ import { Router } from "@angular/router";
     MatIconModule,
     MatLabel,
     MatProgressSpinnerModule,
+    RouterLink
   ],
   templateUrl: './register.html',
   styleUrl: './register.scss'
