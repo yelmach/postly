@@ -15,7 +15,6 @@
                     <mat-form-field appearance="outline" class="half-width">
                         <mat-label>First Name</mat-label>
                         <input matInput type="text" placeholder="John" />
-                        <mat-icon matPrefix>person</mat-icon>
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="half-width">
@@ -48,20 +47,10 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Bio (Optional)</mat-label>
                     <textarea matInput rows="3" placeholder="Tell us about yourself..."></textarea>
-                    <mat-icon matPrefix>edit_note</mat-icon>
                 </mat-form-field>
 
-                <button mat-raised-button color="primary" class="submit-btn" type="submit">
+                <button matButton="filled" class="submit-btn" type="submit">
                     Create Account
-                </button>
-
-                <div class="divider">
-                    <span>OR</span>
-                </div>
-
-                <button mat-stroked-button class="social-btn" type="button">
-                    <mat-icon>image</mat-icon>
-                    Continue with Google
                 </button>
 
                 <div class="login-link">
@@ -71,7 +60,6 @@
         </div>
     </section>
 
-    <!-- Right Section: Welcome Content -->
     <section class="welcome-section">
         <div class="welcome-content">
             <div class="welcome-header">
@@ -104,13 +92,6 @@
                     <h3>Track Your Growth</h3>
                     <p>Create your personal block and showcase your learning achievements</p>
                 </div>
-            </div>
-
-            <div class="testimonial">
-                <mat-icon class="quote-icon">format_quote</mat-icon>
-                <p class="quote">"Postly transformed how I document my learning journey. It's not just a blog—it's a
-                    community of growth-minded learners."</p>
-                <p class="author">— Sarah K., Web Developer</p>
             </div>
         </div>
     </section>
