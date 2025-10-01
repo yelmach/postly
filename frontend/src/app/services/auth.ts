@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { inject, Injectable, signal } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "@environments/environment";
-import { catchError, Observable, tap, throwError } from "rxjs";
+import { Observable, tap } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -14,26 +14,22 @@ export class AuthService {
     http = inject(HttpClient);
     router = inject(Router);
 
-    constructor() {
-
-    }
-
     register(registerData: RegisterRequest): Observable<AuthResponse> {
         return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, registerData).pipe(
-            tap(this.handleAuthSuccess),
-            catchError(this.handleAuthError)
+            tap(this.handleAuthSuccess)
         );
     }
 
-    initializeAuthService() {
-
+    getCurrentUser(): Observable<User> {
+        return this.http.get<User>(`${this.apiUrl}/auth/me`).pipe(
+            tap(user => {
+                this.currentUser.set(user);
+            })
+        );
     }
 
     handleAuthSuccess(response: AuthResponse) {
-
-    }
-
-    handleAuthError(error: HttpErrorResponse): Observable<never> {
-        return throwError(() => "err");
+        localStorage.setItem("jwt_token", response.token);
+        this.getCurrentUser();
     }
 }

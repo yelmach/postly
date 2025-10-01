@@ -1,29 +1,29 @@
 export interface RegisterRequest {
-    firstName: String,
-    lastName: String,
-    username: String,
-    email: String,
-    password: String,
-    bio?: String,
+    firstName: string,
+    lastName: string,
+    username: string,
+    email: string,
+    password: string,
+    bio?: string,
 }
 
 export interface LoginRequest {
-    credentials: String,
-    password: String,
+    credentials: string,
+    password: string,
 }
 
 export interface AuthResponse {
-    token: String
+    token: string
 }
 
 export interface User {
-    firstName: String,
-    lastName: String,
-    username: String,
-    email: String,
+    firstName: string,
+    lastName: string,
+    username: string,
+    email: string,
     role: 'USER' | 'ADMIN',
-    bio: String,
-    profileUrl: String,
+    bio: string,
+    profileUrl: string,
 }
 
 export interface ApiError {
