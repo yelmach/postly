@@ -10,6 +10,13 @@
                 <h2>Login to your account</h2>
             </div>
 
+            @if (formError()) {
+            <div class="form-error-banner">
+                <mat-icon>error</mat-icon>
+                <span>{{ formError() }}</span>
+            </div>
+            }
+
             <form class="login-form" [formGroup]="loginForm" (submit)="onFormSubmit($event)">
                 <mat-form-field appearance="outline">
                     <mat-label>Credentials</mat-label>
@@ -40,6 +47,7 @@
                     <span>Login</span>
                     }
                 </button>
+
 
                 <div class="register-link">
                     You don't have an account? <a routerLink="/register">Register</a>

@@ -25,10 +25,3 @@ export interface User {
     bio: string,
     profileUrl: string,
 }
-
-export interface ApiError {
-    status: number;
-    error: string;
-    message: string;
-    details?: any;
-}

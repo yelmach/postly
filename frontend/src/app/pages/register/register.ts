@@ -1,6 +1,7 @@
-import { ApiError, RegisterRequest } from "@/models/auth";
+import { RegisterRequest } from "@/models/auth";
 import { AuthService } from "@/services/auth";
 import { CommonModule } from "@angular/common";
+import { HttpErrorResponse } from "@angular/common/http";
 import { Component, inject, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
@@ -61,13 +62,18 @@ export class Register {
 
   hidePassword = signal(true);
   isLoading = signal(false);
-  errorField = signal('');
+  formError = signal<string>('');
+  fieldErrors = signal<{ [key: string]: string }>({});
+
   authService = inject(AuthService);
   router = inject(Router);
 
 
   onFormSubmit(e: Event) {
     e.preventDefault;
+
+    this.formError.set('');
+    this.fieldErrors.set({});
 
     if (this.registerForm.invalid) {
       return;
@@ -82,14 +88,50 @@ export class Register {
         this.isLoading.set(false);
         this.router.navigate(['/home']);
       },
-      error: (errorDetails: ApiError) => {
+      error: (errorDetails: HttpErrorResponse) => {
         this.isLoading.set(false);
-        this.errorField.set(errorDetails.message);
+        this.handleError(errorDetails);
       }
     })
   }
 
+  private handleError(error: HttpErrorResponse) {
+    if (error.error?.details) {
+      const details = error.error.details;
+      this.fieldErrors.set(details);
+
+      Object.keys(details).forEach(fieldName => {
+        const control = this.registerForm.get(fieldName);
+        if (control) {
+          control.setErrors({ backend: details[fieldName] });
+          control.markAsTouched();
+        }
+      });
+      return;
+    }
+
+    if (error.error?.message) {
+      const message = error.error.message;
+
+
+      this.formError.set(message);
+
+      return;
+    }
+
+    if (error.error?.error) {
+      this.formError.set(error.error.error);
+    } else {
+      this.formError.set('Registration failed. status: ' + error.status);
+    }
+  }
+
   getErrorMessage(fieldName: string): string {
+    const backendError = this.fieldErrors()[fieldName];
+    if (backendError) {
+      return backendError;
+    }
+
     const field = this.registerForm.get(fieldName);
 
     if (!field || field.valid || field.untouched) {

@@ -10,6 +10,13 @@
                 <h2>Create your account</h2>
             </div>
 
+            @if (formError()) {
+            <div class="form-error-banner">
+                <mat-icon>error</mat-icon>
+                <span>{{ formError() }}</span>
+            </div>
+            }
+
             <form class="register-form" [formGroup]="registerForm" (submit)="onFormSubmit($event)">
                 <div class="name-group">
                     <mat-form-field appearance="outline" class="half-width">

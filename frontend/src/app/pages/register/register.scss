@@ -24,6 +24,30 @@
         max-width: 480px;
     }
 
+    .form-error-banner {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        background-color: var(--mat-sys-error-container);
+        border: 1px solid #fcc;
+        border-radius: 8px;
+        color: var(--mat-sys-error);
+
+        mat-icon {
+            font-size: 1.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        span {
+            flex: 1;
+            font-size: 0.9375rem;
+            line-height: 1.4;
+        }
+    }
+
     .logo-section {
         display: flex;
         align-items: center;
