@@ -53,7 +53,7 @@
                         formControlName="password" />
                     <mat-icon matPrefix>lock</mat-icon>
                     <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
-                        <mat-icon>{{ hidePassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+                        <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
                     </button>
                     <mat-error>{{getErrorMessage('password')}}</mat-error>
                 </mat-form-field>

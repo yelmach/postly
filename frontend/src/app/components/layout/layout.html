@@ -1,0 +1,60 @@
+<div class="main-container">
+    <div class="header-container">
+        <div class="header-content">
+            <!-- Logo Section -->
+            <div class="logo-section" (click)="router.navigate(['/home'])">
+                <mat-icon>article</mat-icon>
+                <span>Postly</span>
+            </div>
+
+            <!-- search Section -->
+            <div class="search-section">
+                <div class="search-bar">
+                    <mat-icon matPrefix>search</mat-icon>
+                    <input matInput placeholder="Search for a user...">
+                </div>
+            </div>
+
+            <!-- navigation Section -->
+            <div class="navigation-section">
+                <!-- feed button -->
+                <button matButton="text" class="feed-btn" (click)="router.navigate(['/home'])">
+                    <mat-icon>home</mat-icon>
+                    <span>Feed</span>
+                </button>
+
+                <!-- Create post button -->
+                <button matButton="filled" class="create-post-btn">
+                    <mat-icon>add_circle_outline</mat-icon>
+                    <span>Create Post</span>
+                </button>
+
+                <!-- theme toggle -->
+                <button matIconButton class="theme-toggle" (click)="toggleTheme()"
+                    [matTooltip]="isDarkMode() ? 'Light Mode' : 'Dark Mode'">
+                    <mat-icon>{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+                </button>
+
+                <!-- notification menu -->
+                <button mat-icon-button class="notification-btn">
+                    <mat-icon matBadgeColor="warn">
+                        notifications
+                    </mat-icon>
+                </button>
+
+                <!-- profile menu -->
+                <button mat-icon-button class="profile-btn">
+                    @if (currentUser?.profileUrl) {
+                    <img [src]="currentUser?.profileUrl" alt="Profile" class="profile-avatar">
+                    } @else {
+                    <mat-icon>account_circle</mat-icon>
+                    }
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

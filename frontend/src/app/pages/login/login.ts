@@ -35,7 +35,7 @@ export class Login {
   }
 
   )
-  hidePassword = signal(false);
+  hidePassword = signal(true);
   isLoading = signal(false);
   formError = signal<string>('');
   fieldErrors = signal<{ [key: string]: string }>({});
