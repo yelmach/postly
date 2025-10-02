@@ -26,9 +26,17 @@ export class AuthService {
         );
     }
 
+    logout() {
+        localStorage.removeItem('jwt_token');
+        this.currentUser.set(null);
+        this.router.navigate(['/login']);
+    }
+
     getCurrentUser(): Observable<User> {
         return this.http.get<User>(`${this.apiUrl}/auth/me`).pipe(
             tap(user => {
+                console.log(user);
+
                 this.currentUser.set(user);
             })
         );
@@ -36,5 +44,15 @@ export class AuthService {
 
     handleAuthSuccess(response: AuthResponse) {
         localStorage.setItem("jwt_token", response.accessToken);
+    }
+
+    isTokenExpired(token: string): boolean {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const expiryTime = payload.exp * 1000;
+            return Date.now() >= expiryTime;
+        } catch {
+            return true;
+        }
     }
 }

@@ -1,11 +1,11 @@
 // frontend/src/app/interceptors/jwt.interceptor.ts
+import { AuthService } from '@/services/auth';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
-    const router = inject(Router);
+    const authService = inject(AuthService);
     const token = localStorage.getItem('jwt_token');
 
     if (token) {
@@ -17,8 +17,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req).pipe(
         catchError((error) => {
             if (error.status === 401) {
-                localStorage.removeItem('jwt_token');
-                router.navigate(['/login']);
+                authService.logout();
             }
             return throwError(() => error);
         })
