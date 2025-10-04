@@ -1,1 +1,122 @@
-<p>profile works!</p>
+<div class="profile-container">
+  <!-- Profile Info Card -->
+  <div class="profile-card">
+    <div class="avatar-section">
+      @if (user()?.profileUrl) {
+      <img [src]="user()?.profileUrl" [alt]="user()?.username" class="profile-avatar" />
+      } @else {
+      <div class="profile-avatar-placeholder">
+        <mat-icon>person</mat-icon>
+      </div>
+      }
+    </div>
+
+    <div class="profile-info">
+      <div class="header-section">
+        <div class="name-section">
+          <h1 class="full-name">{{ user()?.firstName }} {{ user()?.lastName }}</h1>
+          <span class="username">@{{ user()?.username }}</span>
+        </div>
+        <div class="action-section">
+          @if (isOwnProfile()) {
+          <button mat-flat-button color="primary" class="edit-profile-btn">
+            <mat-icon>edit</mat-icon>
+            <span>Edit Profile</span>
+          </button>
+          } @else {
+          <button
+            mat-flat-button
+            [color]="isFollowing() ? 'accent' : 'primary'"
+            class="follow-btn"
+            (click)="toggleFollow()"
+          >
+            <mat-icon>{{ isFollowing() ? 'person_remove' : 'person_add' }}</mat-icon>
+            <span>{{ isFollowing() ? 'Unfollow' : 'Follow' }}</span>
+          </button>
+          }
+        </div>
+      </div>
+
+      @if (user()?.bio) {
+      <p class="bio">{{ user()?.bio }}</p>
+      }
+
+      <div class="stats-row">
+        <div class="stat-item">
+          <span class="stat-value">{{ postsCount() }}</span>
+          <span class="stat-label">Posts</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{{ followersCount() }}</span>
+          <span class="stat-label">Followers</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{{ followingCount() }}</span>
+          <span class="stat-label">Following</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu with Tabs -->
+  <div class="content-section">
+    <mat-tab-group [(selectedIndex)]="selectedTabIndex" class="profile-tabs">
+      <!-- Posts Tab -->
+      <mat-tab label="Posts">
+        <ng-template mat-tab-label>
+          <mat-icon>article</mat-icon>
+          <span>Posts</span>
+        </ng-template>
+
+        <div class="tab-content">
+          @if (postsCount() > 0) {
+          <div class="posts-grid"></div>
+          } @else {
+          <div class="empty-state">
+            <mat-icon>article</mat-icon>
+            <p>No posts yet</p>
+          </div>
+          }
+        </div>
+      </mat-tab>
+
+      <!-- Followers Tab -->
+      <mat-tab label="Followers">
+        <ng-template mat-tab-label>
+          <mat-icon>people</mat-icon>
+          <span>Followers</span>
+        </ng-template>
+
+        <div class="tab-content">
+          @if (followers().length > 0) {
+          <div class="users-list"></div>
+          } @else {
+          <div class="empty-state">
+            <mat-icon>people</mat-icon>
+            <p>No followers yet</p>
+          </div>
+          }
+        </div>
+      </mat-tab>
+
+      <!-- Following Tab -->
+      <mat-tab label="Following">
+        <ng-template mat-tab-label>
+          <mat-icon>person_add</mat-icon>
+          <span>Following</span>
+        </ng-template>
+
+        <div class="tab-content">
+          @if (following.length > 0) {
+          <div class="users-list"></div>
+          } @else {
+          <div class="empty-state">
+            <mat-icon>person_add</mat-icon>
+            <p>Not following anyone yet</p>
+          </div>
+          }
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

@@ -68,6 +68,9 @@
     font-size: 2rem;
     width: 2rem;
     height: 2rem;
+    @media (max-width: 468px) {
+      display: none;
+    }
   }
 
   span {
@@ -85,11 +88,14 @@
   flex: 1;
   max-width: 500px;
 
-  @media (max-width: 768px) {
-    max-width: 300px;
+  @media (max-width: 568px) {
+    max-width: 150px;
+    mat-icon {
+      display: none;
+    }
   }
 
-  @media (max-width: 425px) {
+  @media (max-width: 440px) {
     display: none;
   }
 

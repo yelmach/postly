@@ -22,6 +22,6 @@ export interface User {
     username: string,
     email: string,
     role: 'USER' | 'ADMIN',
-    bio: string,
-    profileUrl: string,
+    bio?: string,
+    profileUrl?: string,
 }
