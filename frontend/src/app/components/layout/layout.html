@@ -1,60 +1,114 @@
 <div class="main-container">
-    <div class="header-container">
-        <div class="header-content">
-            <!-- Logo Section -->
-            <div class="logo-section" (click)="router.navigate(['/home'])">
-                <mat-icon>article</mat-icon>
-                <span>Postly</span>
-            </div>
+  <header class="header-container">
+    <div class="header-content">
+      <!-- Logo Section -->
+      <div class="logo-section" (click)="router.navigate(['/home'])">
+        <mat-icon>article</mat-icon>
+        <span>Postly</span>
+      </div>
 
-            <!-- search Section -->
-            <div class="search-section">
-                <div class="search-bar">
-                    <mat-icon matPrefix>search</mat-icon>
-                    <input matInput placeholder="Search for a user...">
-                </div>
-            </div>
-
-            <!-- navigation Section -->
-            <div class="navigation-section">
-                <!-- feed button -->
-                <button matButton="text" class="feed-btn" (click)="router.navigate(['/home'])">
-                    <mat-icon>home</mat-icon>
-                    <span>Feed</span>
-                </button>
-
-                <!-- Create post button -->
-                <button matButton="filled" class="create-post-btn">
-                    <mat-icon>add_circle_outline</mat-icon>
-                    <span>Create Post</span>
-                </button>
-
-                <!-- theme toggle -->
-                <button matIconButton class="theme-toggle" (click)="toggleTheme()"
-                    [matTooltip]="isDarkMode() ? 'Light Mode' : 'Dark Mode'">
-                    <mat-icon>{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
-                </button>
-
-                <!-- notification menu -->
-                <button mat-icon-button class="notification-btn">
-                    <mat-icon matBadgeColor="warn">
-                        notifications
-                    </mat-icon>
-                </button>
-
-                <!-- profile menu -->
-                <button mat-icon-button class="profile-btn">
-                    @if (currentUser?.profileUrl) {
-                    <img [src]="currentUser?.profileUrl" alt="Profile" class="profile-avatar">
-                    } @else {
-                    <mat-icon>account_circle</mat-icon>
-                    }
-                </button>
-            </div>
+      <!-- Search Section -->
+      <div class="search-section">
+        <div class="search-bar">
+          <mat-icon>search</mat-icon>
+          <input type="text" placeholder="Search for a user..." [(ngModel)]="searchQuery" />
         </div>
-    </div>
+      </div>
 
-    <div class="main-content">
-        <router-outlet></router-outlet>
+      <!-- Navigation Section -->
+      <nav class="navigation-section">
+        <!-- Feed Button -->
+        <button mat-button class="feed-btn" (click)="router.navigate(['/home'])">
+          <mat-icon>home</mat-icon>
+          <span>Feed</span>
+        </button>
+
+        <!-- Create Post Button -->
+        <button mat-flat-button class="create-post-btn">
+          <mat-icon>add_circle_outline</mat-icon>
+          <span>Create Post</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <button
+          mat-icon-button
+          class="theme-toggle"
+          (click)="toggleTheme()"
+          [matTooltip]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+        >
+          <mat-icon>{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        </button>
+
+        <!-- Notifications Menu -->
+        <button
+          mat-icon-button
+          class="notification-btn"
+          [matMenuTriggerFor]="notificationMenu"
+          matTooltip="Notifications"
+        >
+          <mat-icon
+            [matBadge]="notificationCount()"
+            matBadgeColor="warn"
+            [matBadgeHidden]="notificationCount() === 0"
+          >
+            notifications
+          </mat-icon>
+        </button>
+
+        <mat-menu #notificationMenu="matMenu" class="notification-menu" xPosition="before">
+          <div class="menu-header">
+            <h3>Notifications</h3>
+            <button mat-button color="primary">Mark all as read</button>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="notification-list">
+            <p class="empty-state">No new notifications</p>
+          </div>
+        </mat-menu>
+
+        <!-- Profile Menu -->
+        <button
+          mat-icon-button
+          class="profile-btn"
+          [matMenuTriggerFor]="profileMenu"
+          matTooltip="Profile"
+        >
+          @if (currentUser?.profileUrl) {
+          <img
+            [src]="currentUser?.profileUrl"
+            [alt]="currentUser?.username"
+            class="profile-avatar"
+          />
+          } @else {
+          <mat-icon>account_circle</mat-icon>
+          }
+        </button>
+
+        <mat-menu #profileMenu="matMenu" class="profile-menu" xPosition="before">
+          <button mat-menu-item (click)="navigateToProfile()">
+            <mat-icon>person</mat-icon>
+            <span>My Profile</span>
+          </button>
+
+          @if (isAdmin) {
+          <button mat-menu-item (click)="navigateToAdminPanel()">
+            <mat-icon>admin_panel_settings</mat-icon>
+            <span>Admin Panel</span>
+          </button>
+          }
+
+          <mat-divider></mat-divider>
+
+          <button mat-menu-item (click)="logout()" class="logout-btn">
+            <mat-icon>logout</mat-icon>
+            <span>Logout</span>
+          </button>
+        </mat-menu>
+      </nav>
     </div>
+  </header>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
 </div>

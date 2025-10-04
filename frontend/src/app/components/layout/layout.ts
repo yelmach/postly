@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -30,10 +30,10 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatSlideToggleModule,
     MatDividerModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   templateUrl: './layout.html',
-  styleUrl: './layout.scss'
+  styleUrl: './layout.scss',
 })
 export class MainLayout {
   authService = inject(AuthService);
@@ -43,13 +43,48 @@ export class MainLayout {
   searchQuery = signal('');
   notificationCount = signal(5);
 
+  constructor() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      this.isDarkMode.set(true);
+      document.documentElement.classList.add('dark-theme');
+    }
+
+    effect(() => {
+      const darkMode = this.isDarkMode();
+      if (darkMode) {
+        document.documentElement.classList.add('dark-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark-theme');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+  }
+
   get currentUser() {
     return this.authService.currentUser();
   }
 
+  get isAdmin() {
+    return this.currentUser?.role === 'USER';
+  }
 
   toggleTheme() {
-    this.isDarkMode.set(!this.isDarkMode());
-    document.body.classList.toggle('dark-theme');
+    this.isDarkMode.update((v) => !v);
+  }
+
+  navigateToProfile() {
+    if (this.currentUser?.username) {
+      this.router.navigate(['/profile', this.currentUser.username]);
+    }
+  }
+
+  navigateToAdminPanel() {
+    this.router.navigate(['/admin']);
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
