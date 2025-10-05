@@ -4,12 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '@/services/auth.service';
 import { UserService } from '@/services/user.service';
 import { User } from '@/models/user';
 import { HttpErrorResponse } from '@angular/common/http';
+import { EditProfileDialog } from '@/components/edit-profile-dialog/edit-profile-dialog';
 
 @Component({
   selector: 'app-profile',
@@ -29,6 +30,7 @@ export class Profile implements OnInit {
   userService = inject(UserService);
   route = inject(ActivatedRoute);
   router = inject(Router);
+  dialog = inject(MatDialog);
 
   user = signal<User | null>(null);
   isMyProfile = signal(false);
@@ -109,5 +111,24 @@ export class Profile implements OnInit {
     } else {
       this.subscribedCount.update((v) => v - 1);
     }
+  }
+
+  openEditProfileDialog() {
+    const currentUser = this.user();
+    if (!currentUser) return;
+
+    const dialogRef = this.dialog.open(EditProfileDialog, {
+      width: '100%',
+      maxWidth: '600px',
+      data: { user: currentUser },
+      disableClose: false,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.success) {
+        const username = this.route.snapshot.params['username'];
+        this.loadUserProfile(username);
+      }
+    });
   }
 }

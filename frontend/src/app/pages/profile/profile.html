@@ -31,7 +31,12 @@
         </div>
         <div class="action-section">
           @if (isMyProfile()) {
-          <button mat-flat-button color="primary" class="edit-profile-btn">
+          <button
+            mat-flat-button
+            color="primary"
+            class="edit-profile-btn"
+            (click)="openEditProfileDialog()"
+          >
             <mat-icon>edit</mat-icon>
             <span>Edit Profile</span>
           </button>
