@@ -30,19 +30,20 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         String jwtToken = authService.register(registerRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(jwtToken));
+        UserResponse currentUser = userService.getCurrentUser();
+        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(jwtToken, currentUser));
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         String jwtToken = authService.login(loginRequest);
-        return ResponseEntity.ok(new AuthResponse(jwtToken));
+        UserResponse currentUser = userService.getCurrentUser();
+        return ResponseEntity.ok(new AuthResponse(jwtToken, currentUser));
     }
 
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentUser() {
         UserResponse userResponse = userService.getCurrentUser();
-
         return ResponseEntity.ok(userResponse);
     }
 }
