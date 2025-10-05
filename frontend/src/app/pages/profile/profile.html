@@ -1,4 +1,16 @@
 <div class="profile-container">
+  @if (isLoading()) {
+  <div class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading profile...</p>
+  </div>
+  } @else if (errorMessage()) {
+  <div class="error-state">
+    <mat-icon>error_outline</mat-icon>
+    <h2>{{ errorMessage() }}</h2>
+    <button mat-flat-button color="primary" (click)="router.navigate(['/home'])">Go to Home</button>
+  </div>
+  } @else {
   <!-- Profile Info Card -->
   <div class="profile-card">
     <div class="avatar-section">
@@ -18,7 +30,7 @@
           <span class="username">@{{ user()?.username }}</span>
         </div>
         <div class="action-section">
-          @if (isOwnProfile()) {
+          @if (isMyProfile()) {
           <button mat-flat-button color="primary" class="edit-profile-btn">
             <mat-icon>edit</mat-icon>
             <span>Edit Profile</span>
@@ -26,12 +38,12 @@
           } @else {
           <button
             mat-flat-button
-            [color]="isFollowing() ? 'accent' : 'primary'"
+            [color]="isSubscribed() ? 'accent' : 'primary'"
             class="follow-btn"
-            (click)="toggleFollow()"
+            (click)="toggleSubscribe()"
           >
-            <mat-icon>{{ isFollowing() ? 'person_remove' : 'person_add' }}</mat-icon>
-            <span>{{ isFollowing() ? 'Unfollow' : 'Follow' }}</span>
+            <mat-icon>{{ isSubscribed() ? 'person_remove' : 'person_add' }}</mat-icon>
+            <span>{{ isSubscribed() ? 'Unfollow' : 'Follow' }}</span>
           </button>
           }
         </div>
@@ -47,11 +59,11 @@
           <span class="stat-label">Posts</span>
         </div>
         <div class="stat-item">
-          <span class="stat-value">{{ followersCount() }}</span>
+          <span class="stat-value">{{ subscribersCount() }}</span>
           <span class="stat-label">Followers</span>
         </div>
         <div class="stat-item">
-          <span class="stat-value">{{ followingCount() }}</span>
+          <span class="stat-value">{{ subscribedCount() }}</span>
           <span class="stat-label">Following</span>
         </div>
       </div>
@@ -88,7 +100,7 @@
         </ng-template>
 
         <div class="tab-content">
-          @if (followers().length > 0) {
+          @if (subscribers().length > 0) {
           <div class="users-list"></div>
           } @else {
           <div class="empty-state">
@@ -107,7 +119,7 @@
         </ng-template>
 
         <div class="tab-content">
-          @if (following.length > 0) {
+          @if (subscribedCount.length > 0) {
           <div class="users-list"></div>
           } @else {
           <div class="empty-state">
@@ -119,4 +131,5 @@
       </mat-tab>
     </mat-tab-group>
   </div>
+  }
 </div>

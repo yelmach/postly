@@ -5,88 +5,109 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
-import { AuthService } from '@/services/auth';
-import { User } from '@/models/auth';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AuthService } from '@/services/auth.service';
+import { UserService } from '@/services/user.service';
+import { User } from '@/models/user';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatTabsModule, MatDialogModule],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTabsModule,
+    MatDialogModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
 export class Profile implements OnInit {
   authService = inject(AuthService);
+  userService = inject(UserService);
   route = inject(ActivatedRoute);
   router = inject(Router);
 
   user = signal<User | null>(null);
-  isOwnProfile = signal(false);
-  isFollowing = signal(false);
+  isMyProfile = signal(false);
+  isSubscribed = signal(false);
+  isLoading = signal(true);
+  errorMessage = signal<string>('');
 
   selectedTabIndex = signal(0);
 
   postsCount = signal(0);
-  followersCount = signal(0);
-  followingCount = signal(0);
+  subscribersCount = signal(0);
+  subscribedCount = signal(0);
 
   posts = signal<[]>([]);
-  followers = signal<[]>([]);
-  following = signal<[]>([]);
+  subscribers = signal<[]>([]);
+  subscribed = signal<[]>([]);
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
       const username = params['username'];
-      if (username) {
-        this.loadUserProfile(username);
-      } else {
-        this.loadOwnProfile();
-      }
+      this.loadUserProfile(username);
     });
   }
 
-  loadOwnProfile() {
-    const currentUser = this.authService.currentUser();
-    if (currentUser) {
-      this.user.set(currentUser);
-      this.isOwnProfile.set(true);
-      this.loadUserData();
-    }
-  }
-
   loadUserProfile(username: string) {
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+
     const currentUser = this.authService.currentUser();
 
-    // Check if viewing own profile
-    if (currentUser?.username === username) {
-      this.user.set(currentUser);
-      this.isOwnProfile.set(true);
+    if (!username || (currentUser && currentUser.username === username)) {
+      this.loadMyProfile();
     } else {
-      // TODO: Fetch user profile from API
-      this.isOwnProfile.set(false);
-      // Temporary mock data
-      this.user.set({
-        firstName: 'John',
-        lastName: 'Doe',
-        username: username,
-        email: 'john@example.com',
-        role: 'USER',
-        bio: 'This is a sample bio',
-        profileUrl: '',
+      this.isMyProfile.set(false);
+
+      this.userService.getUserProfile(username).subscribe({
+        next: (user: User) => {
+          this.user.set(user);
+          this.postsCount.set(user.postsCount || 0);
+          this.subscribersCount.set(user.subscribersCount || 0);
+          this.subscribedCount.set(user.subscribedCount || 0);
+          this.isLoading.set(false);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isLoading.set(false);
+          if (error.status === 404) {
+            this.errorMessage.set('User not found');
+          } else {
+            this.errorMessage.set('Failed to load user profile');
+          }
+        },
       });
     }
-
-    this.loadUserData();
   }
 
-  loadUserData() {}
+  loadMyProfile() {
+    this.isLoading.set(true);
+    const currentUser = this.authService.currentUser();
 
-  toggleFollow() {
-    this.isFollowing.update((v) => !v);
+    if (currentUser) {
+      this.user.set(currentUser);
+      this.isMyProfile.set(true);
 
-    if (this.isFollowing()) {
-      this.followersCount.update((v) => v + 1);
+      this.postsCount.set(currentUser.postsCount || 0);
+      this.subscribersCount.set(currentUser.subscribersCount || 0);
+      this.subscribedCount.set(currentUser.subscribedCount || 0);
+      this.isLoading.set(false);
     } else {
-      this.followersCount.update((v) => v - 1);
+      this.router.navigate(['/login']);
+    }
+  }
+
+  toggleSubscribe() {
+    this.isSubscribed.update((v) => !v);
+
+    if (this.isSubscribed()) {
+      this.subscribersCount.update((v) => v + 1);
+    } else {
+      this.subscribedCount.update((v) => v - 1);
     }
   }
 }
