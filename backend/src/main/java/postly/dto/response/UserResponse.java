@@ -14,6 +14,9 @@ public class UserResponse {
     private Role role;
     private String bio;
     private String profileUrl;
+    private Long postsCount;
+    private Long subscribersCount;
+    private Long subscribedCount;
 
     private UserResponse(Builder builder) {
         this.id = builder.id;
@@ -25,6 +28,9 @@ public class UserResponse {
         this.role = builder.role;
         this.bio = builder.bio;
         this.profileUrl = builder.profileUrl;
+        this.postsCount = builder.postsCount;
+        this.subscribersCount = builder.subscribersCount;
+        this.subscribedCount = builder.subscribedCount;
     }
 
     public static Builder builder() {
@@ -54,6 +60,9 @@ public class UserResponse {
         private Role role;
         private String bio;
         private String profileUrl;
+        private Long postsCount;
+        private Long subscribersCount;
+        private Long subscribedCount;
 
         private Builder() {
         }
@@ -103,6 +112,21 @@ public class UserResponse {
             return this;
         }
 
+        public Builder postsCount(Long postsCount) {
+            this.postsCount = postsCount;
+            return this;
+        }
+
+        public Builder followersCount(Long followersCount) {
+            this.subscribersCount = followersCount;
+            return this;
+        }
+
+        public Builder followingCount(Long followingCount) {
+            this.subscribedCount = followingCount;
+            return this;
+        }
+
         public UserResponse build() {
             return new UserResponse(this);
         }
@@ -142,6 +166,18 @@ public class UserResponse {
 
     public String getFullName() {
         return fullName;
+    }
+
+    public Long getPostsCount() {
+        return postsCount;
+    }
+
+    public Long getFollowersCount() {
+        return subscribersCount;
+    }
+
+    public Long getFollowingCount() {
+        return subscribedCount;
     }
 
     public boolean hasProfileImage() {
