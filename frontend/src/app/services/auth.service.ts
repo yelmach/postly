@@ -1,4 +1,5 @@
-import { AuthResponse, LoginRequest, RegisterRequest, User } from '@/models/auth';
+import { AuthResponse, LoginRequest, RegisterRequest } from '@/models/auth';
+import { User } from '@/models/user';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
@@ -35,18 +36,15 @@ export class AuthService {
   getCurrentUser(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/auth/me`).pipe(
       tap((user) => {
-        console.log('user: ');
-        console.log(user);
-
         this.currentUser.set(user);
       })
     );
   }
 
-  handleAuthSuccess(response: AuthResponse) {
+  handleAuthSuccess = (response: AuthResponse) => {
     localStorage.setItem('jwt_token', response.accessToken);
     this.currentUser.set(response.currentUser);
-  }
+  };
 
   isTokenExpired(token: string): boolean {
     try {

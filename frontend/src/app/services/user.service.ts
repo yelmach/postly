@@ -1,20 +1,25 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { Observable, tap } from 'rxjs';
-import { User } from '@/models/auth';
+import { Observable } from 'rxjs';
+import { User } from '@/models/user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private readonly apiUrl = environment.apiUrl;
-
   private http = inject(HttpClient);
 
   getUserProfile(username: string): Observable<User> {
-    return this.http
-      .get<User>(`${this.apiUrl}/users/${username}`)
-      .pipe(tap((user) => console.log(user)));
+    return this.http.get<User>(`${this.apiUrl}/users/${username}`);
+  }
+
+  updateProfile(profileData: any): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/users`, profileData);
+  }
+
+  updateProfilePicture(formData: FormData): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/users/picture`, formData);
   }
 }
