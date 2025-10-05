@@ -3,8 +3,6 @@ package postly.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +14,8 @@ import postly.dto.request.LoginRequest;
 import postly.dto.request.RegisterRequest;
 import postly.dto.response.AuthResponse;
 import postly.dto.response.UserResponse;
-import postly.entity.UserEntity;
 import postly.service.AuthService;
+import postly.service.UserService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -25,6 +23,9 @@ public class AuthController {
 
     @Autowired
     AuthService authService;
+
+    @Autowired
+    UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
@@ -40,10 +41,7 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity currentUser = (UserEntity) auth.getPrincipal();
-
-        UserResponse userResponse = UserResponse.fromUser(currentUser).build();
+        UserResponse userResponse = userService.getCurrentUser();
 
         return ResponseEntity.ok(userResponse);
     }

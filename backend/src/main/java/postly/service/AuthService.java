@@ -12,6 +12,8 @@ import postly.dto.request.RegisterRequest;
 import postly.entity.Role;
 import postly.entity.UserEntity;
 import postly.exception.ApiException;
+import postly.repository.PostRepository;
+import postly.repository.SubscriptionRepository;
 import postly.repository.UserRepository;
 import postly.security.JwtProvider;
 
@@ -23,6 +25,12 @@ public class AuthService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PostRepository postRepository;
+
+    @Autowired
+    SubscriptionRepository subscriptionRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
