@@ -40,7 +40,7 @@ public class UserService {
     }
 
     public UserResponse getUserByUsername(String username) {
-        UserEntity user = userRepository.findByUsernameOrEmail(username)
+        UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> ApiException.notFound("User not exist with username: " + username));
 
         long postsCount = postRepository.countByUserId(user.getId());

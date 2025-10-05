@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "subscritions", uniqueConstraints = {
+@Table(name = "subscriptions", uniqueConstraints = {
         @UniqueConstraint(name = "unique_subscription", columnNames = { "subscriber_id", "subscribed_to_id" })
 })
 public class SubscriptionEntity {
