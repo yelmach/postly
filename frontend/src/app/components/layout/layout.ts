@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { AuthService } from '@/services/auth';
+import { AuthService } from '@/services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({

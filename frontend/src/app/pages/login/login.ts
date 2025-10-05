@@ -1,5 +1,5 @@
 import { LoginRequest } from '@/models/auth';
-import { AuthService } from '@/services/auth';
+import { AuthService } from '@/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
@@ -10,7 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
-
 
 @Component({
   selector: 'login-page',
@@ -23,7 +22,7 @@ import { Router, RouterLink } from '@angular/router';
     MatIconModule,
     MatLabel,
     MatProgressSpinnerModule,
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -32,9 +31,7 @@ export class Login {
   loginForm = new FormGroup({
     credentials: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
-  }
-
-  )
+  });
   hidePassword = signal(true);
   isLoading = signal(false);
   formError = signal<string>('');
@@ -42,7 +39,6 @@ export class Login {
 
   authService = inject(AuthService);
   router = inject(Router);
-
 
   onFormSubmit(e: Event) {
     e.preventDefault;
@@ -68,8 +64,8 @@ export class Login {
       error: (errorDetails: HttpErrorResponse) => {
         this.isLoading.set(false);
         this.handleError(errorDetails);
-      }
-    })
+      },
+    });
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -78,7 +74,7 @@ export class Login {
 
       this.fieldErrors.set(details);
 
-      Object.keys(details).forEach(fieldName => {
+      Object.keys(details).forEach((fieldName) => {
         const control = this.loginForm.get(fieldName);
         if (control) {
           control.setErrors({ backend: details[fieldName] });
@@ -93,7 +89,7 @@ export class Login {
     } else if (error.error.error) {
       this.formError.set(error.error.error);
     } else {
-      this.formError.set("An error occurred during login. status: " + error.status);
+      this.formError.set('An error occurred during login. status: ' + error.status);
     }
   }
 

@@ -1,15 +1,15 @@
-import { RegisterRequest } from "@/models/auth";
-import { AuthService } from "@/services/auth";
-import { CommonModule } from "@angular/common";
-import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject, signal } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { MatButtonModule } from "@angular/material/button";
-import { MatFormFieldModule, MatLabel } from "@angular/material/form-field";
-import { MatIconModule } from "@angular/material/icon";
-import { MatInputModule } from "@angular/material/input";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { Router, RouterLink } from "@angular/router";
+import { RegisterRequest } from '@/models/auth';
+import { AuthService } from '@/services/auth.service';
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'register-page',
@@ -22,10 +22,10 @@ import { Router, RouterLink } from "@angular/router";
     MatIconModule,
     MatLabel,
     MatProgressSpinnerModule,
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './register.html',
-  styleUrl: './register.scss'
+  styleUrl: './register.scss',
 })
 export class Register {
   registerForm: FormGroup = new FormGroup({
@@ -33,32 +33,28 @@ export class Register {
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(50),
-      Validators.pattern(/^[a-zA-Z\s]+$/)
+      Validators.pattern(/^[a-zA-Z\s]+$/),
     ]),
     lastName: new FormControl('', [
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(50),
-      Validators.pattern(/^[a-zA-Z\s]+$/)
+      Validators.pattern(/^[a-zA-Z\s]+$/),
     ]),
     username: new FormControl('', [
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(50),
-      Validators.pattern(/^[a-zA-Z0-9_]+$/)
+      Validators.pattern(/^[a-zA-Z0-9_]+$/),
     ]),
-    email: new FormControl('', [
-      Validators.required,
-      Validators.email,
-      Validators.maxLength(100)
-    ]),
+    email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(100)]),
     password: new FormControl('', [
       Validators.required,
       Validators.minLength(6),
-      Validators.maxLength(100)
+      Validators.maxLength(100),
     ]),
     bio: new FormControl('', Validators.maxLength(512)),
-  })
+  });
 
   hidePassword = signal(true);
   isLoading = signal(false);
@@ -67,7 +63,6 @@ export class Register {
 
   authService = inject(AuthService);
   router = inject(Router);
-
 
   onFormSubmit(e: Event) {
     e.preventDefault;
@@ -91,8 +86,8 @@ export class Register {
       error: (errorDetails: HttpErrorResponse) => {
         this.isLoading.set(false);
         this.handleError(errorDetails);
-      }
-    })
+      },
+    });
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -100,7 +95,7 @@ export class Register {
       const details = error.error.details;
       this.fieldErrors.set(details);
 
-      Object.keys(details).forEach(fieldName => {
+      Object.keys(details).forEach((fieldName) => {
         const control = this.registerForm.get(fieldName);
         if (control) {
           control.setErrors({ backend: details[fieldName] });
@@ -112,7 +107,6 @@ export class Register {
 
     if (error.error?.message) {
       const message = error.error.message;
-
 
       this.formError.set(message);
 
