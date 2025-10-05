@@ -43,7 +43,7 @@ public class SubscriptionEntity {
     }
 
     @PrePersist
-    private void onCreate() {
+    protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
