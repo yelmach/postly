@@ -14,6 +14,8 @@ import postly.dto.request.LoginRequest;
 import postly.dto.request.RegisterRequest;
 import postly.dto.response.AuthResponse;
 import postly.dto.response.UserResponse;
+import postly.entity.UserEntity;
+import postly.security.JwtProvider;
 import postly.service.AuthService;
 import postly.service.UserService;
 
@@ -27,17 +29,24 @@ public class AuthController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    JwtProvider jwtProvider;
+
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
-        String jwtToken = authService.register(registerRequest);
-        UserResponse currentUser = userService.getCurrentUser();
+        UserEntity user = authService.register(registerRequest);
+        UserResponse currentUser = userService.getUserByUsername(user.getUsername());
+        String jwtToken = jwtProvider.generateToken(user);
+        
         return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(jwtToken, currentUser));
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        String jwtToken = authService.login(loginRequest);
-        UserResponse currentUser = userService.getCurrentUser();
+        UserEntity user = authService.login(loginRequest);
+        UserResponse currentUser = userService.getUserByUsername(user.getUsername());
+        String jwtToken = jwtProvider.generateToken(user);
+
         return ResponseEntity.ok(new AuthResponse(jwtToken, currentUser));
     }
 

@@ -15,7 +15,6 @@ import postly.exception.ApiException;
 import postly.repository.PostRepository;
 import postly.repository.SubscriptionRepository;
 import postly.repository.UserRepository;
-import postly.security.JwtProvider;
 
 @Service
 public class AuthService {
@@ -35,10 +34,7 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private JwtProvider jwtProvider;
-
-    public String register(RegisterRequest request) {
+    public UserEntity register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.username())) {
             throw ApiException.badRequest("Username is already taken");
         }
@@ -58,19 +54,18 @@ public class AuthService {
 
         UserEntity savedUser = userRepository.save(user);
 
-        return jwtProvider.generateToken(savedUser);
+        return savedUser;
     }
 
-    public String login(LoginRequest request) {
+    public UserEntity login(LoginRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.credentials(),
                             request.password()));
 
-            UserEntity user = (UserEntity) authentication.getPrincipal();
+            return (UserEntity) authentication.getPrincipal();
 
-            return jwtProvider.generateToken(user);
         } catch (Exception e) {
             throw ApiException.unauthorized("Invalid credentials");
         }
