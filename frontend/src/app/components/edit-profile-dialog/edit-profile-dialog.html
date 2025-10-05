@@ -1,0 +1,120 @@
+<div class="edit-profile-dialog">
+  <h2 mat-dialog-title>Edit Profile</h2>
+
+  <mat-dialog-content>
+    <!-- Profile Picture Section -->
+    <div class="profile-picture-section">
+      <div class="current-picture">
+        @if (previewUrl()) {
+        <img [src]="previewUrl()" alt="Profile preview" class="preview-avatar" />
+        } @else if (data.user.profileUrl) {
+        <img [src]="data.user.profileUrl" alt="Current profile" class="preview-avatar" />
+        } @else {
+        <div class="preview-avatar-placeholder">
+          <mat-icon>person</mat-icon>
+        </div>
+        }
+      </div>
+
+      <div class="picture-info">
+        <div class="picture-actions">
+          <input
+            type="file"
+            #fileInput
+            accept="image/jpeg,image/jpg,image/png,image/webp"
+            (change)="onFileSelected($event)"
+            style="display: none"
+          />
+          <button mat-stroked-button color="primary" (click)="fileInput.click()">
+            <mat-icon>upload</mat-icon>
+            Change Picture
+          </button>
+          @if (selectedFile()) {
+          <button mat-stroked-button color="warn" (click)="clearSelectedFile()">
+            <mat-icon>close</mat-icon>
+            Clear
+          </button>
+          }
+        </div>
+
+        @if (selectedFile()) {
+        <p class="file-info">{{ selectedFile()?.name }} ({{ getFileSize() }})</p>
+        }
+      </div>
+    </div>
+
+    <!-- Profile Form -->
+    <form class="edit-profile-form" [formGroup]="editForm">
+      <div class="name-group">
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput type="text" formControlName="firstName" />
+          <mat-error>{{ getErrorMessage('firstName') }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput type="text" formControlName="lastName" />
+          <mat-error>{{ getErrorMessage('lastName') }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        <mat-icon matPrefix>email</mat-icon>
+        <mat-error>{{ getErrorMessage('email') }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>New Password (leave empty to keep current)</mat-label>
+        <input
+          matInput
+          [type]="hidePassword() ? 'password' : 'text'"
+          formControlName="password"
+          placeholder="Enter new password"
+        />
+        <mat-icon matPrefix>lock</mat-icon>
+        <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
+          <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error>{{ getErrorMessage('password') }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Bio</mat-label>
+        <textarea
+          matInput
+          rows="4"
+          formControlName="bio"
+          placeholder="Tell us about yourself..."
+        ></textarea>
+        <mat-error>{{ getErrorMessage('bio') }}</mat-error>
+      </mat-form-field>
+    </form>
+
+    @if (formError()) {
+    <div class="form-error-banner">
+      <mat-icon>error</mat-icon>
+      <span>{{ formError() }}</span>
+    </div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="isLoading()">Cancel</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onSave()"
+      [disabled]="isLoading() || (!editForm.dirty && !selectedFile())"
+    >
+      @if (isLoading()) {
+      <mat-spinner diameter="20" color="accent"></mat-spinner>
+      <span>Saving...</span>
+      } @else {
+      <span>Save Changes</span>
+      }
+    </button>
+  </mat-dialog-actions>
+</div>
