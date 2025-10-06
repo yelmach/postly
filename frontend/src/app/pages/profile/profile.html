@@ -44,11 +44,11 @@
           <button
             mat-flat-button
             [color]="isSubscribed() ? 'accent' : 'primary'"
-            class="follow-btn"
+            class="subscribe-btn"
             (click)="toggleSubscribe()"
           >
             <mat-icon>{{ isSubscribed() ? 'person_remove' : 'person_add' }}</mat-icon>
-            <span>{{ isSubscribed() ? 'Unfollow' : 'Follow' }}</span>
+            <span>{{ isSubscribed() ? 'Unsubscribe' : 'Subscribe' }}</span>
           </button>
           }
         </div>
@@ -65,11 +65,11 @@
         </div>
         <div class="stat-item">
           <span class="stat-value">{{ subscribersCount() }}</span>
-          <span class="stat-label">Followers</span>
+          <span class="stat-label">Subscribers</span>
         </div>
         <div class="stat-item">
           <span class="stat-value">{{ subscribedCount() }}</span>
-          <span class="stat-label">Following</span>
+          <span class="stat-label">Subscribed</span>
         </div>
       </div>
     </div>
@@ -97,11 +97,11 @@
         </div>
       </mat-tab>
 
-      <!-- Followers Tab -->
-      <mat-tab label="Followers">
+      <!-- Subscribers Tab -->
+      <mat-tab label="Subscribers">
         <ng-template mat-tab-label>
           <mat-icon>people</mat-icon>
-          <span>Followers</span>
+          <span>Subscribers</span>
         </ng-template>
 
         <div class="tab-content">
@@ -110,17 +110,17 @@
           } @else {
           <div class="empty-state">
             <mat-icon>people</mat-icon>
-            <p>No followers yet</p>
+            <p>No subscribers yet</p>
           </div>
           }
         </div>
       </mat-tab>
 
-      <!-- Following Tab -->
-      <mat-tab label="Following">
+      <!-- Subscribed Tab -->
+      <mat-tab label="Subscribed">
         <ng-template mat-tab-label>
           <mat-icon>person_add</mat-icon>
-          <span>Following</span>
+          <span>Subscribed</span>
         </ng-template>
 
         <div class="tab-content">
@@ -129,7 +129,7 @@
           } @else {
           <div class="empty-state">
             <mat-icon>person_add</mat-icon>
-            <p>Not following anyone yet</p>
+            <p>Not subscribed to anyone yet</p>
           </div>
           }
         </div>

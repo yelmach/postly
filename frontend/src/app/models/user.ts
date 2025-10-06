@@ -11,4 +11,5 @@ export interface User {
   postsCount?: number;
   subscribersCount?: number;
   subscribedCount?: number;
+  isSubscribed?: boolean;
 }

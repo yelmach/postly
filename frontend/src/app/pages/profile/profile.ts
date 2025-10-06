@@ -72,6 +72,7 @@ export class Profile implements OnInit {
           this.postsCount.set(user.postsCount || 0);
           this.subscribersCount.set(user.subscribersCount || 0);
           this.subscribedCount.set(user.subscribedCount || 0);
+          this.isSubscribed.set(user.isSubscribed || false);
           this.isLoading.set(false);
         },
         error: (error: HttpErrorResponse) => {
@@ -104,12 +105,43 @@ export class Profile implements OnInit {
   }
 
   toggleSubscribe() {
-    this.isSubscribed.update((v) => !v);
+    const profileUser = this.user();
+    if (!profileUser) return;
 
-    if (this.isSubscribed()) {
-      this.subscribersCount.update((v) => v + 1);
+    const wasSubscribed = this.isSubscribed();
+
+    if (wasSubscribed) {
+      // Unsubscribe
+      this.userService.unsubscribe(profileUser.id).subscribe({
+        next: () => {
+          this.isSubscribed.set(false);
+          this.subscribersCount.update((v) => Math.max(0, v - 1));
+          this.authService.getCurrentUser().subscribe();
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Failed to unsubscribe:', error);
+          this.errorMessage.set('Failed to unsubscribe user. Please try again.');
+        },
+      });
     } else {
-      this.subscribedCount.update((v) => v - 1);
+      // Subscribe
+      this.userService.subscribe(profileUser.id).subscribe({
+        next: () => {
+          this.isSubscribed.set(true);
+          this.subscribersCount.update((v) => v + 1);
+          this.authService.getCurrentUser().subscribe();
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Failed to subscribe:', error);
+          if (error.status === 400) {
+            this.errorMessage.set('You cannot subscribe to yourself.');
+          } else if (error.status === 409) {
+            this.errorMessage.set('You are already subscribed to this user.');
+          } else {
+            this.errorMessage.set('Failed to subscribe to user. Please try again.');
+          }
+        },
+      });
     }
   }
 

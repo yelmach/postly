@@ -28,6 +28,9 @@ public class UserService {
     SubscriptionRepository subscriptionRepository;
 
     @Autowired
+    SubscriptionService subscriptionService;
+
+    @Autowired
     FileStorageService fileStorageService;
 
     @Autowired
@@ -38,13 +41,13 @@ public class UserService {
         UserEntity currentUser = (UserEntity) auth.getPrincipal();
 
         long postsCount = postRepository.countByUserId(currentUser.getId());
-        long followersCount = subscriptionRepository.countBySubscribedToId(currentUser.getId());
-        long followingCount = subscriptionRepository.countBySubscriberId(currentUser.getId());
+        long subscribersCount = subscriptionRepository.countBySubscribedToId(currentUser.getId());
+        long subscribedCount = subscriptionRepository.countBySubscriberId(currentUser.getId());
 
         return UserResponse.fromUser(currentUser)
                 .postsCount(postsCount)
-                .followersCount(followersCount)
-                .followingCount(followingCount)
+                .subscribersCount(subscribersCount)
+                .subscribedCount(subscribedCount)
                 .build();
     }
 
@@ -53,13 +56,21 @@ public class UserService {
                 .orElseThrow(() -> ApiException.notFound("User not exist with username: " + username));
 
         long postsCount = postRepository.countByUserId(user.getId());
-        long followersCount = subscriptionRepository.countBySubscribedToId(user.getId());
-        long followingCount = subscriptionRepository.countBySubscriberId(user.getId());
+        long subscribersCount = subscriptionRepository.countBySubscribedToId(user.getId());
+        long subscribedCount = subscriptionRepository.countBySubscriberId(user.getId());
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Boolean isSubscribed = null;
+        if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof UserEntity) {
+            UserEntity currentUser = (UserEntity) auth.getPrincipal();
+            isSubscribed = subscriptionService.isSubscribed(currentUser.getId(), user.getId());
+        }
 
         return UserResponse.fromUser(user)
                 .postsCount(postsCount)
-                .followersCount(followersCount)
-                .followingCount(followingCount)
+                .subscribersCount(subscribersCount)
+                .subscribedCount(subscribedCount)
+                .isSubscribed(isSubscribed)
                 .build();
     }
 
@@ -96,13 +107,13 @@ public class UserService {
         UserEntity updatedUser = userRepository.save(user);
 
         long postsCount = postRepository.countByUserId(updatedUser.getId());
-        long followersCount = subscriptionRepository.countBySubscribedToId(updatedUser.getId());
-        long followingCount = subscriptionRepository.countBySubscriberId(updatedUser.getId());
+        long subscribersCount = subscriptionRepository.countBySubscribedToId(updatedUser.getId());
+        long subscribedCount = subscriptionRepository.countBySubscriberId(updatedUser.getId());
 
         return UserResponse.fromUser(updatedUser)
                 .postsCount(postsCount)
-                .followersCount(followersCount)
-                .followingCount(followingCount)
+                .subscribersCount(subscribersCount)
+                .subscribedCount(subscribedCount)
                 .build();
     }
 
@@ -123,13 +134,13 @@ public class UserService {
         UserEntity updatedUser = userRepository.save(user);
 
         long postsCount = postRepository.countByUserId(updatedUser.getId());
-        long followersCount = subscriptionRepository.countBySubscribedToId(updatedUser.getId());
-        long followingCount = subscriptionRepository.countBySubscriberId(updatedUser.getId());
+        long subscribersCount = subscriptionRepository.countBySubscribedToId(updatedUser.getId());
+        long subscribedCount = subscriptionRepository.countBySubscriberId(updatedUser.getId());
 
         return UserResponse.fromUser(updatedUser)
                 .postsCount(postsCount)
-                .followersCount(followersCount)
-                .followingCount(followingCount)
+                .subscribersCount(subscribersCount)
+                .subscribedCount(subscribedCount)
                 .build();
     }
 }

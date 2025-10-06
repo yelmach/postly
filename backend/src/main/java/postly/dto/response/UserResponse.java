@@ -17,6 +17,7 @@ public class UserResponse {
     private Long postsCount;
     private Long subscribersCount;
     private Long subscribedCount;
+    private Boolean isSubscribed;
 
     private UserResponse(Builder builder) {
         this.id = builder.id;
@@ -31,6 +32,7 @@ public class UserResponse {
         this.postsCount = builder.postsCount;
         this.subscribersCount = builder.subscribersCount;
         this.subscribedCount = builder.subscribedCount;
+        this.isSubscribed = builder.isSubscribed;
     }
 
     public static Builder builder() {
@@ -63,6 +65,7 @@ public class UserResponse {
         private Long postsCount;
         private Long subscribersCount;
         private Long subscribedCount;
+        private Boolean isSubscribed;
 
         private Builder() {
         }
@@ -117,13 +120,18 @@ public class UserResponse {
             return this;
         }
 
-        public Builder followersCount(Long followersCount) {
-            this.subscribersCount = followersCount;
+        public Builder subscribersCount(Long subscribersCount) {
+            this.subscribersCount = subscribersCount;
             return this;
         }
 
-        public Builder followingCount(Long followingCount) {
-            this.subscribedCount = followingCount;
+        public Builder subscribedCount(Long subscribedCount) {
+            this.subscribedCount = subscribedCount;
+            return this;
+        }
+
+        public Builder isSubscribed(Boolean isSubscribed) {
+            this.isSubscribed = isSubscribed;
             return this;
         }
 
@@ -172,11 +180,11 @@ public class UserResponse {
         return postsCount;
     }
 
-    public Long getFollowersCount() {
+    public Long getSubscribersCount() {
         return subscribersCount;
     }
 
-    public Long getFollowingCount() {
+    public Long getSubscribedCount() {
         return subscribedCount;
     }
 
@@ -186,5 +194,9 @@ public class UserResponse {
 
     public boolean hasBio() {
         return bio != null && !bio.trim().isEmpty();
+    }
+
+    public Boolean getIsSubscribed() {
+        return isSubscribed;
     }
 }
