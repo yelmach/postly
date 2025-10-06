@@ -11,6 +11,7 @@ import { UserService } from '@/services/user.service';
 import { AuthService } from '@/services/auth.service';
 import { User } from '@/models/user';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorBannerComponent } from '@/components/error-banner/error-banner.component';
 
 @Component({
   selector: 'app-edit-profile-dialog',
@@ -23,6 +24,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatInputModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    ErrorBannerComponent,
   ],
   templateUrl: './edit-profile-dialog.html',
   styleUrl: './edit-profile-dialog.scss',

@@ -94,10 +94,7 @@
     </form>
 
     @if (formError()) {
-    <div class="form-error-banner">
-      <mat-icon>error</mat-icon>
-      <span>{{ formError() }}</span>
-    </div>
+    <app-error-banner [message]="formError()" />
     }
   </mat-dialog-content>
 

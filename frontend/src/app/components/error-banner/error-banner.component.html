@@ -1,0 +1,9 @@
+<div class="error-banner">
+  <mat-icon class="error-icon">error</mat-icon>
+  <span class="error-message">{{ message() }}</span>
+  @if (dismissible()) {
+  <button mat-icon-button class="dismiss-btn" (click)="onDismiss()">
+    <mat-icon>close</mat-icon>
+  </button>
+  }
+</div>

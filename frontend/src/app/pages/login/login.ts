@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
+import { ErrorBannerComponent } from '@/components/error-banner/error-banner.component';
 
 @Component({
   selector: 'login-page',
@@ -23,6 +24,7 @@ import { Router, RouterLink } from '@angular/router';
     MatLabel,
     MatProgressSpinnerModule,
     RouterLink,
+    ErrorBannerComponent,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
