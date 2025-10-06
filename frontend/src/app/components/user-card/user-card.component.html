@@ -1,0 +1,25 @@
+<div class="user-card">
+  <div class="user-info" (click)="onUserClick()">
+    @if (user().profileUrl) {
+    <img [src]="user().profileUrl" [alt]="user().username" class="user-avatar" />
+    } @else {
+    <div class="user-avatar-placeholder">
+      <mat-icon>person</mat-icon>
+    </div>
+    }
+    <div class="user-details">
+      <span class="user-name">{{ user().firstName }} {{ user().lastName }}</span>
+      <span class="user-username">@{{ user().username }}</span>
+    </div>
+  </div>
+  @if (shouldShowSubscribeButton()) {
+  <button
+    mat-flat-button
+    [color]="user().isSubscribed ? 'accent' : 'primary'"
+    class="subscribe-btn-small"
+    (click)="onSubscribeClick($event)"
+  >
+    {{ user().isSubscribed ? 'Unsubscribe' : 'Subscribe' }}
+  </button>
+  }
+</div>
