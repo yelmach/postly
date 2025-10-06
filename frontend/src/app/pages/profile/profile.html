@@ -77,7 +77,11 @@
 
   <!-- Menu with Tabs -->
   <div class="content-section">
-    <mat-tab-group [(selectedIndex)]="selectedTabIndex" class="profile-tabs">
+    <mat-tab-group
+      [(selectedIndex)]="selectedTabIndex"
+      (selectedIndexChange)="onTabChange($event)"
+      class="profile-tabs"
+    >
       <!-- Posts Tab -->
       <mat-tab label="Posts">
         <ng-template mat-tab-label>
@@ -105,8 +109,41 @@
         </ng-template>
 
         <div class="tab-content">
-          @if (subscribers().length > 0) {
-          <div class="users-list"></div>
+          @if (subscribersLoading()) {
+          <div class="loading-state">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading subscribers...</p>
+          </div>
+          } @else if (subscribers().length > 0) {
+          <div class="users-list">
+            @for (user of subscribers(); track user.id) {
+            <div class="user-card">
+              <div class="user-info" (click)="navigateToProfile(user.username)">
+                @if (user.profileUrl) {
+                <img [src]="user.profileUrl" [alt]="user.username" class="user-avatar" />
+                } @else {
+                <div class="user-avatar-placeholder">
+                  <mat-icon>person</mat-icon>
+                </div>
+                }
+                <div class="user-details">
+                  <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+                  <span class="user-username">@{{ user.username }}</span>
+                </div>
+              </div>
+              @if (user.id !== authService.currentUser()?.id) {
+              <button
+                mat-flat-button
+                [color]="user.isSubscribed ? 'accent' : 'primary'"
+                class="subscribe-btn-small"
+                (click)="toggleUserSubscription(user)"
+              >
+                {{ user.isSubscribed ? 'Unsubscribe' : 'Subscribe' }}
+              </button>
+              }
+            </div>
+            }
+          </div>
           } @else {
           <div class="empty-state">
             <mat-icon>people</mat-icon>
@@ -124,8 +161,41 @@
         </ng-template>
 
         <div class="tab-content">
-          @if (subscribedCount.length > 0) {
-          <div class="users-list"></div>
+          @if (subscriptionsLoading()) {
+          <div class="loading-state">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading subscriptions...</p>
+          </div>
+          } @else if (subscriptions().length > 0) {
+          <div class="users-list">
+            @for (user of subscriptions(); track user.id) {
+            <div class="user-card">
+              <div class="user-info" (click)="navigateToProfile(user.username)">
+                @if (user.profileUrl) {
+                <img [src]="user.profileUrl" [alt]="user.username" class="user-avatar" />
+                } @else {
+                <div class="user-avatar-placeholder">
+                  <mat-icon>person</mat-icon>
+                </div>
+                }
+                <div class="user-details">
+                  <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+                  <span class="user-username">@{{ user.username }}</span>
+                </div>
+              </div>
+              @if (user.id !== authService.currentUser()?.id) {
+              <button
+                mat-flat-button
+                [color]="user.isSubscribed ? 'accent' : 'primary'"
+                class="subscribe-btn-small"
+                (click)="toggleUserSubscription(user)"
+              >
+                {{ user.isSubscribed ? 'Unsubscribe' : 'Subscribe' }}
+              </button>
+              }
+            </div>
+            }
+          </div>
           } @else {
           <div class="empty-state">
             <mat-icon>person_add</mat-icon>

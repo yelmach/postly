@@ -1,5 +1,7 @@
 package postly.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,5 +60,17 @@ public class UserController {
     public ResponseEntity<Void> unsubscribe(@PathVariable Long userId) {
         subscriptionService.unsubscribe(userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{userId}/subscribers")
+    public ResponseEntity<List<UserResponse>> getSubscribers(@PathVariable Long userId) {
+        List<UserResponse> subscribers = subscriptionService.getSubscribers(userId);
+        return ResponseEntity.ok(subscribers);
+    }
+
+    @GetMapping("/{userId}/subscriptions")
+    public ResponseEntity<List<UserResponse>> getSubscriptions(@PathVariable Long userId) {
+        List<UserResponse> subscriptions = subscriptionService.getSubscriptions(userId);
+        return ResponseEntity.ok(subscriptions);
     }
 }

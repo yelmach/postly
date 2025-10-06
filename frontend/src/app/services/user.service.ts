@@ -30,4 +30,12 @@ export class UserService {
   unsubscribe(userId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/users/${userId}/subscriptions`);
   }
+
+  getSubscribers(userId: number): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/users/${userId}/subscribers`);
+  }
+
+  getSubscriptions(userId: number): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/users/${userId}/subscriptions`);
+  }
 }

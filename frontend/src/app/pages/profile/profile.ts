@@ -45,8 +45,11 @@ export class Profile implements OnInit {
   subscribedCount = signal(0);
 
   posts = signal<[]>([]);
-  subscribers = signal<[]>([]);
-  subscribed = signal<[]>([]);
+  subscribers = signal<User[]>([]);
+  subscriptions = signal<User[]>([]);
+
+  subscribersLoading = signal(false);
+  subscriptionsLoading = signal(false);
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -58,6 +61,12 @@ export class Profile implements OnInit {
   loadUserProfile(username: string) {
     this.isLoading.set(true);
     this.errorMessage.set('');
+
+    // Reset tab data when navigating to a different profile
+    this.selectedTabIndex.set(0);
+    this.subscribers.set([]);
+    this.subscriptions.set([]);
+    this.posts.set([]);
 
     const currentUser = this.authService.currentUser();
 
@@ -143,6 +152,88 @@ export class Profile implements OnInit {
         },
       });
     }
+  }
+
+  onTabChange(index: number) {
+    this.selectedTabIndex.set(index);
+    const currentUser = this.user();
+    if (!currentUser) return;
+
+    if (index === 1) {
+      this.loadSubscribers(currentUser.id);
+    } else if (index === 2) {
+      this.loadSubscriptions(currentUser.id);
+    }
+  }
+
+  loadSubscribers(userId: number) {
+    this.subscribersLoading.set(true);
+    this.userService.getSubscribers(userId).subscribe({
+      next: (users: User[]) => {
+        this.subscribers.set(users);
+        this.subscribersLoading.set(false);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Failed to load subscribers:', error);
+        this.subscribersLoading.set(false);
+      },
+    });
+  }
+
+  loadSubscriptions(userId: number) {
+    this.subscriptionsLoading.set(true);
+    this.userService.getSubscriptions(userId).subscribe({
+      next: (users: User[]) => {
+        this.subscriptions.set(users);
+        this.subscriptionsLoading.set(false);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Failed to load subscriptions:', error);
+        this.subscriptionsLoading.set(false);
+      },
+    });
+  }
+
+  navigateToProfile(username: string) {
+    this.router.navigate(['/profile', username]);
+  }
+
+  toggleUserSubscription(targetUser: User) {
+    const wasSubscribed = targetUser.isSubscribed;
+
+    if (wasSubscribed) {
+      this.userService.unsubscribe(targetUser.id).subscribe({
+        next: () => {
+          this.updateUserInList(targetUser.id, false);
+          this.authService.getCurrentUser().subscribe();
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Failed to unsubscribe:', error);
+        },
+      });
+    } else {
+      this.userService.subscribe(targetUser.id).subscribe({
+        next: () => {
+          this.updateUserInList(targetUser.id, true);
+          this.authService.getCurrentUser().subscribe();
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Failed to subscribe:', error);
+        },
+      });
+    }
+  }
+
+  updateUserInList(userId: number, isSubscribed: boolean) {
+    const updatedSubscribers = this.subscribers().map((user) =>
+      user.id === userId ? { ...user, isSubscribed } : user
+    );
+    this.subscribers.set(updatedSubscribers);
+
+    const updatedSubscriptions = this.subscriptions().map((user) =>
+      user.id === userId ? { ...user, isSubscribed } : user
+    );
+    this.subscriptions.set(updatedSubscriptions);
   }
 
   openEditProfileDialog() {
