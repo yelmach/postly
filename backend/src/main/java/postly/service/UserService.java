@@ -1,5 +1,8 @@
 package postly.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -142,5 +145,15 @@ public class UserService {
                 .subscribersCount(subscribersCount)
                 .subscribedCount(subscribedCount)
                 .build();
+    }
+
+    public List<UserResponse> searchUsers(String query) {
+        List<UserEntity> users = userRepository.searchUsers(query);
+
+        return users.stream()
+                .map(user -> {
+                    return UserResponse.fromUser(user).build();
+                })
+                .collect(Collectors.toList());
     }
 }

@@ -14,6 +14,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '@/services/auth.service';
 import { Router } from '@angular/router';
+import { HeaderSearchComponent } from '@/components/header-search/header-search';
 
 @Component({
   selector: 'app-main-layout',
@@ -31,6 +32,7 @@ import { Router } from '@angular/router';
     MatSlideToggleModule,
     MatDividerModule,
     MatTooltipModule,
+    HeaderSearchComponent,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.scss',
@@ -40,7 +42,6 @@ export class MainLayout {
   router = inject(Router);
 
   isDarkMode = signal(false);
-  searchQuery = signal('');
   notificationCount = signal(5);
 
   constructor() {

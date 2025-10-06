@@ -38,4 +38,10 @@ export class UserService {
   getSubscriptions(userId: number): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/users/${userId}/subscriptions`);
   }
+
+  searchUsers(query: string): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/users/search`, {
+      params: { query }
+    });
+  }
 }

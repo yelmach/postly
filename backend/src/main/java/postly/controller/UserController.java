@@ -73,4 +73,10 @@ public class UserController {
         List<UserResponse> subscriptions = subscriptionService.getSubscriptions(userId);
         return ResponseEntity.ok(subscriptions);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<UserResponse>> searchUsers(@RequestParam String query) {
+        List<UserResponse> users = userService.searchUsers(query);
+        return ResponseEntity.ok(users);
+    }
 }
