@@ -1,9 +1,6 @@
 <div class="profile-container">
   @if (isLoading()) {
-  <div class="loading-state">
-    <mat-spinner diameter="50"></mat-spinner>
-    <p>Loading profile...</p>
-  </div>
+  <app-loading-spinner [size]="'medium'" [message]="'Loading profile...'" />
   } @else if (errorMessage()) {
   <div class="error-state">
     <mat-icon>error_outline</mat-icon>
@@ -110,38 +107,16 @@
 
         <div class="tab-content">
           @if (subscribersLoading()) {
-          <div class="loading-state">
-            <mat-spinner diameter="40"></mat-spinner>
-            <p>Loading subscribers...</p>
-          </div>
+          <app-loading-spinner [size]="'small'" [message]="'Loading subscribers...'" />
           } @else if (subscribers().length > 0) {
           <div class="users-list">
             @for (user of subscribers(); track user.id) {
-            <div class="user-card">
-              <div class="user-info" (click)="navigateToProfile(user.username)">
-                @if (user.profileUrl) {
-                <img [src]="user.profileUrl" [alt]="user.username" class="user-avatar" />
-                } @else {
-                <div class="user-avatar-placeholder">
-                  <mat-icon>person</mat-icon>
-                </div>
-                }
-                <div class="user-details">
-                  <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
-                  <span class="user-username">@{{ user.username }}</span>
-                </div>
-              </div>
-              @if (user.id !== authService.currentUser()?.id) {
-              <button
-                mat-flat-button
-                [color]="user.isSubscribed ? 'accent' : 'primary'"
-                class="subscribe-btn-small"
-                (click)="toggleUserSubscription(user)"
-              >
-                {{ user.isSubscribed ? 'Unsubscribe' : 'Subscribe' }}
-              </button>
-              }
-            </div>
+            <app-user-card
+              [user]="user"
+              [currentUserId]="authService.currentUser()?.id"
+              (userClick)="navigateToProfile(user.username)"
+              (subscribeToggle)="toggleUserSubscription($event)"
+            />
             }
           </div>
           } @else {
@@ -162,38 +137,16 @@
 
         <div class="tab-content">
           @if (subscriptionsLoading()) {
-          <div class="loading-state">
-            <mat-spinner diameter="40"></mat-spinner>
-            <p>Loading subscriptions...</p>
-          </div>
+          <app-loading-spinner [size]="'small'" [message]="'Loading subscriptions...'" />
           } @else if (subscriptions().length > 0) {
           <div class="users-list">
             @for (user of subscriptions(); track user.id) {
-            <div class="user-card">
-              <div class="user-info" (click)="navigateToProfile(user.username)">
-                @if (user.profileUrl) {
-                <img [src]="user.profileUrl" [alt]="user.username" class="user-avatar" />
-                } @else {
-                <div class="user-avatar-placeholder">
-                  <mat-icon>person</mat-icon>
-                </div>
-                }
-                <div class="user-details">
-                  <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
-                  <span class="user-username">@{{ user.username }}</span>
-                </div>
-              </div>
-              @if (user.id !== authService.currentUser()?.id) {
-              <button
-                mat-flat-button
-                [color]="user.isSubscribed ? 'accent' : 'primary'"
-                class="subscribe-btn-small"
-                (click)="toggleUserSubscription(user)"
-              >
-                {{ user.isSubscribed ? 'Unsubscribe' : 'Subscribe' }}
-              </button>
-              }
-            </div>
+            <app-user-card
+              [user]="user"
+              [currentUserId]="authService.currentUser()?.id"
+              (userClick)="navigateToProfile(user.username)"
+              (subscribeToggle)="toggleUserSubscription($event)"
+            />
             }
           </div>
           } @else {

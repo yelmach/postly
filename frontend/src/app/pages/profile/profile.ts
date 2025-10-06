@@ -11,6 +11,8 @@ import { UserService } from '@/services/user.service';
 import { User } from '@/models/user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EditProfileDialog } from '@/components/edit-profile-dialog/edit-profile-dialog';
+import { UserCardComponent } from '@/components/user-card/user-card.component';
+import { LoadingSpinnerComponent } from '@/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-profile',
@@ -21,6 +23,8 @@ import { EditProfileDialog } from '@/components/edit-profile-dialog/edit-profile
     MatTabsModule,
     MatDialogModule,
     MatProgressSpinnerModule,
+    UserCardComponent,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
