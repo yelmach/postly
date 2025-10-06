@@ -119,7 +119,8 @@ export class Profile implements OnInit {
 
     const dialogRef = this.dialog.open(EditProfileDialog, {
       width: '100%',
-      maxWidth: '600px',
+      maxWidth: '550px',
+      height: 'auto',
       data: { user: currentUser },
       disableClose: false,
     });

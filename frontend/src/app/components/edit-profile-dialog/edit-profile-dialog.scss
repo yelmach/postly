@@ -1,12 +1,10 @@
 .edit-profile-dialog {
-  width: 100%;
   background: var(--mat-sys-surface-container);
 
   h2 {
     margin: 0;
     font-size: 1.6rem;
     font-weight: 600;
-    color: var(--mat-sys-on-surface);
   }
 
   .form-error-banner {
@@ -35,6 +33,7 @@
 
   mat-dialog-content {
     overflow: hidden;
+    max-height: 70vh;
     height: 100%;
   }
 
@@ -44,12 +43,9 @@
     gap: 1rem;
     margin-bottom: 1rem;
     padding: 0.75rem;
-    background: var(--mat-sys-surface-container-low);
     border-radius: 10px;
+    flex-direction: column;
 
-    @media (max-width: 568px) {
-      flex-direction: column;
-    }
 
     .current-picture {
       flex-shrink: 0;
