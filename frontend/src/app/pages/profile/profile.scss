@@ -217,29 +217,6 @@
   }
 }
 
-// ============= EMPTY STATE =============
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 1rem;
-  color: var(--mat-sys-on-surface-variant);
-
-  mat-icon {
-    font-size: 4rem;
-    width: 4rem;
-    height: 4rem;
-    margin-bottom: 1rem;
-    opacity: 0.5;
-  }
-
-  p {
-    margin: 0;
-    font-size: 1rem;
-  }
-}
-
 // ============= USERS LIST =============
 .users-list {
   display: flex;

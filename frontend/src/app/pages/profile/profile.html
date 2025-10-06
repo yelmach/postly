@@ -2,11 +2,11 @@
   @if (isLoading()) {
   <app-loading-spinner [size]="'medium'" [message]="'Loading profile...'" />
   } @else if (errorMessage()) {
-  <div class="error-state">
-    <mat-icon>error_outline</mat-icon>
-    <h2>{{ errorMessage() }}</h2>
-    <button mat-flat-button color="primary" (click)="router.navigate(['/home'])">Go to Home</button>
-  </div>
+  <app-error-state
+    [title]="errorMessage()"
+    [actionLabel]="'Go to Home'"
+    (actionClick)="router.navigate(['/home'])"
+  />
   } @else {
   <!-- Profile Info Card -->
   <div class="profile-card">
@@ -90,10 +90,7 @@
           @if (postsCount() > 0) {
           <div class="posts-grid"></div>
           } @else {
-          <div class="empty-state">
-            <mat-icon>article</mat-icon>
-            <p>No posts yet</p>
-          </div>
+          <app-empty-state [icon]="'article'" [message]="'No posts yet'" />
           }
         </div>
       </mat-tab>
@@ -120,10 +117,7 @@
             }
           </div>
           } @else {
-          <div class="empty-state">
-            <mat-icon>people</mat-icon>
-            <p>No subscribers yet</p>
-          </div>
+          <app-empty-state [icon]="'people'" [message]="'No subscribers yet'" />
           }
         </div>
       </mat-tab>
@@ -150,10 +144,7 @@
             }
           </div>
           } @else {
-          <div class="empty-state">
-            <mat-icon>person_add</mat-icon>
-            <p>Not subscribed to anyone yet</p>
-          </div>
+          <app-empty-state [icon]="'person_add'" [message]="'Not subscribed to anyone yet'" />
           }
         </div>
       </mat-tab>

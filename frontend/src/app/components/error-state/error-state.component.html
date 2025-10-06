@@ -1,0 +1,12 @@
+<div class="error-state">
+  <mat-icon class="error-icon">{{ icon() }}</mat-icon>
+  <h2 class="error-title">{{ title() }}</h2>
+  @if (message()) {
+  <p class="error-message">{{ message() }}</p>
+  }
+  @if (actionLabel()) {
+  <button mat-flat-button color="primary" (click)="onActionClick()">
+    {{ actionLabel() }}
+  </button>
+  }
+</div>

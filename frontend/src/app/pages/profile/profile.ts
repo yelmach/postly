@@ -13,6 +13,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { EditProfileDialog } from '@/components/edit-profile-dialog/edit-profile-dialog';
 import { UserCardComponent } from '@/components/user-card/user-card.component';
 import { LoadingSpinnerComponent } from '@/components/loading-spinner/loading-spinner.component';
+import { ErrorStateComponent } from '@/components/error-state/error-state.component';
+import { EmptyStateComponent } from '@/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-profile',
@@ -25,6 +27,8 @@ import { LoadingSpinnerComponent } from '@/components/loading-spinner/loading-sp
     MatProgressSpinnerModule,
     UserCardComponent,
     LoadingSpinnerComponent,
+    ErrorStateComponent,
+    EmptyStateComponent,
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
