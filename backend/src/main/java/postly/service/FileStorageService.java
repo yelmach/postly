@@ -20,8 +20,11 @@ public class FileStorageService {
     @Value("${app.upload.dir:uploads}")
     private String uploadDir;
 
-    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-    private static final String[] ALLOWED_EXTENSIONS = { "jpg", "jpeg", "png", "webp" };
+    private static final long MAX_PROFILE_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+    private static final long MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100MB
+    private static final String[] ALLOWED_IMAGE_EXTENSIONS = { "jpg", "jpeg", "png", "webp", "gif" };
+    private static final String[] ALLOWED_VIDEO_EXTENSIONS = { "mp4", "webm", "mov" };
 
     public String storeProfilePicture(MultipartFile file, Long userId) {
         validateFile(file);
@@ -63,14 +66,14 @@ public class FileStorageService {
             throw ApiException.badRequest("File is empty");
         }
 
-        if (file.getSize() > MAX_FILE_SIZE) {
+        if (file.getSize() > MAX_PROFILE_FILE_SIZE) {
             throw ApiException.badRequest("File size exceeds maximum limit of 5MB");
         }
 
         String extension = getFileExtension(file);
 
         boolean isAllowed = false;
-        for (String allowedExt : ALLOWED_EXTENSIONS) {
+        for (String allowedExt : ALLOWED_IMAGE_EXTENSIONS) {
             if (allowedExt.equalsIgnoreCase(extension)) {
                 isAllowed = true;
                 break;
@@ -78,13 +81,86 @@ public class FileStorageService {
         }
 
         if (!isAllowed) {
-            throw ApiException.badRequest("Only JPG, JPEG, PNG, and WebP images are allowed");
+            throw ApiException.badRequest("Only JPG, JPEG, PNG, WebP, and GIF images are allowed");
         }
 
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
             throw ApiException.badRequest("Invalid file type. Only images are allowed");
         }
+    }
+
+    public String storePostMedia(MultipartFile file, Long postId) {
+        validatePostMedia(file);
+
+        try {
+            Path uploadPath = Paths.get(uploadDir, "posts", String.valueOf(postId));
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            String fileExtension = getFileExtension(file);
+            String newFilename = "media_" + UUID.randomUUID().toString() + "." + fileExtension;
+
+            Path targetLocation = uploadPath.resolve(newFilename);
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+
+            return "/uploads/posts/" + postId + "/" + newFilename;
+
+        } catch (IOException ex) {
+            throw ApiException.internalError("Failed to store file: " + ex.getMessage());
+        }
+    }
+
+    private void validatePostMedia(MultipartFile file) {
+        if (file.isEmpty()) {
+            throw ApiException.badRequest("File is empty");
+        }
+
+        String extension = getFileExtension(file);
+        String contentType = file.getContentType();
+
+        boolean isImage = isImageExtension(extension);
+        boolean isVideo = isVideoExtension(extension);
+
+        if (!isImage && !isVideo) {
+            throw ApiException.badRequest(
+                    "Only JPG, JPEG, PNG, WebP, GIF images and MP4, WebM, MOV videos are allowed");
+        }
+
+        if (isImage) {
+            if (file.getSize() > MAX_IMAGE_SIZE) {
+                throw ApiException.badRequest("Image size exceeds maximum limit of 10MB");
+            }
+            if (contentType == null || !contentType.startsWith("image/")) {
+                throw ApiException.badRequest("Invalid file type. Only images are allowed for this extension");
+            }
+        } else if (isVideo) {
+            if (file.getSize() > MAX_VIDEO_SIZE) {
+                throw ApiException.badRequest("Video size exceeds maximum limit of 100MB");
+            }
+            if (contentType == null || !contentType.startsWith("video/")) {
+                throw ApiException.badRequest("Invalid file type. Only videos are allowed for this extension");
+            }
+        }
+    }
+
+    private boolean isImageExtension(String extension) {
+        for (String allowed : ALLOWED_IMAGE_EXTENSIONS) {
+            if (allowed.equalsIgnoreCase(extension)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isVideoExtension(String extension) {
+        for (String allowed : ALLOWED_VIDEO_EXTENSIONS) {
+            if (allowed.equalsIgnoreCase(extension)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String getFileExtension(MultipartFile file) {
