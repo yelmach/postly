@@ -6,22 +6,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import postly.dto.request.CreatePostRequest;
 import postly.dto.request.UpdatePostRequest;
-import postly.dto.response.PostMediaResponse;
 import postly.dto.response.PostResponse;
-import postly.dto.response.UserResponse;
 import postly.entity.MediaType;
 import postly.entity.PostEntity;
 import postly.entity.PostMediaEntity;
@@ -42,24 +37,22 @@ public class PostService {
     @Autowired
     private FileStorageService fileStorageService;
 
+    @Autowired
+    private UserService userService;
+
     @Transactional
     public PostResponse createPost(CreatePostRequest request) {
-        UserEntity currentUser = getCurrentUser();
+        UserEntity currentUser = userService.getCurrentUserEntity();
 
-        // 1. Create post entity
         PostEntity post = new PostEntity();
         post.setUser(currentUser);
-        post.setTitle(request.getTitle());
-        post.setContent(request.getContent());
+        post.setTitle(request.title());
 
-        // 2. Upload files and create media entities
         List<String> mediaUrls = new ArrayList<>();
         List<PostMediaEntity> mediaEntities = new ArrayList<>();
 
-        if (request.getFiles() != null && !request.getFiles().isEmpty()) {
-            for (int i = 0; i < request.getFiles().size(); i++) {
-                MultipartFile file = request.getFiles().get(i);
-
+        if (request.files() != null && !request.files().isEmpty()) {
+            for (MultipartFile file : request.files()) {
                 String mediaUrl = fileStorageService.storePostMedia(file, post.getId());
                 mediaUrls.add(mediaUrl);
 
@@ -67,35 +60,29 @@ public class PostService {
                 media.setPost(post);
                 media.setMediaUrl(mediaUrl);
                 media.setMediaType(determineMediaType(file));
-                media.setDisplayOrder(i);
                 mediaEntities.add(media);
             }
 
             postMediaRepository.saveAll(mediaEntities);
         }
 
-        // 3. Replace placeholders with actual URLs
-        String finalContent = replacePlaceholders(request.getContent(), mediaUrls);
+        String finalContent = replacePlaceholders(request.content(), mediaUrls);
         post.setContent(finalContent);
         post = postRepository.save(post);
 
-        return mapToResponse(post, mediaEntities);
+        return PostResponse.fromPost(post, mediaEntities);
     }
 
     @Transactional
     public PostResponse updatePost(Long postId, UpdatePostRequest request) {
-        PostEntity post = postRepository.findById(postId)
-                .orElseThrow(() -> ApiException.notFound("Post not found"));
+        PostEntity post = postRepository.findById(postId).orElseThrow(() -> ApiException.notFound("Post not found"));
 
         verifyOwnership(post);
 
-        // 1. Get existing media
-        List<PostMediaEntity> existingMedia = postMediaRepository.findByPostIdOrderByDisplayOrder(postId);
+        List<PostMediaEntity> existingMedia = postMediaRepository.findByPostIdOrderByCreatedAt(postId);
 
-        // 2. Extract URLs from new content to determine what to keep
-        Set<String> urlsInNewContent = extractMediaUrls(request.getContent());
+        Set<String> urlsInNewContent = extractMediaUrls(request.content());
 
-        // 3. Delete media that's no longer in the content
         for (PostMediaEntity media : existingMedia) {
             if (!urlsInNewContent.contains(media.getMediaUrl())) {
                 fileStorageService.deleteFile(media.getMediaUrl());
@@ -103,17 +90,9 @@ public class PostService {
             }
         }
 
-        // 4. Upload new files
         List<String> newMediaUrls = new ArrayList<>();
-        if (request.getFiles() != null && !request.getFiles().isEmpty()) {
-            int currentMaxOrder = existingMedia.stream()
-                    .filter(m -> urlsInNewContent.contains(m.getMediaUrl()))
-                    .mapToInt(PostMediaEntity::getDisplayOrder)
-                    .max()
-                    .orElse(-1);
-
-            for (int i = 0; i < request.getFiles().size(); i++) {
-                MultipartFile file = request.getFiles().get(i);
+        if (request.files() != null && !request.files().isEmpty()) {
+            for (MultipartFile file : request.files()) {
                 String mediaUrl = fileStorageService.storePostMedia(file, postId);
                 newMediaUrls.add(mediaUrl);
 
@@ -121,16 +100,13 @@ public class PostService {
                 media.setPost(post);
                 media.setMediaUrl(mediaUrl);
                 media.setMediaType(determineMediaType(file));
-                media.setDisplayOrder(currentMaxOrder + i + 1);
                 postMediaRepository.save(media);
             }
         }
 
-        // 5. Replace placeholders in content
-        String finalContent = replacePlaceholders(request.getContent(), newMediaUrls);
+        String finalContent = replacePlaceholders(request.content(), newMediaUrls);
 
-        // 6. Update post
-        post.setTitle(request.getTitle());
+        post.setTitle(request.title());
         post.setContent(finalContent);
         post = postRepository.save(post);
 
@@ -139,13 +115,12 @@ public class PostService {
 
     @Transactional
     public void deletePost(Long postId) {
-        PostEntity post = postRepository.findById(postId)
-                .orElseThrow(() -> ApiException.notFound("Post not found"));
+        PostEntity post = postRepository.findById(postId).orElseThrow(() -> ApiException.notFound("Post not found"));
 
         verifyOwnership(post);
 
         // Get all media and delete files
-        List<PostMediaEntity> mediaFiles = postMediaRepository.findByPostIdOrderByDisplayOrder(postId);
+        List<PostMediaEntity> mediaFiles = postMediaRepository.findByPostIdOrderByCreatedAt(postId);
         for (PostMediaEntity media : mediaFiles) {
             fileStorageService.deleteFile(media.getMediaUrl());
         }
@@ -155,8 +130,7 @@ public class PostService {
     }
 
     public PostResponse getPost(Long postId) {
-        PostEntity post = postRepository.findById(postId)
-                .orElseThrow(() -> ApiException.notFound("Post not found"));
+        PostEntity post = postRepository.findById(postId).orElseThrow(() -> ApiException.notFound("Post not found"));
 
         return mapToResponse(post);
     }
@@ -171,20 +145,8 @@ public class PostService {
         return posts.map(this::mapToResponse);
     }
 
-    public List<PostResponse> getUserPostsList(Long userId) {
-        List<PostEntity> posts = postRepository.findByUserIdOrderByCreatedAtDesc(userId);
-        return posts.stream().map(this::mapToResponse).collect(Collectors.toList());
-    }
-
-    // Helper methods
-
-    private UserEntity getCurrentUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (UserEntity) auth.getPrincipal();
-    }
-
     private void verifyOwnership(PostEntity post) {
-        UserEntity currentUser = getCurrentUser();
+        UserEntity currentUser = userService.getCurrentUserEntity();
         if (!post.getUser().getId().equals(currentUser.getId())) {
             throw ApiException.forbidden("You can only modify your own posts");
         }
@@ -211,7 +173,6 @@ public class PostService {
 
         while (matcher.find()) {
             String url = matcher.group(1);
-            // Only track our own uploaded media (starts with /uploads/posts/)
             if (url.startsWith("/uploads/posts/")) {
                 urls.add(url);
             }
@@ -231,33 +192,11 @@ public class PostService {
             }
         }
 
-        return MediaType.IMAGE; // Default fallback
+        return MediaType.IMAGE;
     }
 
     private PostResponse mapToResponse(PostEntity post) {
-        List<PostMediaEntity> mediaFiles = postMediaRepository.findByPostIdOrderByDisplayOrder(post.getId());
-        return mapToResponse(post, mediaFiles);
-    }
-
-    private PostResponse mapToResponse(PostEntity post, List<PostMediaEntity> mediaFiles) {
-        UserResponse author = UserResponse.fromUser(post.getUser()).build();
-
-        List<PostMediaResponse> mediaResponses = mediaFiles.stream()
-                .map(media -> new PostMediaResponse(
-                        media.getId(),
-                        media.getMediaUrl(),
-                        media.getMediaType(),
-                        media.getDisplayOrder(),
-                        media.getCreatedAt()))
-                .collect(Collectors.toList());
-
-        return new PostResponse(
-                post.getId(),
-                post.getTitle(),
-                post.getContent(),
-                author,
-                mediaResponses,
-                post.getCreatedAt(),
-                post.getUpdatedAt());
+        List<PostMediaEntity> mediaFiles = postMediaRepository.findByPostIdOrderByCreatedAt(post.getId());
+        return PostResponse.fromPost(post, mediaFiles);
     }
 }

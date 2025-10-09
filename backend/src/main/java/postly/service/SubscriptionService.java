@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +23,12 @@ public class SubscriptionService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserService userService;
+
     @Transactional
     public void subscribe(Long targetUserId) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity currentUser = (UserEntity) auth.getPrincipal();
+        UserEntity currentUser = userService.getCurrentUserEntity();
 
         if (currentUser.getId().equals(targetUserId)) {
             throw ApiException.badRequest("You cannot subscribe yourself");
@@ -47,8 +47,7 @@ public class SubscriptionService {
 
     @Transactional
     public void unsubscribe(Long targetUserId) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity currentUser = (UserEntity) auth.getPrincipal();
+        UserEntity currentUser = userService.getCurrentUserEntity();
 
         if (currentUser.getId().equals(targetUserId)) {
             throw ApiException.badRequest("You cannot unsubscribe from yourself");
@@ -73,8 +72,7 @@ public class SubscriptionService {
 
         List<SubscriptionEntity> subscriptions = subscriptionRepository.findBySubscribedToId(userId);
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity currentUser = (UserEntity) auth.getPrincipal();
+        UserEntity currentUser = userService.getCurrentUserEntity();
         final Long currentUserId = currentUser.getId();
 
         return subscriptions.stream()
@@ -94,8 +92,7 @@ public class SubscriptionService {
 
         List<SubscriptionEntity> subscriptions = subscriptionRepository.findBySubscriberId(userId);
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity currentUser = (UserEntity) auth.getPrincipal();
+        UserEntity currentUser = userService.getCurrentUserEntity();
         final Long currentUserId = currentUser.getId();
 
         return subscriptions.stream()

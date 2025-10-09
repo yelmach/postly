@@ -10,7 +10,7 @@ import postly.entity.PostMediaEntity;
 @Repository
 public interface PostMediaRepository extends JpaRepository<PostMediaEntity, Long> {
 
-    List<PostMediaEntity> findByPostIdOrderByDisplayOrder(Long postId);
+    List<PostMediaEntity> findByPostIdOrderByCreatedAt(Long postId);
 
     void deleteByPostId(Long postId);
 }

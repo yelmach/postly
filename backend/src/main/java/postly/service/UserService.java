@@ -39,9 +39,13 @@ public class UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public UserResponse getCurrentUser() {
+    public UserEntity getCurrentUserEntity() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity currentUser = (UserEntity) auth.getPrincipal();
+        return (UserEntity) auth.getPrincipal();
+    }
+
+    public UserResponse getCurrentUser() {
+        UserEntity currentUser = getCurrentUserEntity();
 
         long postsCount = postRepository.countByUserId(currentUser.getId());
         long subscribersCount = subscriptionRepository.countBySubscribedToId(currentUser.getId());
@@ -62,12 +66,8 @@ public class UserService {
         long subscribersCount = subscriptionRepository.countBySubscribedToId(user.getId());
         long subscribedCount = subscriptionRepository.countBySubscriberId(user.getId());
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Boolean isSubscribed = null;
-        if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof UserEntity) {
-            UserEntity currentUser = (UserEntity) auth.getPrincipal();
-            isSubscribed = subscriptionService.isSubscribed(currentUser.getId(), user.getId());
-        }
+        UserEntity currentUser = getCurrentUserEntity();
+        boolean isSubscribed = subscriptionService.isSubscribed(currentUser.getId(), user.getId());
 
         return UserResponse.fromUser(user)
                 .postsCount(postsCount)
@@ -78,8 +78,7 @@ public class UserService {
     }
 
     public UserResponse updateUser(UpdateProfileRequest request) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity currentUser = (UserEntity) auth.getPrincipal();
+        UserEntity currentUser = getCurrentUserEntity();
 
         UserEntity user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> ApiException.notFound("User not found"));
@@ -121,8 +120,7 @@ public class UserService {
     }
 
     public UserResponse updateProfilePicture(MultipartFile file) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserEntity currentUser = (UserEntity) auth.getPrincipal();
+        UserEntity currentUser = getCurrentUserEntity();
 
         UserEntity user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> ApiException.notFound("User not found"));
