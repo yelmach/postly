@@ -26,8 +26,7 @@ public class PostMediaEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
-    @NotNull(message = "Post is required")
+    @JoinColumn(name = "post_id", nullable = true)
     private PostEntity post;
 
     @NotBlank(message = "Media URL is required")
@@ -39,6 +38,12 @@ public class PostMediaEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "media_type", nullable = false, length = 20)
     private MediaType mediaType;
+
+    @Column(name = "is_temporary", nullable = false)
+    private Boolean isTemporary = true;
+
+    @Column(name = "expires_at")
+    private LocalDateTime expiresAt;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -90,5 +95,21 @@ public class PostMediaEntity {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Boolean getIsTemporary() {
+        return isTemporary;
+    }
+
+    public void setIsTemporary(Boolean isTemporary) {
+        this.isTemporary = isTemporary;
+    }
+
+    public LocalDateTime getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(LocalDateTime expiresAt) {
+        this.expiresAt = expiresAt;
     }
 }
