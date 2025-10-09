@@ -40,9 +40,6 @@ public class PostMediaEntity {
     @Column(name = "media_type", nullable = false, length = 20)
     private MediaType mediaType;
 
-    @Column(name = "display_order", nullable = false)
-    private Integer displayOrder = 0;
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -85,14 +82,6 @@ public class PostMediaEntity {
 
     public void setMediaType(MediaType mediaType) {
         this.mediaType = mediaType;
-    }
-
-    public Integer getDisplayOrder() {
-        return displayOrder;
-    }
-
-    public void setDisplayOrder(Integer displayOrder) {
-        this.displayOrder = displayOrder;
     }
 
     public LocalDateTime getCreatedAt() {

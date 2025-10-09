@@ -7,8 +7,6 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,21 +32,13 @@ public class PostEntity {
     private UserEntity user;
 
     @NotBlank(message = "Title is required")
-    @Size(max = 255, message = "Title must not exceed 255 characters")
-    @Column(name = "title", nullable = false, length = 255)
+    @Size(max = 100, message = "Title must not exceed 100 characters")
+    @Column(name = "title", nullable = false, length = 100)
     private String title;
 
     @NotBlank(message = "Content is required")
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
-
-    @Size(max = 512, message = "Media URL must not exceed 512 characters")
-    @Column(name = "media_url", length = 512)
-    private String mediaUrl;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "media_type", length = 20)
-    private MediaType mediaType;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -107,22 +97,6 @@ public class PostEntity {
         this.content = content;
     }
 
-    public String getMediaUrl() {
-        return mediaUrl;
-    }
-
-    public void setMediaUrl(String mediaUrl) {
-        this.mediaUrl = mediaUrl;
-    }
-
-    public MediaType getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(MediaType mediaType) {
-        this.mediaType = mediaType;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -137,18 +111,6 @@ public class PostEntity {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public boolean hasMedia() {
-        return mediaUrl != null && !mediaUrl.trim().isEmpty();
-    }
-
-    public boolean isImage() {
-        return mediaType == MediaType.IMAGE;
-    }
-
-    public boolean isVideo() {
-        return mediaType == MediaType.VIDEO;
     }
 
     public List<PostMediaEntity> getMediaFiles() {

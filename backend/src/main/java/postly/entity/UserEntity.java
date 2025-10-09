@@ -58,8 +58,8 @@ public class UserEntity implements UserDetails {
     @Column(name = "role", nullable = false, length = 20)
     private Role role = Role.USER;
 
-    @Size(max = 512, message = "Bio must not exceed 512 characters")
-    @Column(name = "bio", length = 512)
+    @Size(max = 255, message = "Bio must not exceed 255 characters")
+    @Column(name = "bio", length = 255)
     private String bio;
 
     @Size(max = 500, message = "Profile URL must not exceed 512 characters")
