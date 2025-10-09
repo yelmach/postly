@@ -66,8 +66,12 @@ public class UserService {
         long subscribersCount = subscriptionRepository.countBySubscribedToId(user.getId());
         long subscribedCount = subscriptionRepository.countBySubscriberId(user.getId());
 
-        UserEntity currentUser = getCurrentUserEntity();
-        boolean isSubscribed = subscriptionService.isSubscribed(currentUser.getId(), user.getId());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Boolean isSubscribed = null;
+        if (auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof UserEntity) {
+            UserEntity currentUser = (UserEntity) auth.getPrincipal();
+            isSubscribed = subscriptionService.isSubscribed(currentUser.getId(), user.getId());
+        }
 
         return UserResponse.fromUser(user)
                 .postsCount(postsCount)

@@ -47,6 +47,8 @@ public class PostService {
         PostEntity post = new PostEntity();
         post.setUser(currentUser);
         post.setTitle(request.title());
+        post.setContent(request.content());
+        post = postRepository.save(post);
 
         List<String> mediaUrls = new ArrayList<>();
         List<PostMediaEntity> mediaEntities = new ArrayList<>();
@@ -119,14 +121,16 @@ public class PostService {
 
         verifyOwnership(post);
 
-        // Get all media and delete files
-        List<PostMediaEntity> mediaFiles = postMediaRepository.findByPostIdOrderByCreatedAt(postId);
-        for (PostMediaEntity media : mediaFiles) {
-            fileStorageService.deleteFile(media.getMediaUrl());
-        }
-
-        // Delete post (cascade will delete media records)
+        List<PostMediaEntity> mediaFiles = new ArrayList<>(post.getMediaFiles());
         postRepository.delete(post);
+
+        for (PostMediaEntity media : mediaFiles) {
+            try {
+                fileStorageService.deleteFile(media.getMediaUrl());
+            } catch (Exception e) {
+                System.err.println("Failed to delete file: " + media.getMediaUrl() + e);
+            }
+        }
     }
 
     public PostResponse getPost(Long postId) {
