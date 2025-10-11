@@ -90,11 +90,11 @@ public class FileStorageService {
         }
     }
 
-    public String storePostMedia(MultipartFile file, Long postId) {
+    public String storePostMedia(MultipartFile file) {
         validatePostMedia(file);
 
         try {
-            Path uploadPath = Paths.get(uploadDir, "posts", String.valueOf(postId));
+            Path uploadPath = Paths.get(uploadDir, "posts");
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
@@ -105,7 +105,7 @@ public class FileStorageService {
             Path targetLocation = uploadPath.resolve(newFilename);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-            return "/uploads/posts/" + postId + "/" + newFilename;
+            return "/uploads/posts/" + newFilename;
 
         } catch (IOException ex) {
             throw ApiException.internalError("Failed to store file: " + ex.getMessage());
