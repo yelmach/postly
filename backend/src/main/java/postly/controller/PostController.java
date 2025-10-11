@@ -1,7 +1,5 @@
 package postly.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,14 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.Valid;
-import postly.dto.request.CreatePostRequest;
-import postly.dto.request.UpdatePostRequest;
+import postly.dto.request.PostRequest;
 import postly.dto.response.PostResponse;
 import postly.service.PostService;
 
@@ -32,13 +28,8 @@ public class PostController {
     private PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostResponse> createPost(
-            @Valid @RequestParam("title") String title,
-            @RequestParam("content") String content,
-            @RequestParam(value = "files", required = false) List<MultipartFile> files) {
-
-        CreatePostRequest request = new CreatePostRequest(title, content, files);
-        PostResponse post = postService.createPost(request);
+    public ResponseEntity<PostResponse> createPost(@RequestBody PostRequest postRequest) {
+        PostResponse post = postService.createPost(postRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
 
@@ -49,9 +40,8 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PostResponse>> getAllPosts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<PostResponse>> getAllPosts(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<PostResponse> posts = postService.getAllPosts(pageable);
@@ -62,7 +52,7 @@ public class PostController {
     public ResponseEntity<Page<PostResponse>> getUserPosts(
             @PathVariable Long userId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "20") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<PostResponse> posts = postService.getUserPosts(userId, pageable);
@@ -70,14 +60,8 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostResponse> updatePost(
-            @PathVariable Long id,
-            @Valid @RequestParam("title") String title,
-            @RequestParam("content") String content,
-            @RequestParam(value = "files", required = false) List<MultipartFile> files) {
-
-        UpdatePostRequest request = new UpdatePostRequest(title, content, files);
-        PostResponse post = postService.updatePost(id, request);
+    public ResponseEntity<PostResponse> updatePost(@PathVariable Long id, @RequestBody PostRequest postRequest) {
+        PostResponse post = postService.updatePost(id, postRequest);
         return ResponseEntity.ok(post);
     }
 
