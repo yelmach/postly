@@ -93,14 +93,11 @@ export class NewPost implements OnInit, OnDestroy {
         },
         '|',
         'preview',
-        'side-by-side',
-        'fullscreen',
-        '|',
-        'guide',
       ],
-      status: false,
-      minHeight: '300px',
-      maxHeight: '400px',
+      status: ['lines', 'words', 'cursor'],
+
+      minHeight: '400px',
+      maxHeight: '500px',
     });
 
     this.easyMDE.codemirror.on('change', () => {

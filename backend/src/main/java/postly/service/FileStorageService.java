@@ -22,7 +22,7 @@ public class FileStorageService {
 
     private static final long MAX_PROFILE_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
-    private static final long MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100MB
+    private static final long MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB
     private static final String[] ALLOWED_IMAGE_EXTENSIONS = { "jpg", "jpeg", "png", "webp", "gif" };
     private static final String[] ALLOWED_VIDEO_EXTENSIONS = { "mp4", "webm", "mov" };
 

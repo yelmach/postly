@@ -32,7 +32,7 @@ public class PostEntity {
     private UserEntity user;
 
     @NotBlank(message = "Title is required")
-    @Size(max = 100, message = "Title must not exceed 100 characters")
+    @Size(min = 3, max = 100, message = "Title must not exceed 100 characters")
     @Column(name = "title", nullable = false, length = 100)
     private String title;
 

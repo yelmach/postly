@@ -15,3 +15,27 @@ body {
 html.dark-theme {
   color-scheme: dark;
 }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--mat-sys-outline-variant) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--mat-sys-outline-variant);
+  border-radius: 5px;
+  border: 2px solid var(--mat-sys-surface-dim);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--mat-sys-outline);
+}
