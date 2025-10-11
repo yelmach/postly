@@ -1,0 +1,305 @@
+// Import EasyMDE styles
+@import 'easymde/dist/easymde.min.css';
+
+.new-post-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+// ============= HEADER =============
+.post-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  .title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .header-icon {
+      font-size: 2rem;
+      width: 2rem;
+      height: 2rem;
+      color: var(--mat-sys-primary);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--mat-sys-on-surface);
+
+      @media (max-width: 568px) {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .close-btn {
+    color: var(--mat-sys-on-surface-variant);
+
+    &:hover {
+      color: var(--mat-sys-error);
+      background: color-mix(in srgb, var(--mat-sys-error) 8%, transparent);
+    }
+  }
+}
+
+// ============= FORM =============
+.post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// ============= EDITOR SECTION =============
+.editor-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .editor-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+    margin-left: 0.25rem;
+  }
+
+  .editor-error {
+    font-size: 0.75rem;
+    color: var(--mat-sys-error);
+    margin-top: 0.25rem;
+    margin-left: 1rem;
+  }
+}
+
+// ============= EASYMDE =============
+::ng-deep {
+  .EasyMDEContainer {
+    .CodeMirror {
+      background: var(--mat-sys-surface-bright);
+      color: var(--mat-sys-on-surface);
+      border: 1px solid var(--mat-sys-outline-variant);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.9375rem;
+      padding: 0.5rem;
+
+      &.CodeMirror-focused {
+        border-color: var(--mat-sys-primary);
+        box-shadow: 0 0 0 1px var(--mat-sys-primary);
+      }
+
+      .CodeMirror-cursor {
+        border-left-color: var(--mat-sys-primary);
+      }
+
+      .CodeMirror-selected {
+        background: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+      }
+
+      .CodeMirror-line {
+        &::selection {
+          background: color-mix(in srgb, var(--mat-sys-primary) 20%, transparent);
+        }
+      }
+
+      .cm-header {
+        color: var(--mat-sys-primary);
+        font-weight: 600;
+      }
+
+      .cm-strong {
+        color: var(--mat-sys-on-surface);
+        font-weight: 700;
+      }
+
+      .cm-em {
+        color: var(--mat-sys-on-surface);
+        font-style: italic;
+      }
+
+      .cm-link {
+        color: var(--mat-sys-tertiary);
+      }
+
+      .cm-url {
+        color: var(--mat-sys-secondary);
+      }
+
+      .cm-quote {
+        color: var(--mat-sys-on-surface-variant);
+        font-style: italic;
+      }
+    }
+
+    .editor-toolbar {
+      background: var(--mat-sys-surface-container-high);
+      border: 1px solid var(--mat-sys-outline-variant);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      padding: 0.5rem;
+
+      button {
+        color: var(--mat-sys-on-surface) !important;
+        background: transparent !important;
+
+        &:hover {
+          background: var(--mat-sys-surface-container-highest) !important;
+          border-radius: 4px;
+        }
+
+        &.active {
+          background: var(--mat-sys-primary-container) !important;
+          color: var(--mat-sys-on-primary-container) !important;
+        }
+      }
+
+      i.separator {
+        border-left: 1px solid var(--mat-sys-outline-variant);
+        border-right: none;
+      }
+    }
+
+    .editor-statusbar {
+      background: var(--mat-sys-surface-container-high);
+      color: var(--mat-sys-on-surface-variant);
+      border: 1px solid var(--mat-sys-outline-variant);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      padding: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .editor-preview,
+    .editor-preview-side {
+      background: var(--mat-sys-surface-bright);
+      color: var(--mat-sys-on-surface);
+      border: 1px solid var(--mat-sys-outline-variant);
+      padding: 1rem;
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: var(--mat-sys-on-surface);
+        border-bottom: 1px solid var(--mat-sys-outline-variant);
+      }
+
+      a {
+        color: var(--mat-sys-tertiary);
+      }
+
+      code {
+        background: var(--mat-sys-surface-container-highest);
+        color: var(--mat-sys-on-surface);
+        padding: 0.125rem 0.25rem;
+        border-radius: 4px;
+      }
+      img {
+        max-width: 100%;
+      }
+
+      pre {
+        background: var(--mat-sys-surface-container-highest);
+        border: 1px solid var(--mat-sys-outline-variant);
+        border-radius: 8px;
+        padding: 1rem;
+
+        code {
+          background: transparent;
+          padding: 0;
+        }
+      }
+
+      blockquote {
+        border-left: 4px solid var(--mat-sys-primary);
+        color: var(--mat-sys-on-surface-variant);
+        padding-left: 1rem;
+      }
+    }
+  }
+}
+
+// ============= UPLOAD LOADING =============
+.upload-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--mat-sys-surface-container-high);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.875rem;
+}
+
+// ============= FORM ACTIONS =============
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+
+  button {
+    min-width: 120px;
+    height: 44px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+
+    @media (max-width: 568px) {
+      min-width: 100px;
+      font-size: 0.875rem;
+    }
+
+    .button-content {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      mat-icon {
+        font-size: 1.25rem;
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+    }
+  }
+
+  @media (max-width: 568px) {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// ============= DARK MODE ADJUSTMENTS =============
+html.dark-theme {
+  ::ng-deep {
+    .EasyMDEContainer {
+      .CodeMirror {
+        background: var(--mat-sys-surface-bright);
+
+        .cm-header {
+          color: var(--mat-sys-primary);
+        }
+      }
+
+      .editor-toolbar {
+        background: var(--mat-sys-surface-container-high);
+      }
+
+      .editor-preview,
+      .editor-preview-side {
+        background: var(--mat-sys-surface-bright);
+      }
+    }
+  }
+}

@@ -2,6 +2,7 @@ package postly.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,8 +44,6 @@ public class PostService {
         post.setContent(request.content());
         post = postRepository.save(post);
 
-        List<PostMediaEntity> mediaEntities = new ArrayList<>();
-
         if (request.mediaUrls() != null && !request.mediaUrls().isEmpty()) {
             List<PostMediaEntity> temporaryMedia = postMediaRepository.findByMediaUrlIn(request.mediaUrls());
 
@@ -53,11 +52,10 @@ public class PostService {
                     media.setPost(post);
                     media.setIsTemporary(false);
                     media.setExpiresAt(null);
-                    mediaEntities.add(media);
                 }
             }
 
-            postMediaRepository.saveAll(mediaEntities);
+            postMediaRepository.saveAll(temporaryMedia);
         }
 
         return PostResponse.fromPost(post);
@@ -69,7 +67,23 @@ public class PostService {
 
         verifyOwnership(post);
 
-        List<PostMediaEntity> mediaEntities = new ArrayList<>();
+        // Get current media linked to post
+        List<PostMediaEntity> currentMedia = postMediaRepository.findByPostIdOrderByCreatedAt(postId);
+        List<String> currentUrls = currentMedia.stream().map(PostMediaEntity::getMediaUrl).collect(Collectors.toList());
+
+        // find and delete old media no longer in content
+        List<String> urlsToRemove = currentUrls.stream()
+                .filter(url -> !request.content().contains(url))
+                .collect(Collectors.toList());
+
+        if (!urlsToRemove.isEmpty()) {
+            for (PostMediaEntity media : currentMedia) {
+                if (urlsToRemove.contains(media.getMediaUrl())) {
+                    postMediaRepository.delete(media);
+                    fileStorageService.deleteFile(media.getMediaUrl());
+                }
+            }
+        }
 
         if (request.mediaUrls() != null && !request.mediaUrls().isEmpty()) {
             List<PostMediaEntity> temporaryMedia = postMediaRepository.findByMediaUrlIn(request.mediaUrls());
@@ -79,13 +93,12 @@ public class PostService {
                     media.setPost(post);
                     media.setIsTemporary(false);
                     media.setExpiresAt(null);
-                    mediaEntities.add(media);
                 }
             }
-
-            postMediaRepository.saveAll(mediaEntities);
+            postMediaRepository.saveAll(temporaryMedia);
         }
 
+        // Update post content and title
         post.setTitle(request.title());
         post.setContent(request.content());
         post = postRepository.save(post);
