@@ -1,0 +1,98 @@
+@if (isLoading()) {
+<div class="loading-container">
+  <app-loading-spinner />
+</div>
+} @else if (errorMessage()) {
+<div class="error-container">
+  <app-error-state
+    title="Post Not Found"
+    [message]="errorMessage()"
+    actionLabel="Retry"
+    (actionClick)="retry()"
+  />
+</div>
+} @else if (post()) {
+<div class="post-detail-container">
+  <!-- Back Button -->
+  <button mat-icon-button class="back-button" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <mat-card class="post-detail-card">
+    <!-- Post Title Header -->
+    <mat-card-header class="title-header">
+      <h1 class="post-title">{{ post()!.title }}</h1>
+    </mat-card-header>
+
+    <!-- User Info Section -->
+    <div class="user-info-section">
+      <div class="author-info" (click)="onAuthorClick($event)">
+        @if (post()!.author.profileUrl) {
+        <img
+          [src]="post()!.author.profileUrl"
+          [alt]="post()!.author.username"
+          class="author-avatar"
+        />
+        } @else {
+        <div class="author-avatar-placeholder">
+          <mat-icon>person</mat-icon>
+        </div>
+        }
+        <div class="author-details">
+          <span class="author-name">
+            {{ post()!.author.firstName }} {{ post()!.author.lastName }}
+          </span>
+          <span class="post-time">{{ getRelativeTime(post()!.createdAt) }}</span>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button mat-icon-button (click)="onLikeClick()" class="like-button">
+          <mat-icon>favorite_border</mat-icon>
+        </button>
+
+        <!-- Three-dot menu -->
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+
+        <mat-menu #menu="matMenu">
+          @if (isPostOwner()) {
+          <button mat-menu-item (click)="onEditClick()">
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </button>
+          <button mat-menu-item (click)="onDeleteClick()" class="delete-option">
+            <mat-icon>delete</mat-icon>
+            <span>Delete</span>
+          </button>
+          } @else {
+          <button mat-menu-item (click)="onReportClick()">
+            <mat-icon>flag</mat-icon>
+            <span>Report</span>
+          </button>
+          }
+        </mat-menu>
+      </div>
+    </div>
+
+    <!-- Post Content -->
+    <mat-card-content class="post-content">
+      <div class="markdown-content" [innerHTML]="renderedContent()"></div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Comments Section -->
+  <mat-card class="comments-section">
+    <mat-card-header class="comments-header">
+      <h2 class="comments-title">Comments</h2>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="comments-placeholder">
+        <mat-icon class="placeholder-icon">comment</mat-icon>
+        <p class="placeholder-text">No comments</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+}

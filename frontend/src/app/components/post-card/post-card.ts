@@ -70,7 +70,7 @@ export class PostCard {
   constructor(private router: Router) {}
 
   onPostClick() {
-    // TODO
+    this.router.navigate(['/post', this.post().id]);
   }
 
   onAuthorClick(event: Event) {

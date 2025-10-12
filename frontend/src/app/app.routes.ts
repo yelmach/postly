@@ -39,6 +39,10 @@ export const routes: Routes = [
         path: 'new-post',
         loadComponent: () => import('./pages/new-post/new-post').then((m) => m.NewPost),
       },
+      {
+        path: 'post/:id',
+        loadComponent: () => import('./pages/post-detail/post-detail').then((m) => m.PostDetail),
+      },
     ],
   },
   {
