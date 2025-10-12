@@ -224,3 +224,10 @@
   gap: 0.5rem;
   padding: 0.5rem;
 }
+
+// ============= POSTS LIST =============
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+}

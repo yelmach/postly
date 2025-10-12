@@ -87,8 +87,14 @@
         </ng-template>
 
         <div class="tab-content">
-          @if (postsCount() > 0) {
-          <div class="posts-grid"></div>
+          @if (postsLoading()) {
+          <app-loading-spinner [size]="'small'" [message]="'Loading posts...'" />
+          } @else if (posts().length > 0) {
+          <div class="posts-list">
+            @for (post of posts(); track post.id) {
+            <app-post-card [post]="post" [currentUserId]="authService.currentUser()?.id" />
+            }
+          </div>
           } @else {
           <app-empty-state [icon]="'article'" [message]="'No posts yet'" />
           }

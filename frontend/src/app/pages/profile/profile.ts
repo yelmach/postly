@@ -8,10 +8,13 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '@/services/auth.service';
 import { UserService } from '@/services/user.service';
+import { PostService } from '@/services/post.service';
 import { User } from '@/models/user';
+import { PostResponse } from '@/models/post';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EditProfileDialog } from '@/components/edit-profile-dialog/edit-profile-dialog';
 import { UserCardComponent } from '@/components/user-card/user-card.component';
+import { PostCard } from '@/components/post-card/post-card';
 import { LoadingSpinnerComponent } from '@/components/loading-spinner/loading-spinner.component';
 import { ErrorStateComponent } from '@/components/error-state/error-state.component';
 import { EmptyStateComponent } from '@/components/empty-state/empty-state.component';
@@ -26,6 +29,7 @@ import { EmptyStateComponent } from '@/components/empty-state/empty-state.compon
     MatDialogModule,
     MatProgressSpinnerModule,
     UserCardComponent,
+    PostCard,
     LoadingSpinnerComponent,
     ErrorStateComponent,
     EmptyStateComponent,
@@ -36,6 +40,7 @@ import { EmptyStateComponent } from '@/components/empty-state/empty-state.compon
 export class Profile implements OnInit {
   authService = inject(AuthService);
   userService = inject(UserService);
+  postService = inject(PostService);
   route = inject(ActivatedRoute);
   router = inject(Router);
   dialog = inject(MatDialog);
@@ -52,10 +57,11 @@ export class Profile implements OnInit {
   subscribersCount = signal(0);
   subscribedCount = signal(0);
 
-  posts = signal<[]>([]);
+  posts = signal<PostResponse[]>([]);
   subscribers = signal<User[]>([]);
   subscriptions = signal<User[]>([]);
 
+  postsLoading = signal(false);
   subscribersLoading = signal(false);
   subscriptionsLoading = signal(false);
 
@@ -63,6 +69,10 @@ export class Profile implements OnInit {
     this.route.params.subscribe((params) => {
       const username = params['username'];
       this.loadUserProfile(username);
+
+      const currentUser = this.user();
+      if (!currentUser) return;
+      this.loadPosts(currentUser.id);
     });
   }
 
@@ -167,11 +177,29 @@ export class Profile implements OnInit {
     const currentUser = this.user();
     if (!currentUser) return;
 
-    if (index === 1) {
+    if (index === 0) {
+      this.loadPosts(currentUser.id);
+    } else if (index === 1) {
       this.loadSubscribers(currentUser.id);
     } else if (index === 2) {
       this.loadSubscriptions(currentUser.id);
     }
+  }
+
+  loadPosts(userId: number) {
+    if (this.posts().length > 0) return;
+
+    this.postsLoading.set(true);
+    this.postService.getUserPosts(userId, 0, 20).subscribe({
+      next: (response: any) => {
+        this.posts.set(response.content || []);
+        this.postsLoading.set(false);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Failed to load posts:', error);
+        this.postsLoading.set(false);
+      },
+    });
   }
 
   loadSubscribers(userId: number) {
