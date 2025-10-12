@@ -1,0 +1,97 @@
+<mat-card class="post-card" (click)="onPostClick()">
+  <!-- Post Header -->
+  <mat-card-header>
+    <div class="post-header">
+      <div class="author-info" (click)="onAuthorClick($event)">
+        @if (post().author.profileUrl) {
+        <img
+          [src]="post().author.profileUrl"
+          [alt]="post().author.username"
+          class="author-avatar"
+        />
+        } @else {
+        <div class="author-avatar-placeholder">
+          <mat-icon>person</mat-icon>
+        </div>
+        }
+        <div class="author-details">
+          <span class="author-name">
+            {{ post().author.firstName }} {{ post().author.lastName }}
+          </span>
+          <span class="post-time"> {{ getRelativeTime(post().createdAt) }} </span>
+        </div>
+      </div>
+
+      <!-- Three-dot menu -->
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        (click)="$event.stopPropagation()"
+        class="menu-button"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu">
+        @if (isPostOwner()) {
+        <button mat-menu-item (click)="onEditClick($event)">
+          <mat-icon>edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        <button mat-menu-item (click)="onDeleteClick($event)" class="delete-option">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+        } @else {
+        <button mat-menu-item (click)="onReportClick($event)">
+          <mat-icon>flag</mat-icon>
+          <span>Report</span>
+        </button>
+        }
+      </mat-menu>
+    </div>
+  </mat-card-header>
+
+  <!-- Post Content -->
+  <mat-card-content>
+    @if (post().title) {
+    <h2 class="post-title">{{ post().title }}</h2>
+    }
+    <p class="post-content">{{ plainTextContent() }}</p>
+
+    <!-- Media Preview -->
+    @if (post().mediaUrls && post().mediaUrls.length > 0) {
+    <div class="post-media">
+      @if (post().mediaUrls[0].mediaType === 'IMAGE') {
+      <img
+        [src]="post().mediaUrls[0].mediaUrl"
+        [alt]="post().mediaUrls[0].id || 'Post image'"
+        class="media-image"
+        (click)="onMediaClick($event, post().mediaUrls[0].mediaUrl)"
+      />
+      } @else if (post().mediaUrls[0].mediaType === 'VIDEO') {
+      <video
+        [src]="post().mediaUrls[0].mediaUrl"
+        class="media-video"
+        controls
+        (click)="$event.stopPropagation()"
+      >
+        Your browser does not support the video tag.
+      </video>
+      }
+    </div>
+    }
+  </mat-card-content>
+
+  <!-- Post Actions -->
+  <mat-card-actions class="post-actions">
+    <button mat-button (click)="onLikeClick($event)" class="action-button">
+      <mat-icon>favorite_border</mat-icon>
+      <span>Like</span>
+    </button>
+    <button mat-button (click)="onPostClick()" class="action-button">
+      <mat-icon>comment</mat-icon>
+      <span>Comment</span>
+    </button>
+  </mat-card-actions>
+</mat-card>

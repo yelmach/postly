@@ -18,6 +18,7 @@ export interface PostResponse {
   author: User;
   createdAt: string;
   updatedAt: string;
+  mediaUrls: PostMediaResponse[];
 }
 
 export interface PostMediaResponse {
