@@ -1,1 +1,38 @@
-<p>home works!</p>
+<div class="home-container">
+  @if (isLoading()) {
+  <app-loading-spinner [size]="'medium'" [message]="'Loading posts...'" />
+  } @else if (errorMessage()) {
+  <app-error-state [title]="errorMessage()" [actionLabel]="'Retry'" (actionClick)="retry()" />
+  } @else {
+  <div class="home-content">
+    <!-- Posts -->
+    <div class="main-content">
+      @if (posts().length > 0) {
+      <div class="posts-list">
+        @for (post of posts(); track post.id) {
+        <app-post-card [post]="post" [currentUserId]="authService.currentUser()?.id" />
+        }
+
+        <!-- Load More Button -->
+        @if (isLoadingMore()) {
+        <div class="load-more-container">
+          <app-loading-spinner [size]="'small'" [message]="'Loading more posts...'" />
+        </div>
+        }
+      </div>
+      } @else {
+      <app-empty-state
+        [icon]="'article'"
+        [message]="'No posts yet. Start following users to see their posts!'"
+      />
+      }
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <app-profile-info-card [user]="authService.currentUser()!" />
+      <app-suggested-users-card />
+    </div>
+  </div>
+  }
+</div>
