@@ -136,7 +136,7 @@ public class PostService {
     }
 
     public Page<PostResponse> getUserPosts(Long userId, Pageable pageable) {
-        Page<PostEntity> posts = postRepository.findPostsFromSubscribedUsers(userId, pageable);
+        Page<PostEntity> posts = postRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
         return posts.map(post -> PostResponse.fromPost(post));
     }
 
