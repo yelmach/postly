@@ -158,4 +158,14 @@ public class UserService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public List<UserResponse> getSuggestedUsers(int limit) {
+        UserEntity currentUser = getCurrentUserEntity();
+
+        List<UserEntity> users = userRepository.findSuggestedUsers(currentUser.getId());
+
+        return users.stream().limit(limit).map(user -> {
+            return UserResponse.fromUser(user).build();
+        }).collect(Collectors.toList());
+    }
 }

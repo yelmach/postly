@@ -11,12 +11,7 @@
     } @else if (suggestedUsers().length > 0) {
     <div class="users-list">
       @for (user of suggestedUsers(); track user.id) {
-      <app-user-card
-        [user]="user"
-        [currentUserId]="authService.currentUser()?.id"
-        (userClick)="navigateToProfile(user.username)"
-        (showSubscribeButton)="(false)"
-      />
+      <app-user-card [user]="user" (userClick)="navigateToProfile(user.username)" />
       }
     </div>
     } @else {

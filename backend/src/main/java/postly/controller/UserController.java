@@ -79,4 +79,11 @@ public class UserController {
         List<UserResponse> users = userService.searchUsers(query);
         return ResponseEntity.ok(users);
     }
+
+    @GetMapping("/suggestions")
+    public ResponseEntity<List<UserResponse>> getSuggestedUsers(
+            @RequestParam(defaultValue = "5") int limit) {
+        List<UserResponse> users = userService.getSuggestedUsers(limit);
+        return ResponseEntity.ok(users);
+    }
 }

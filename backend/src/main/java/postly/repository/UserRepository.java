@@ -12,7 +12,6 @@ import postly.entity.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
-
     @Query("SELECT u FROM UserEntity u where u.username = ?1 OR u.email = ?1")
     public Optional<UserEntity> findByUsernameOrEmail(String login);
 
@@ -28,4 +27,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
            "LOWER(u.lastName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(CONCAT(u.firstName, ' ', u.lastName)) LIKE LOWER(CONCAT('%', :query, '%'))")
     public List<UserEntity> searchUsers(@Param("query") String query);
+
+    @Query("SELECT u FROM UserEntity u WHERE u.id != :currentUserId " +
+           "AND u.id NOT IN (SELECT s.subscribedTo.id FROM SubscriptionEntity s WHERE s.subscriber.id = :currentUserId) " +
+           "ORDER BY (SELECT COUNT(s2) FROM SubscriptionEntity s2 WHERE s2.subscribedTo.id = u.id) DESC")
+    public List<UserEntity> findSuggestedUsers(@Param("currentUserId") Long currentUserId);
 }
