@@ -1,0 +1,41 @@
+.card-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.card-content {
+  padding: 0.5rem;
+  min-height: 150px;
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
+  }
+
+  .users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.empty-message {
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 14px;
+  padding: 24px 0;
+  margin: 0;
+}
+
+@media (max-width: 868px) {
+  .suggested-users-card {
+    display: none;
+  }
+}
