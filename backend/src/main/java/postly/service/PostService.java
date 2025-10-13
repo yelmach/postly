@@ -34,6 +34,12 @@ public class PostService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LikeService likeService;
+
+    @Autowired
+    private CommentService commentService;
+
     @Transactional
     public PostResponse createPost(PostRequest request) {
         UserEntity currentUser = userService.getCurrentUserEntity();
@@ -126,18 +132,37 @@ public class PostService {
 
     public PostResponse getPost(Long postId) {
         PostEntity post = postRepository.findById(postId).orElseThrow(() -> ApiException.notFound("Post not found"));
+        UserEntity currentUser = userService.getCurrentUserEntity();
 
-        return PostResponse.fromPost(post);
+        Long likesCount = likeService.countLikesByPost(postId);
+        Long commentsCount = commentService.countCommentsByPost(postId);
+        Boolean isLiked = likeService.isPostLikedByUser(postId, currentUser.getId());
+
+        return PostResponse.fromPost(post, likesCount, commentsCount, isLiked);
     }
 
     public Page<PostResponse> getAllPosts(Pageable pageable) {
-        Page<PostEntity> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
-        return posts.map(post -> PostResponse.fromPost(post));
+        UserEntity currentUser = userService.getCurrentUserEntity();
+
+        Page<PostEntity> posts = postRepository.findPostsFromSubscribedUsers(currentUser.getId(), pageable);
+        return posts.map(post -> {
+            Long likesCount = likeService.countLikesByPost(post.getId());
+            Long commentsCount = commentService.countCommentsByPost(post.getId());
+            Boolean isLiked = likeService.isPostLikedByUser(post.getId(), currentUser.getId());
+            return PostResponse.fromPost(post, likesCount, commentsCount, isLiked);
+        });
     }
 
     public Page<PostResponse> getUserPosts(Long userId, Pageable pageable) {
+        UserEntity currentUser = userService.getCurrentUserEntity();
+
         Page<PostEntity> posts = postRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
-        return posts.map(post -> PostResponse.fromPost(post));
+        return posts.map(post -> {
+            Long likesCount = likeService.countLikesByPost(post.getId());
+            Long commentsCount = commentService.countCommentsByPost(post.getId());
+            Boolean isLiked = likeService.isPostLikedByUser(post.getId(), currentUser.getId());
+            return PostResponse.fromPost(post, likesCount, commentsCount, isLiked);
+        });
     }
 
     private void verifyOwnership(PostEntity post) {
