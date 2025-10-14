@@ -25,6 +25,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("User not found with username or email: " + login);
         }
 
-        return user.get();
+        UserEntity userEntity = user.get();
+
+        if (userEntity.isActiveBan()) {
+            String banMessage = "Your account has been banned";
+            if (userEntity.getBannedUntil() != null) {
+                banMessage += " until " + userEntity.getBannedUntil();
+            } else {
+                banMessage += " permanently";
+            }
+            if (userEntity.getBanReason() != null) {
+                banMessage += ". Reason: " + userEntity.getBanReason();
+            }
+            throw new UsernameNotFoundException(banMessage);
+        }
+
+        return userEntity;
     }
 }

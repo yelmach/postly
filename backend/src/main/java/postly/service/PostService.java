@@ -134,6 +134,10 @@ public class PostService {
         PostEntity post = postRepository.findById(postId).orElseThrow(() -> ApiException.notFound("Post not found"));
         UserEntity currentUser = userService.getCurrentUserEntity();
 
+        if (post.getIsHidden() && !currentUser.isAdmin() && !post.getUser().getId().equals(currentUser.getId())) {
+            throw ApiException.notFound("Post not found");
+        }
+
         Long likesCount = likeService.countLikesByPost(postId);
         Long commentsCount = commentService.countCommentsByPost(postId);
         Boolean isLiked = likeService.isPostLikedByUser(postId, currentUser.getId());
