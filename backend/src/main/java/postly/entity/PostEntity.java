@@ -46,6 +46,9 @@ public class PostEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(name = "is_hidden", nullable = false)
+    private Boolean isHidden = false;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostMediaEntity> mediaFiles = new ArrayList<>();
 
@@ -129,5 +132,13 @@ public class PostEntity {
     public void removeMediaFile(PostMediaEntity media) {
         mediaFiles.remove(media);
         media.setPost(null);
+    }
+
+    public Boolean getIsHidden() {
+        return isHidden;
+    }
+
+    public void setIsHidden(Boolean isHidden) {
+        this.isHidden = isHidden;
     }
 }

@@ -69,6 +69,15 @@ public class UserEntity implements UserDetails {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "is_banned", nullable = false)
+    private Boolean isBanned = false;
+
+    @Column(name = "banned_until")
+    private LocalDateTime bannedUntil;
+
+    @Column(name = "ban_reason", columnDefinition = "TEXT")
+    private String banReason;
+
     public UserEntity() {
     }
 
@@ -175,5 +184,39 @@ public class UserEntity implements UserDetails {
 
     public boolean isUser() {
         return role == Role.USER;
+    }
+
+    public Boolean getIsBanned() {
+        return isBanned;
+    }
+
+    public void setIsBanned(Boolean isBanned) {
+        this.isBanned = isBanned;
+    }
+
+    public LocalDateTime getBannedUntil() {
+        return bannedUntil;
+    }
+
+    public void setBannedUntil(LocalDateTime bannedUntil) {
+        this.bannedUntil = bannedUntil;
+    }
+
+    public String getBanReason() {
+        return banReason;
+    }
+
+    public void setBanReason(String banReason) {
+        this.banReason = banReason;
+    }
+
+    public boolean isActiveBan() {
+        if (!isBanned) {
+            return false;
+        }
+        if (bannedUntil == null) {
+            return true;
+        }
+        return LocalDateTime.now().isBefore(bannedUntil);
     }
 }
