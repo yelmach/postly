@@ -173,13 +173,27 @@ export class PostDetail implements OnInit {
   }
 
   onEditClick() {
-    // TODO:
-    console.log('Edit clicked');
+    const post = this.post();
+    if (post) {
+      this.router.navigate(['/edit-post'], { state: { post: post } });
+    }
   }
 
   onDeleteClick() {
-    // TODO
-    console.log('Delete clicked');
+    const post = this.post();
+    if (!post) return;
+
+    if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+      this.postService.deletePost(post.id).subscribe({
+        next: () => {
+          this.router.navigate(['/home']);
+        },
+        error: (error) => {
+          console.error('Failed to delete post:', error);
+          alert('Failed to delete post. Please try again.');
+        },
+      });
+    }
   }
 
   onReportClick() {

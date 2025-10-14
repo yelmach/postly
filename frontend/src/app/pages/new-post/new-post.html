@@ -1,79 +1,8 @@
 <div class="new-post-container">
-  <!-- Header -->
-  <div class="post-header">
-    <div class="title">
-      <mat-icon class="header-icon">edit_note</mat-icon>
-      <h1>Create New Article</h1>
-    </div>
-    <button mat-icon-button class="close-btn" (click)="onCancel()" matTooltip="Cancel">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-
-  @if (formError()) {
-  <app-error-banner [message]="formError()" />
-  }
-
-  <!-- Form -->
-  <form class="post-form" [formGroup]="postForm" (submit)="onSubmit()">
-    <!-- Title Field -->
-    <mat-form-field appearance="outline" class="title-field">
-      <mat-label>Post Title</mat-label>
-      <input
-        matInput
-        type="text"
-        placeholder="Enter a title for your article"
-        formControlName="title"
-        maxlength="100"
-      />
-      <mat-icon matPrefix>title</mat-icon>
-      <mat-hint align="end">{{ postForm.get('title')?.value?.length || 0 }}/100</mat-hint>
-      <mat-error>{{ getErrorMessage('title') }}</mat-error>
-    </mat-form-field>
-
-    <!-- Content Editor -->
-    <div class="editor-section">
-      <label class="editor-label">Content</label>
-      <textarea id="content-editor" formControlName="content"></textarea>
-      @if (postForm.get('content')?.invalid && postForm.get('content')?.touched) {
-      <div class="editor-error">{{ getErrorMessage('content') }}</div>
-      }
-    </div>
-
-    <!-- Upload Loading Indicator -->
-    @if (isUploadingMedia()) {
-    <div class="upload-loading">
-      <mat-spinner diameter="24"></mat-spinner>
-      <span>Uploading media...</span>
-    </div>
-    }
-
-    <!-- Action Buttons -->
-    <div class="form-actions">
-      <button mat-stroked-button type="button" (click)="onCancel()" [disabled]="isSubmitting()">
-        <mat-icon>close</mat-icon>
-        Cancel
-      </button>
-
-      <button
-        mat-flat-button
-        color="primary"
-        type="submit"
-        [disabled]="postForm.invalid || isSubmitting() || isUploadingMedia()"
-        class="submit-btn"
-      >
-        @if (isSubmitting()) {
-        <div class="button-content">
-          <mat-spinner diameter="20" color="accent"></mat-spinner>
-          <span>Publishing...</span>
-        </div>
-        } @else {
-        <div class="button-content">
-          <mat-icon>send</mat-icon>
-          <span>Publish Article</span>
-        </div>
-        }
-      </button>
-    </div>
-  </form>
+  <app-post-form
+    [mode]="'create'"
+    [isSubmitting]="isSubmitting()"
+    (formSubmit)="onFormSubmit($event)"
+    (formCancel)="onFormCancel()"
+  />
 </div>

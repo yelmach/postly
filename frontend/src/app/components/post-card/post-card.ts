@@ -112,12 +112,23 @@ export class PostCard {
 
   onEditClick(event: Event) {
     event.stopPropagation();
-    // TODO
+    this.router.navigate(['/edit-post'], { state: { post: this.post() } });
   }
 
   onDeleteClick(event: Event) {
     event.stopPropagation();
-    // TODO
+
+    if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+      this.postService.deletePost(this.post().id).subscribe({
+        next: () => {
+          window.location.reload();
+        },
+        error: (error) => {
+          console.error('Failed to delete post:', error);
+          alert('Failed to delete post. Please try again.');
+        },
+      });
+    }
   }
 
   onReportClick(event: Event) {

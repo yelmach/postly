@@ -1,0 +1,18 @@
+<div class="edit-post-container">
+  @if (errorMessage()) {
+  <app-error-state
+    [title]="'No Post Data'"
+    [message]="errorMessage()"
+    [actionLabel]="'Go Back'"
+    (actionClick)="goBack()"
+  />
+  } @else if (post()) {
+  <app-post-form
+    [mode]="'edit'"
+    [postData]="post()"
+    [isSubmitting]="isSubmitting()"
+    (formSubmit)="onFormSubmit($event)"
+    (formCancel)="onFormCancel()"
+  />
+  }
+</div>
