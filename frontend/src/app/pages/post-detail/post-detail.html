@@ -47,9 +47,15 @@
       </div>
 
       <div class="action-buttons">
-        <button mat-icon-button (click)="onLikeClick()" class="like-button">
-          <mat-icon>favorite_border</mat-icon>
+        <button
+          mat-icon-button
+          (click)="onLikeClick()"
+          class="like-button"
+          [class.liked]="isLiked()"
+        >
+          <mat-icon>{{ isLiked() ? 'favorite' : 'favorite_border' }}</mat-icon>
         </button>
+        <span class="like-count">{{ likesCount() }}</span>
 
         <!-- Three-dot menu -->
         <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
@@ -85,13 +91,51 @@
   <!-- Comments Section -->
   <mat-card class="comments-section">
     <mat-card-header class="comments-header">
-      <h2 class="comments-title">Comments</h2>
+      <h2 class="comments-title">Comments ({{ post()!.commentsCount }})</h2>
     </mat-card-header>
+
     <mat-card-content>
+      <!-- Comment Form -->
+      <div class="comment-form">
+        <mat-form-field class="comment-input">
+          <mat-label>Add a comment...</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="commentText"
+            rows="3"
+            maxlength="1000"
+            [disabled]="isSubmittingComment()"
+          ></textarea>
+          <mat-hint align="end">{{ commentText().length }}/1000</mat-hint>
+        </mat-form-field>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="onSubmitComment()"
+          [disabled]="!commentText().trim() || isSubmittingComment()"
+          class="submit-button"
+        >
+          {{ isSubmittingComment() ? 'Posting...' : 'Post Comment' }}
+        </button>
+      </div>
+
+      <!-- Comments List -->
+      @if (commentsLoading() && comments().length === 0) {
+      <div class="comments-loading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+      } @else if (comments().length === 0) {
       <div class="comments-placeholder">
         <mat-icon class="placeholder-icon">comment</mat-icon>
-        <p class="placeholder-text">No comments</p>
+        <p class="placeholder-text">No comments yet!</p>
       </div>
+      } @else {
+      <div class="comments-list">
+        @for (comment of comments(); track comment.id) {
+        <app-comment-card [comment]="comment" />
+        }
+      </div>
+      }
     </mat-card-content>
   </mat-card>
 </div>

@@ -43,4 +43,8 @@ export class PostService {
   deletePost(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/posts/${id}`);
   }
+
+  toggleLike(postId: number): Observable<{ liked: boolean }> {
+    return this.http.post<{ liked: boolean }>(`${this.apiUrl}/posts/${postId}/likes`, {});
+  }
 }

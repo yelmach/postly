@@ -1,4 +1,4 @@
-import { Component, input, computed } from '@angular/core';
+import { Component, input, computed, signal, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { PostResponse } from '@/models/post';
 import { Router } from '@angular/router';
+import { PostService } from '@/services/post.service';
 
 @Component({
   selector: 'app-post-card',
@@ -14,9 +15,22 @@ import { Router } from '@angular/router';
   styleUrl: './post-card.scss',
 })
 export class PostCard {
+  private postService = inject(PostService);
+
   post = input.required<PostResponse>();
   currentUserId = input<number | undefined>(undefined);
   maxContentLength = input<number>(200);
+
+  likesCount = signal<number>(0);
+  isLiked = signal<boolean>(false);
+
+  constructor(private router: Router) {
+    effect(() => {
+      const post = this.post();
+      this.likesCount.set(post.likesCount);
+      this.isLiked.set(post.isLikedByCurrentUser);
+    });
+  }
 
   plainTextContent = computed(() => {
     const content = this.post().content;
@@ -67,8 +81,6 @@ export class PostCard {
     return plainText;
   });
 
-  constructor(private router: Router) {}
-
   onPostClick() {
     this.router.navigate(['/post', this.post().id]);
   }
@@ -81,7 +93,21 @@ export class PostCard {
 
   onLikeClick(event: Event) {
     event.stopPropagation();
-    // TODO
+
+    const wasLiked = this.isLiked();
+    this.isLiked.set(!wasLiked);
+    this.likesCount.update((count) => (wasLiked ? count - 1 : count + 1));
+
+    this.postService.toggleLike(this.post().id).subscribe({
+      next: (response) => {
+        this.isLiked.set(response.liked);
+      },
+      error: (error) => {
+        console.error('Failed to toggle like:', error);
+        this.isLiked.set(wasLiked);
+        this.likesCount.update((count) => (wasLiked ? count + 1 : count - 1));
+      },
+    });
   }
 
   onEditClick(event: Event) {

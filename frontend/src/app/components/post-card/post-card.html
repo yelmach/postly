@@ -85,13 +85,18 @@
 
   <!-- Post Actions -->
   <mat-card-actions class="post-actions">
-    <button mat-button (click)="onLikeClick($event)" class="action-button">
-      <mat-icon>favorite_border</mat-icon>
-      <span>Like</span>
+    <button
+      mat-button
+      (click)="onLikeClick($event)"
+      class="action-button"
+      [class.liked]="isLiked()"
+    >
+      <mat-icon>{{ isLiked() ? 'favorite' : 'favorite_border' }}</mat-icon>
+      <span>{{ likesCount() }}</span>
     </button>
     <button mat-button (click)="onPostClick()" class="action-button">
       <mat-icon>comment</mat-icon>
-      <span>Comment</span>
+      <span>{{ post().commentsCount }}</span>
     </button>
   </mat-card-actions>
 </mat-card>

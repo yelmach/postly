@@ -1,0 +1,28 @@
+<div class="comment-card">
+  <div class="profile">
+    @if (comment().author.profileUrl) {
+    <img
+      [src]="comment().author.profileUrl"
+      [alt]="comment().author.username"
+      class="author-avatar"
+    />
+    } @else {
+    <div class="author-avatar-placeholder">
+      <mat-icon>person</mat-icon>
+    </div>
+    }
+  </div>
+
+  <div class="comment">
+    <div class="author-info" (click)="onAuthorClick($event)">
+      <div class="author-name">
+        {{ comment().author.firstName }} {{ comment().author.lastName }}
+      </div>
+      <div class="comment-time">{{ getRelativeTime(comment().createdAt) }}</div>
+    </div>
+
+    <div class="comment-content">
+      <p>{{ comment().content }}</p>
+    </div>
+  </div>
+</div>

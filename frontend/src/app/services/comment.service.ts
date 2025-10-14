@@ -1,0 +1,34 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { environment } from '@environments/environment';
+import { Observable } from 'rxjs';
+import { CommentRequest, CommentResponse } from '@/models/comment';
+
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
+@Injectable({ providedIn: 'root' })
+export class CommentService {
+  private readonly apiUrl = environment.apiUrl;
+
+  http = inject(HttpClient);
+
+  createComment(postId: number, request: CommentRequest): Observable<CommentResponse> {
+    return this.http.post<CommentResponse>(`${this.apiUrl}/posts/${postId}/comments`, request);
+  }
+
+  getComments(
+    postId: number,
+    page: number = 0,
+    size: number = 20
+  ): Observable<PageResponse<CommentResponse>> {
+    return this.http.get<PageResponse<CommentResponse>>(`${this.apiUrl}/posts/${postId}/comments`, {
+      params: { page: page.toString(), size: size.toString() },
+    });
+  }
+}

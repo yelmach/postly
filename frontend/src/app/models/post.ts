@@ -19,6 +19,9 @@ export interface PostResponse {
   createdAt: string;
   updatedAt: string;
   mediaUrls: PostMediaResponse[];
+  likesCount: number;
+  commentsCount: number;
+  isLikedByCurrentUser: boolean;
 }
 
 export interface PostMediaResponse {
