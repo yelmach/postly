@@ -138,11 +138,53 @@
 
     .comment-form {
       margin: 1rem 0;
-      .comment-input {
-        width: 100%;
 
-        textarea {
-          resize: none;
+      .comment-input-wrapper {
+        position: relative;
+
+        .comment-input {
+          width: 100%;
+          margin-bottom: 0;
+
+          textarea {
+            resize: none;
+            margin-bottom: 3rem;
+          }
+        }
+
+        .comment-actions {
+          position: absolute;
+          bottom: 2rem;
+          right: 1rem;
+          display: flex;
+          gap: 0.5rem;
+          align-items: center;
+          z-index: 10;
+
+          .cancel-button {
+            font-size: 0.875rem;
+            min-width: auto;
+            height: 36px;
+            line-height: 36px;
+            padding: 0 1rem;
+            color: var(--mat-sys-on-surface-variant);
+
+            &:hover:not(:disabled) {
+              background-color: color-mix(
+                in srgb,
+                var(--mat-sys-on-surface),
+                transparent 92%
+              );
+            }
+          }
+
+          .submit-button {
+            font-size: 0.875rem;
+            min-width: auto;
+            height: 36px;
+            line-height: 36px;
+            padding: 0 1.25rem;
+          }
         }
       }
     }

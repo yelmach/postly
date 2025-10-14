@@ -97,26 +97,38 @@
     <mat-card-content>
       <!-- Comment Form -->
       <div class="comment-form">
-        <mat-form-field class="comment-input">
-          <mat-label>Add a comment...</mat-label>
-          <textarea
-            matInput
-            [(ngModel)]="commentText"
-            rows="3"
-            maxlength="1000"
-            [disabled]="isSubmittingComment()"
-          ></textarea>
-          <mat-hint align="end">{{ commentText().length }}/1000</mat-hint>
-        </mat-form-field>
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="onSubmitComment()"
-          [disabled]="!commentText().trim() || isSubmittingComment()"
-          class="submit-button"
-        >
-          {{ isSubmittingComment() ? 'Posting...' : 'Post Comment' }}
-        </button>
+        <div class="comment-input-wrapper">
+          <mat-form-field class="comment-input">
+            <mat-label>Add a comment...</mat-label>
+            <textarea
+              matInput
+              [(ngModel)]="commentText"
+              rows="4"
+              maxlength="1000"
+              [disabled]="isSubmittingComment()"
+            ></textarea>
+            <mat-hint align="end">{{ commentText().length }}/1000</mat-hint>
+          </mat-form-field>
+          <div class="comment-actions">
+            <button
+              mat-button
+              (click)="commentText.set('')"
+              [disabled]="!commentText().trim() || isSubmittingComment()"
+              class="cancel-button"
+            >
+              Cancel
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="onSubmitComment()"
+              [disabled]="!commentText().trim() || isSubmittingComment()"
+              class="submit-button"
+            >
+              {{ isSubmittingComment() ? 'Posting...' : 'Comment' }}
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Comments List -->
