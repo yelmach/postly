@@ -1,0 +1,112 @@
+<div class="report-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>flag</mat-icon>
+    {{ dialogTitle() }}
+  </h2>
+
+  <mat-dialog-content>
+    @if (currentStep() === 'select') {
+    <!-- Step 1: Select Reason -->
+    <div class="step-content">
+      <p class="dialog-description">{{ dialogDescription() }}</p>
+
+      <form [formGroup]="reportForm" class="report-form">
+        <mat-form-field appearance="outline">
+          <mat-label>Reason for reporting</mat-label>
+          <mat-select formControlName="reason" placeholder="Select a reason">
+            @for (reason of reportReasons; track reason.value) {
+            <mat-option [value]="reason.value">{{ reason.label }}</mat-option>
+            }
+          </mat-select>
+          <mat-icon matPrefix>report_problem</mat-icon>
+          <mat-error>Please select a reason</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Additional details (optional)</mat-label>
+          <textarea
+            matInput
+            formControlName="description"
+            rows="4"
+            maxlength="1000"
+            placeholder="Provide any additional context that might help us understand the issue..."
+          ></textarea>
+          <mat-hint align="end">{{ descriptionLength }}/1000</mat-hint>
+        </mat-form-field>
+      </form>
+
+      @if (formError()) {
+      <app-error-banner [message]="formError()" />
+      }
+    </div>
+    } @else {
+    <!-- Step 2: Confirmation -->
+    <div class="step-content confirmation-step">
+      @if (formError()) {
+      <app-error-banner [message]="formError()" />
+      } @else {
+      <div class="warning-box">
+        <mat-icon color="warn">warning</mat-icon>
+        <p>
+          Please review your report before submitting. False reports may result in actions against
+          your account.
+        </p>
+      </div>
+      }
+
+      <div class="report-summary">
+        <h3>Report Summary</h3>
+
+        @if (targetValue()) {
+        <div class="summary-item">
+          <strong>{{ targetLabel() }}:</strong>
+          <span [class]="data.type === 'post' ? 'post-title' : 'username'">
+            {{ targetValue() }}
+          </span>
+        </div>
+        }
+
+        <div class="summary-item">
+          <strong>Reason:</strong>
+          <span class="reason-badge">{{ selectedReason }}</span>
+        </div>
+
+        @if (description) {
+        <div class="summary-item">
+          <strong>Additional Details:</strong>
+          <p class="description-text">{{ description }}</p>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    @if (currentStep() === 'select') {
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onNext()"
+      [disabled]="reportForm.get('reason')?.invalid"
+    >
+      Next
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
+    } @else {
+    <button mat-button (click)="onBack()" [disabled]="isLoading()">
+      <mat-icon>arrow_back</mat-icon>
+      Back
+    </button>
+    <button mat-flat-button color="warn" (click)="onSubmit()" [disabled]="isLoading()">
+      <mat-icon>send</mat-icon>
+      @if (isLoading()) {
+      <span>Submitting...</span>
+      } @else {
+      <span>Submit Report</span>
+      }
+    </button>
+    }
+  </mat-dialog-actions>
+</div>
