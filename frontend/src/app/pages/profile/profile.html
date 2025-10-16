@@ -38,15 +38,31 @@
             <span>Edit Profile</span>
           </button>
           } @else {
-          <button
-            mat-flat-button
-            [color]="isSubscribed() ? 'accent' : 'primary'"
-            class="subscribe-btn"
-            (click)="toggleSubscribe()"
-          >
-            <mat-icon>{{ isSubscribed() ? 'person_remove' : 'person_add' }}</mat-icon>
-            <span>{{ isSubscribed() ? 'Unsubscribe' : 'Subscribe' }}</span>
-          </button>
+          <div class="action-buttons">
+            <button
+              mat-flat-button
+              [color]="isSubscribed() ? 'accent' : 'primary'"
+              class="subscribe-btn"
+              (click)="toggleSubscribe()"
+            >
+              <mat-icon>{{ isSubscribed() ? 'person_remove' : 'person_add' }}</mat-icon>
+              <span>{{ isSubscribed() ? 'Unsubscribe' : 'Subscribe' }}</span>
+            </button>
+            <button
+              mat-icon-button
+              [matMenuTriggerFor]="profileMenu"
+              class="more-btn"
+              aria-label="More options"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #profileMenu="matMenu" class="profile-menu" xPosition="before">
+              <button mat-menu-item (click)="openReportUserDialog()">
+                <mat-icon>flag</mat-icon>
+                <span>Report User</span>
+              </button>
+            </mat-menu>
+          </div>
           }
         </div>
       </div>

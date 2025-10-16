@@ -8,6 +8,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
@@ -19,6 +21,7 @@ import { CommentResponse } from '@/models/comment';
 import { LoadingSpinnerComponent } from '@/components/loading-spinner/loading-spinner.component';
 import { ErrorStateComponent } from '@/components/error-state/error-state.component';
 import { CommentCardComponent } from '@/components/comment-card/comment-card.component';
+import { ReportDialog } from '@/components/report-dialog/report-dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -47,6 +50,8 @@ export class PostDetail implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private sanitizer = inject(DomSanitizer);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
 
   post = signal<PostResponse | null>(null);
   isLoading = signal(true);
@@ -197,8 +202,32 @@ export class PostDetail implements OnInit {
   }
 
   onReportClick() {
-    // TODO
-    console.log('Report clicked');
+    const post = this.post();
+    if (!post) return;
+
+    const dialogRef = this.dialog.open(ReportDialog, {
+      width: '100%',
+      maxWidth: '500px',
+      data: {
+        type: 'post' as const,
+        targetId: post.id,
+        targetTitle: post.title,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.success) {
+        this.snackBar.open(
+          'Report submitted successfully. Our team will review it shortly.',
+          'Close',
+          {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          }
+        );
+      }
+    });
   }
 
   isPostOwner(): boolean {

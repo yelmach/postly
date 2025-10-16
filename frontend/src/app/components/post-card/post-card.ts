@@ -4,9 +4,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { PostResponse } from '@/models/post';
 import { Router } from '@angular/router';
 import { PostService } from '@/services/post.service';
+import { ReportDialog } from '@/components/report-dialog/report-dialog';
 
 @Component({
   selector: 'app-post-card',
@@ -16,6 +19,8 @@ import { PostService } from '@/services/post.service';
 })
 export class PostCard {
   private postService = inject(PostService);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
 
   post = input.required<PostResponse>();
   currentUserId = input<number | undefined>(undefined);
@@ -133,7 +138,30 @@ export class PostCard {
 
   onReportClick(event: Event) {
     event.stopPropagation();
-    // TODO
+
+    const dialogRef = this.dialog.open(ReportDialog, {
+      width: '100%',
+      maxWidth: '500px',
+      data: {
+        type: 'post' as const,
+        targetId: this.post().id,
+        targetTitle: this.post().title,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.success) {
+        this.snackBar.open(
+          'Report submitted successfully. Our team will review it shortly.',
+          'Close',
+          {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          }
+        );
+      }
+    });
   }
 
   onMediaClick(event: Event, mediaUrl: string) {

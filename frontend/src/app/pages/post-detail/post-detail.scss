@@ -358,10 +358,22 @@
   }
 }
 
-.delete-option {
-  color: var(--mat-sys-error);
+::ng-deep {
+  .cdk-overlay-pane {
+    .delete-option {
+      color: var(--mat-sys-error);
 
-  mat-icon {
-    color: var(--mat-sys-error);
+      mat-icon {
+        color: var(--mat-sys-error);
+      }
+
+      &:hover {
+        background: color-mix(in srgb, var(--mat-sys-error) 8%, transparent);
+        color: var(--mat-sys-error) !important;
+      }
+      &:hover mat-icon {
+        color: var(--mat-sys-error) !important;
+      }
+    }
   }
 }

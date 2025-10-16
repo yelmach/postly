@@ -32,7 +32,7 @@
         <mat-icon>more_vert</mat-icon>
       </button>
 
-      <mat-menu #menu="matMenu">
+      <mat-menu #menu="matMenu" xPosition="before">
         @if (isPostOwner()) {
         <button mat-menu-item (click)="onEditClick($event)">
           <mat-icon>edit</mat-icon>

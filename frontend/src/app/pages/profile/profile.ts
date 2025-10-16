@@ -6,6 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
 import { AuthService } from '@/services/auth.service';
 import { UserService } from '@/services/user.service';
 import { PostService } from '@/services/post.service';
@@ -13,6 +15,7 @@ import { User } from '@/models/user';
 import { PostResponse } from '@/models/post';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EditProfileDialog } from '@/components/edit-profile-dialog/edit-profile-dialog';
+import { ReportDialog } from '@/components/report-dialog/report-dialog';
 import { UserCardComponent } from '@/components/user-card/user-card.component';
 import { PostCard } from '@/components/post-card/post-card';
 import { LoadingSpinnerComponent } from '@/components/loading-spinner/loading-spinner.component';
@@ -28,6 +31,7 @@ import { EmptyStateComponent } from '@/components/empty-state/empty-state.compon
     MatTabsModule,
     MatDialogModule,
     MatProgressSpinnerModule,
+    MatMenuModule,
     UserCardComponent,
     PostCard,
     LoadingSpinnerComponent,
@@ -44,6 +48,7 @@ export class Profile implements OnInit {
   route = inject(ActivatedRoute);
   router = inject(Router);
   dialog = inject(MatDialog);
+  snackBar = inject(MatSnackBar);
 
   user = signal<User | null>(null);
   isMyProfile = signal(false);
@@ -288,6 +293,31 @@ export class Profile implements OnInit {
       if (result?.success) {
         const username = this.route.snapshot.params['username'];
         this.loadUserProfile(username);
+      }
+    });
+  }
+
+  openReportUserDialog() {
+    const profileUser = this.user();
+    if (!profileUser) return;
+
+    const dialogRef = this.dialog.open(ReportDialog, {
+      width: '100%',
+      maxWidth: '500px',
+      data: {
+        type: 'user' as const,
+        targetId: profileUser.id,
+        targetUsername: profileUser.username,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.success) {
+        this.snackBar.open('Report submitted successfully. Our team will review it.', 'Close', {
+          duration: 5000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
       }
     });
   }
