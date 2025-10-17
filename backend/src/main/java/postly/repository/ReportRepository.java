@@ -14,18 +14,10 @@ import postly.entity.ReportStatus;
 
 @Repository
 public interface ReportRepository extends JpaRepository<ReportEntity, Long> {
-	Page<ReportEntity> findByStatus(ReportStatus status, Pageable pageable);
-
 	Page<ReportEntity> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
 	@Query("SELECT r FROM ReportEntity r WHERE r.status = :status ORDER BY r.createdAt DESC")
 	Page<ReportEntity> findByStatusOrderByCreatedAtDesc(@Param("status") ReportStatus status, Pageable pageable);
-
-	@Query("SELECT COUNT(r) FROM ReportEntity r WHERE r.reportedUser.id = :userId AND r.status = 'PENDING'")
-	Long countPendingReportsByUserId(@Param("userId") Long userId);
-
-	@Query("SELECT COUNT(r) FROM ReportEntity r WHERE r.reportedPost.id = :postId AND r.status = 'PENDING'")
-	Long countPendingReportsByPostId(@Param("postId") Long postId);
 
 	@Query("SELECT r FROM ReportEntity r WHERE r.reporter.id = :reporterId AND r.reportedUser.id = :reportedUserId AND r.status = 'PENDING'")
 	Optional<ReportEntity> findPendingUserReport(@Param("reporterId") Long reporterId,
@@ -46,4 +38,12 @@ public interface ReportRepository extends JpaRepository<ReportEntity, Long> {
 
 	@Query("SELECT r FROM ReportEntity r WHERE r.reportedPost IS NOT NULL AND r.status = :status ORDER BY r.createdAt DESC")
 	Page<ReportEntity> findPostReportsByStatus(@Param("status") ReportStatus status, Pageable pageable);
+
+	long countByStatus(ReportStatus status);
+
+	@Query("SELECT COUNT(r) FROM ReportEntity r WHERE r.reportedUser.id = :userId")
+	Long countReportsByUserId(@Param("userId") Long userId);
+
+	@Query("SELECT COUNT(r) FROM ReportEntity r WHERE r.reportedPost.id = :postId")
+	Long countReportsByPostId(@Param("postId") Long postId);
 }

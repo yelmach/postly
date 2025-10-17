@@ -1,5 +1,7 @@
 package postly.repository;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,4 +31,17 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
 
     @Query("SELECT p FROM PostEntity p WHERE p.user.id = :userId AND p.isHidden = false ORDER BY p.createdAt DESC")
     Page<PostEntity> findByUserIdOrderByCreatedAtDesc(@Param("userId") Long userId, Pageable pageable);
+
+    long countByCreatedAtAfter(LocalDateTime date);
+
+    Page<PostEntity> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    Page<PostEntity> findByIsHiddenOrderByCreatedAtDesc(Boolean isHidden, Pageable pageable);
+
+    @Query("SELECT p FROM PostEntity p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :query, '%')) ORDER BY p.createdAt DESC")
+    Page<PostEntity> searchPostsByTitle(@Param("query") String query, Pageable pageable);
+
+    @Query("SELECT p FROM PostEntity p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :query, '%')) AND p.isHidden = :isHidden ORDER BY p.createdAt DESC")
+    Page<PostEntity> searchPostsByTitleAndStatus(@Param("query") String query, @Param("isHidden") Boolean isHidden,
+            Pageable pageable);
 }
