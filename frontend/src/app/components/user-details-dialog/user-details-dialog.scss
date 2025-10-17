@@ -1,0 +1,256 @@
+.user-details-dialog {
+  mat-dialog-content {
+    min-width: 37.5rem;
+    max-width: 43.75rem;
+    max-height: 70vh;
+    padding: 1.5rem;
+  }
+
+  // Profile Section
+  .profile-section {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+
+    .profile-avatar {
+      flex-shrink: 0;
+
+      img {
+        width: 6.25rem;
+        height: 6.25rem;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 0.1875rem solid var(--mat-sys-primary);
+      }
+
+      .avatar-placeholder {
+        width: 6.25rem;
+        height: 6.25rem;
+        border-radius: 50%;
+        background-color: var(--mat-sys-surface-container);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        mat-icon {
+          font-size: 3rem;
+          width: 3rem;
+          height: 3rem;
+          color: var(--mat-sys-on-surface-variant);
+        }
+      }
+    }
+
+    .profile-info {
+      flex: 1;
+
+      .user-name {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0 0 0.25rem 0;
+        color: var(--mat-sys-on-surface);
+      }
+
+      .user-username {
+        font-size: 1rem;
+        color: var(--mat-sys-on-surface-variant);
+        margin: 0 0 0.75rem 0;
+      }
+
+      .profile-badges {
+        mat-chip-set {
+          display: flex;
+          gap: 0.5rem;
+        }
+      }
+    }
+  }
+
+  // Info Sections
+  .info-section {
+    padding: 1.25rem 0;
+
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0 0 1rem 0;
+      color: var(--mat-sys-on-surface);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      &.bio-item,
+      &.full-width {
+        grid-column: 1 / -1;
+      }
+
+      .label {
+        font-weight: 500;
+        font-size: 0.75rem;
+        color: var(--mat-sys-on-surface-variant);
+        text-transform: uppercase;
+        letter-spacing: 0.031rem;
+      }
+
+      .value {
+        font-size: 0.875rem;
+        color: var(--mat-sys-on-surface);
+      }
+
+      .bio-text {
+        margin: 0;
+        padding: 0.75rem;
+        background-color: var(--mat-sys-surface-container);
+        border-radius: var(--mat-sys-corner-small);
+        font-size: 0.875rem;
+        line-height: 1.5;
+        color: var(--mat-sys-on-surface);
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+    }
+  }
+
+  // Statistics
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      background-color: var(--mat-sys-surface-container);
+      border-radius: var(--mat-sys-corner-medium);
+      gap: 0.5rem;
+
+      mat-icon {
+        color: var(--mat-sys-primary);
+        font-size: 2rem;
+        width: 2rem;
+        height: 2rem;
+      }
+
+      .stat-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.125rem;
+      }
+
+      .stat-value {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--mat-sys-on-surface);
+      }
+
+      .stat-label {
+        font-size: 0.75rem;
+        color: var(--mat-sys-on-surface-variant);
+      }
+    }
+  }
+
+  // Ban Section
+  .ban-section {
+    background-color: var(--mat-sys-tertiary-container);
+    padding: 1.25rem;
+    border-radius: var(--mat-sys-corner-medium);
+    margin: 0 -1.5rem;
+    padding: 1.25rem 1.5rem;
+
+    h3 {
+      color: var(--mat-sys-on-tertiary-container);
+    }
+
+    .ban-permanent {
+      color: var(--mat-sys-error);
+      font-weight: 600;
+    }
+
+    .ban-reason {
+      margin: 0;
+      padding: 0.75rem;
+      background-color: var(--mat-sys-surface-container-highest);
+      border-radius: var(--mat-sys-corner-small);
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--mat-sys-on-tertiary-container);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+
+  // Chips
+  .role-chip {
+    &--user {
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
+    }
+
+    &--admin {
+      background-color: var(--mat-sys-secondary-container);
+      color: var(--mat-sys-on-secondary-container);
+    }
+  }
+
+  .status-chip {
+    &--active {
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
+    }
+
+    &--banned {
+      background-color: var(--mat-sys-error-container);
+      color: var(--mat-sys-on-error-container);
+    }
+  }
+
+  mat-divider {
+    margin: 1rem -1.5rem;
+  }
+
+  mat-dialog-actions {
+    padding: 1rem 1.5rem;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  // Responsive Design
+  @media (max-width: 48rem) {
+    mat-dialog-content {
+      min-width: auto;
+      max-width: 90vw;
+    }
+
+    .profile-section {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .info-section .info-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}

@@ -1,0 +1,25 @@
+.ban-user-dialog {
+  .dialog-description {
+    color: var(--mat-sys-on-surface-variant);
+    margin-bottom: 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .checkbox-field {
+    margin-bottom: 1rem;
+  }
+
+  mat-dialog-content {
+    min-width: 25rem;
+    max-width: 31.25rem;
+  }
+
+  mat-dialog-actions {
+    padding: 1rem 1.5rem;
+  }
+}

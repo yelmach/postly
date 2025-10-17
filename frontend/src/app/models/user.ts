@@ -12,4 +12,8 @@ export interface User {
   subscribersCount?: number;
   subscribedCount?: number;
   isSubscribed?: boolean;
+  createdAt?: string;
+  isBanned?: boolean;
+  bannedUntil?: string;
+  banReason?: string;
 }

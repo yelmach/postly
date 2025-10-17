@@ -1,0 +1,349 @@
+.admin-dashboard {
+  max-width: 87.5rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+
+  .dashboard-header {
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+      color: var(--mat-sys-on-surface);
+    }
+
+    .dashboard-subtitle {
+      font-size: 1rem;
+      color: var(--mat-sys-on-surface-variant);
+      margin: 0;
+    }
+  }
+
+  // Section Titles
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 1.25rem 0;
+    color: var(--mat-sys-on-surface);
+  }
+
+  // Section 1: Stats
+  .stats-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17.5rem, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  // Section 2: Tables
+  .tables-section {
+    background-color: var(--mat-sys-surface);
+    border-radius: var(--mat-sys-corner-medium);
+    box-shadow: var(--mat-sys-level2);
+    padding: 1.5rem;
+
+    .section-title {
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .management-tabs {
+    .mat-mdc-tab-body-content {
+      overflow: visible;
+    }
+  }
+
+  .tab-content {
+    padding: 1.5rem 0;
+    min-height: 25rem;
+  }
+
+  // Table Controls
+  .table-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+
+    .search-field {
+      flex: 1;
+      min-width: 15.625rem;
+    }
+
+    .filter-field {
+      min-width: 9.375rem;
+    }
+
+    button {
+      height: 3.5rem;
+    }
+  }
+
+  // Table Container
+  .table-container {
+    overflow-x: auto;
+    background-color: var(--mat-sys-surface);
+    border-radius: var(--mat-sys-corner-small);
+    border: 1px solid var(--mat-sys-outline-variant);
+
+    table {
+      width: 100%;
+
+      th {
+        background-color: var(--mat-sys-surface-container);
+        font-weight: 600;
+        color: var(--mat-sys-on-surface);
+        padding: 1rem;
+      }
+
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--mat-sys-outline-variant);
+      }
+
+      tr.clickable-row {
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: var(--mat-sys-surface-container-highest);
+        }
+      }
+
+      tr:hover {
+        background-color: var(--mat-sys-surface-container);
+      }
+    }
+  }
+
+  // User Cell Styling
+  .user-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .user-avatar {
+      flex-shrink: 0;
+
+      img {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 0.125rem solid var(--mat-sys-outline-variant);
+      }
+
+      .avatar-placeholder {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        background-color: var(--mat-sys-surface-container);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 0.125rem solid var(--mat-sys-outline-variant);
+
+        mat-icon {
+          font-size: 1.5rem;
+          width: 1.5rem;
+          height: 1.5rem;
+          color: var(--mat-sys-on-surface-variant);
+        }
+      }
+    }
+
+    .user-info {
+      flex: 1;
+      min-width: 0; // Allow text truncation
+
+      .user-name {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--mat-sys-on-surface);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .user-username {
+        font-size: 0.75rem;
+        color: var(--mat-sys-on-surface-variant);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  // Chips Styling
+  .role-chip {
+    &--user {
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
+    }
+
+    &--admin {
+      background-color: var(--mat-sys-secondary-container);
+      color: var(--mat-sys-on-secondary-container);
+    }
+  }
+
+  .status-chip {
+    &--active,
+    &--visible {
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
+    }
+
+    &--banned,
+    &--hidden {
+      background-color: var(--mat-sys-error-container);
+      color: var(--mat-sys-on-error-container);
+    }
+
+    &--pending {
+      background-color: var(--mat-sys-tertiary-container);
+      color: var(--mat-sys-on-tertiary-container);
+    }
+
+    &--resolved {
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
+    }
+
+    &--dismissed {
+      background-color: var(--mat-sys-surface-container-high);
+      color: var(--mat-sys-on-surface-variant);
+    }
+  }
+
+  .type-chip {
+    &--user {
+      background-color: var(--mat-sys-primary-container);
+      color: var(--mat-sys-on-primary-container);
+    }
+
+    &--post {
+      background-color: var(--mat-sys-tertiary-container);
+      color: var(--mat-sys-on-tertiary-container);
+    }
+  }
+
+  // Links and Actions
+  .author-link {
+    color: var(--mat-sys-primary);
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--mat-sys-primary);
+      text-decoration: underline;
+    }
+  }
+
+  .danger-action {
+    color: var(--mat-sys-error);
+
+    mat-icon {
+      color: var(--mat-sys-error);
+    }
+  }
+
+  .view-details-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    mat-icon {
+      font-size: 1.125rem;
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+  }
+
+  // Responsive Design
+  @media (max-width: 60rem) {
+    padding: 1rem;
+
+    .dashboard-header h1 {
+      font-size: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tables-section {
+      padding: 1rem;
+    }
+
+    .table-controls {
+      flex-direction: column;
+      align-items: stretch;
+
+      .search-field,
+      .filter-field {
+        width: 100%;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .table-container {
+      font-size: 0.875rem;
+
+      th,
+      td {
+        padding: 0.75rem 0.5rem;
+      }
+
+      .user-cell {
+        gap: 0.5rem;
+
+        .user-avatar {
+          img,
+          .avatar-placeholder {
+            width: 2rem;
+            height: 2rem;
+          }
+
+          .avatar-placeholder mat-icon {
+            font-size: 1.125rem;
+            width: 1.125rem;
+            height: 1.125rem;
+          }
+        }
+
+        .user-info {
+          .user-name {
+            font-size: 0.8125rem;
+          }
+
+          .user-username {
+            font-size: 0.6875rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Global mat-menu styling for danger actions
+::ng-deep .danger-action {
+  .mat-mdc-menu-item-text {
+    color: var(--mat-sys-error);
+  }
+}
