@@ -4,14 +4,14 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import postly.dto.request.BanUserRequest;
 import postly.dto.request.ReportRequest;
 import postly.dto.request.ResolveReportRequest;
 import postly.dto.response.ReportResponse;
+import postly.entity.ModerationAction;
 import postly.entity.PostEntity;
 import postly.entity.ReportEntity;
 import postly.entity.ReportStatus;
@@ -36,13 +36,15 @@ public class ReportService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ModerationService moderationService;
+
     @Transactional
     public ReportResponse reportUser(Long userId, ReportRequest request) {
         UserEntity reporter = userService.getCurrentUserEntity();
         UserEntity reportedUser = userRepository.findById(userId)
                 .orElseThrow(() -> ApiException.notFound("User not found"));
 
-        // Prevent self-reporting
         if (reporter.getId().equals(reportedUser.getId())) {
             throw ApiException.badRequest("You cannot report yourself");
         }
@@ -70,7 +72,6 @@ public class ReportService {
         PostEntity reportedPost = postRepository.findById(postId)
                 .orElseThrow(() -> ApiException.notFound("Post not found"));
 
-        // Prevent self-reporting
         if (reporter.getId().equals(reportedPost.getUser().getId())) {
             throw ApiException.badRequest("You cannot report your own post");
         }
@@ -92,41 +93,6 @@ public class ReportService {
         return ReportResponse.fromReport(report);
     }
 
-    public Page<ReportResponse> getAllReports(Pageable pageable, ReportStatus status, String type) {
-        Page<ReportEntity> reports;
-
-        if (status != null && type != null) {
-            if ("user".equalsIgnoreCase(type)) {
-                reports = reportRepository.findUserReportsByStatus(status, pageable);
-            } else if ("post".equalsIgnoreCase(type)) {
-                reports = reportRepository.findPostReportsByStatus(status, pageable);
-            } else {
-                reports = reportRepository.findByStatusOrderByCreatedAtDesc(status, pageable);
-            }
-        } else if (status != null) {
-            reports = reportRepository.findByStatusOrderByCreatedAtDesc(status, pageable);
-        } else if (type != null) {
-            if ("user".equalsIgnoreCase(type)) {
-                reports = reportRepository.findUserReports(pageable);
-            } else if ("post".equalsIgnoreCase(type)) {
-                reports = reportRepository.findPostReports(pageable);
-            } else {
-                reports = reportRepository.findAllByOrderByCreatedAtDesc(pageable);
-            }
-        } else {
-            reports = reportRepository.findAllByOrderByCreatedAtDesc(pageable);
-        }
-
-        return reports.map(ReportResponse::fromReport);
-    }
-
-    public ReportResponse getReportById(Long reportId) {
-        ReportEntity report = reportRepository.findById(reportId)
-                .orElseThrow(() -> ApiException.notFound("Report not found"));
-
-        return ReportResponse.fromReport(report);
-    }
-
     @Transactional
     public ReportResponse resolveReport(Long reportId, ResolveReportRequest request) {
         UserEntity currentUser = userService.getCurrentUserEntity();
@@ -142,6 +108,10 @@ public class ReportService {
             throw ApiException.badRequest("Cannot change status to PENDING");
         }
 
+        if (request.action() != null && request.action() != ModerationAction.NO_ACTION) {
+            executeModerationAction(report, request.action());
+        }
+
         report.setStatus(request.status());
         report.setAdminNotes(request.adminNotes());
         report.setReviewedBy(currentUser);
@@ -149,5 +119,48 @@ public class ReportService {
 
         report = reportRepository.save(report);
         return ReportResponse.fromReport(report);
+    }
+
+    private void executeModerationAction(ReportEntity report, ModerationAction action) {
+        switch (action) {
+            case BAN_USER:
+                if (report.getReportedUser() != null) {
+                    BanUserRequest banRequest = new BanUserRequest(
+                            report.getReason().toString(),
+                            0,
+                            true);
+                    moderationService.banUser(report.getReportedUser().getId(), banRequest);
+                } else {
+                    throw ApiException.badRequest("Cannot ban user: This is a post report");
+                }
+                break;
+
+            case DELETE_USER:
+                if (report.getReportedUser() != null) {
+                    moderationService.deleteUser(report.getReportedUser().getId());
+                } else {
+                    throw ApiException.badRequest("Cannot delete user: This is a post report");
+                }
+                break;
+
+            case HIDE_POST:
+                if (report.getReportedPost() != null) {
+                    moderationService.hidePost(report.getReportedPost().getId(), report.getReason().toString());
+                } else {
+                    throw ApiException.badRequest("Cannot hide post: This is a user report");
+                }
+                break;
+
+            case DELETE_POST:
+                if (report.getReportedPost() != null) {
+                    moderationService.deletePost(report.getReportedPost().getId());
+                } else {
+                    throw ApiException.badRequest("Cannot delete post: This is a user report");
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 }

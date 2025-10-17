@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import postly.dto.request.BanUserRequest;
 import postly.dto.response.UserResponse;
 import postly.entity.PostEntity;
+import postly.entity.Role;
 import postly.entity.UserEntity;
 import postly.exception.ApiException;
 import postly.repository.PostRepository;
@@ -106,5 +107,39 @@ public class ModerationService {
                 .orElseThrow(() -> ApiException.notFound("Post not found"));
 
         postRepository.delete(post);
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        UserEntity currentUser = userService.getCurrentUserEntity();
+
+        UserEntity userToDelete = userRepository.findById(userId)
+                .orElseThrow(() -> ApiException.notFound("User not found"));
+
+        if (userToDelete.isAdmin()) {
+            throw ApiException.forbidden("Cannot delete admin users");
+        }
+
+        if (userToDelete.getId().equals(currentUser.getId())) {
+            throw ApiException.badRequest("You cannot delete yourself");
+        }
+
+        userRepository.delete(userToDelete);
+    }
+
+    @Transactional
+    public UserResponse changeUserRole(Long userId) {
+        UserEntity currentUser = userService.getCurrentUserEntity();
+
+        UserEntity userToUpdate = userRepository.findById(userId)
+                .orElseThrow(() -> ApiException.notFound("User not found"));
+
+        if (userToUpdate.getId().equals(currentUser.getId())) {
+            throw ApiException.badRequest("You cannot change your own role");
+        }
+
+        userToUpdate.setRole(Role.ADMIN);
+        userToUpdate = userRepository.save(userToUpdate);
+        return UserResponse.fromUser(userToUpdate).build();
     }
 }

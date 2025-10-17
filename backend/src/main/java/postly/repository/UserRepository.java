@@ -31,7 +31,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
                 LOWER(u.firstName) LIKE LOWER(CONCAT('%', :query, '%')) OR
                 LOWER(u.lastName) LIKE LOWER(CONCAT('%', :query, '%')) OR
                 LOWER(CONCAT(u.firstName, ' ', u.lastName)) LIKE LOWER(CONCAT('%', :query, '%'))
-                i""")
+                """)
     public List<UserEntity> searchUsers(@Param("query") String query);
 
     @Query("""
@@ -70,7 +70,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
                 LOWER(u.firstName) LIKE LOWER(CONCAT('%', :query, '%')) OR
                 LOWER(u.lastName) LIKE LOWER(CONCAT('%', :query, '%')) OR
                 LOWER(CONCAT(u.firstName, ' ', u.lastName)) LIKE LOWER(CONCAT('%', :query, '%')))
-                ORDER BY u.createdAt DESC""")
+                ORDER BY u.createdAt DESC
+                """)
     Page<UserEntity> searchUsersByRoleWithPagination(@Param("query") String query, @Param("role") Role role,
             Pageable pageable);
 
@@ -82,7 +83,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
                 LOWER(u.firstName) LIKE LOWER(CONCAT('%', :query, '%')) OR
                 LOWER(u.lastName) LIKE LOWER(CONCAT('%', :query, '%')) OR
                 LOWER(CONCAT(u.firstName, ' ', u.lastName)) LIKE LOWER(CONCAT('%', :query, '%')))
-                ORDER BY u.createdAt DESC""")
+                ORDER BY u.createdAt DESC
+                """)
     Page<UserEntity> searchUsersByBannedWithPagination(@Param("query") String query, @Param("banned") Boolean banned,
             Pageable pageable);
 
@@ -94,7 +96,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
                 LOWER(u.firstName) LIKE LOWER(CONCAT('%', :query, '%')) OR
                 LOWER(u.lastName) LIKE LOWER(CONCAT('%', :query, '%')) OR
                 LOWER(CONCAT(u.firstName, ' ', u.lastName)) LIKE LOWER(CONCAT('%', :query, '%')))
-                ORDER BY u.createdAt DESC""")
+                ORDER BY u.createdAt DESC
+                """)
     Page<UserEntity> searchUsersByRoleAndBannedWithPagination(@Param("query") String query, @Param("role") Role role,
             @Param("banned") Boolean banned, Pageable pageable);
 }
