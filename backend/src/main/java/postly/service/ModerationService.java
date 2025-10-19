@@ -38,6 +38,10 @@ public class ModerationService {
             throw ApiException.forbidden("Cannot ban admin users");
         }
 
+        if (userToBan.getIsBanned()) {
+            throw ApiException.badRequest("This user is already banned");
+        }
+
         // Prevent banning yourself
         if (userToBan.getId().equals(currentUser.getId())) {
             throw ApiException.badRequest("You cannot ban yourself");

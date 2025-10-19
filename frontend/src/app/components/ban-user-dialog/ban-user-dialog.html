@@ -1,0 +1,63 @@
+<div class="ban-user-dialog">
+  <h2 mat-dialog-title>
+    Ban User <span>@{{ data.username }}</span>
+  </h2>
+
+  <mat-dialog-content>
+    <p class="dialog-description">
+      Banning this user will prevent them from accessing the platform. Please provide a reason for
+      the ban.
+    </p>
+
+    @if (formError()) {
+    <app-error-banner [message]="formError()" />
+    }
+
+    <form [formGroup]="banForm">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Reason for ban</mat-label>
+        <textarea
+          matInput
+          formControlName="reason"
+          rows="4"
+          placeholder="Explain why this user is being banned..."
+          maxlength="1000"
+        ></textarea>
+        <mat-hint align="end">{{ reasonLength }}/1000</mat-hint>
+        @if (banForm.get('reason')?.hasError('required') && banForm.get('reason')?.touched) {
+        <mat-error>Reason is required</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="checkbox-field">
+        <mat-checkbox formControlName="permanent" (change)="onPermanentChange()">
+          Permanent Ban
+        </mat-checkbox>
+      </div>
+
+      @if (!isPermanent) {
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Ban Duration (days)</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="durationDays"
+          min="1"
+          placeholder="e.g., 7"
+        />
+        <mat-hint>Number of days for the ban to last</mat-hint>
+        @if (banForm.get('durationDays')?.hasError('min')) {
+        <mat-error>Duration must be at least 1 day</mat-error>
+        }
+      </mat-form-field>
+      }
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="isLoading()">Cancel</button>
+    <button mat-flat-button color="warn" (click)="onSubmit()" [disabled]="isLoading()">
+      @if (isLoading()) { Banning... } @else { Ban User }
+    </button>
+  </mat-dialog-actions>
+</div>
