@@ -1,0 +1,30 @@
+.hide-post-dialog {
+  background-color: var(--mat-sys-surface-container-low);
+  padding-bottom: 0.5rem;
+
+  .dialog-description {
+    color: var(--mat-sys-on-surface-variant);
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+
+    strong {
+      color: var(--mat-sys-on-surface);
+    }
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  mat-dialog-content {
+    max-width: 500px;
+  }
+
+  mat-dialog-actions {
+    padding: 1rem 1.5rem;
+  }
+}

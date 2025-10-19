@@ -1,0 +1,41 @@
+<div class="hide-post-dialog">
+  <h2 mat-dialog-title>Hide Post</h2>
+
+  <mat-dialog-content>
+    <p class="dialog-description">
+      You are about to hide the post: <strong>"{{ data.postTitle }}"</strong>
+    </p>
+    <p class="dialog-description">
+      Hidden posts will not be visible to regular users but can be restored later. Please provide a
+      reason for hiding this post.
+    </p>
+
+    @if (formError()) {
+    <app-error-banner [message]="formError()" />
+    }
+
+    <form [formGroup]="hideForm">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Reason for hiding</mat-label>
+        <textarea
+          matInput
+          formControlName="reason"
+          rows="4"
+          placeholder="Explain why this post is being hidden..."
+          maxlength="1000"
+        ></textarea>
+        <mat-hint align="end">{{ reasonLength }}/1000</mat-hint>
+        @if (hideForm.get('reason')?.hasError('required') && hideForm.get('reason')?.touched) {
+        <mat-error>Reason is required</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="isLoading()">Cancel</button>
+    <button mat-flat-button color="warn" (click)="onSubmit()" [disabled]="isLoading()">
+      @if (isLoading()) { Hiding... } @else { Hide Post }
+    </button>
+  </mat-dialog-actions>
+</div>
