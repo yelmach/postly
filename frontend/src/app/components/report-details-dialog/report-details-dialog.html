@@ -1,0 +1,153 @@
+<div class="report-details-dialog">
+  <div class="header">
+    <mat-icon>flag</mat-icon>
+    <span>Report Details</span>
+  </div>
+
+  <mat-dialog-content>
+    <!-- Report Information -->
+    <div class="report-info">
+      <div class="info-section">
+        <h3>Report Information</h3>
+        <div class="info-row">
+          <span class="label">Type:</span>
+          <mat-chip-set>
+            <mat-chip class="chip">{{ reportType() }} Report</mat-chip>
+          </mat-chip-set>
+        </div>
+        <div class="info-row">
+          <span class="label">Status:</span>
+          <mat-chip-set class="title-status">
+            <mat-chip [class]="'status-chip status-chip--' + data.report.status.toLowerCase()">
+              {{ data.report.status }}
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+        <div class="info-row">
+          <span class="label">Reason:</span>
+          <mat-chip-set>
+            <mat-chip class="chip">{{ getReasonLabel(data.report.reason) }}</mat-chip>
+          </mat-chip-set>
+        </div>
+        <div class="info-row">
+          <span class="label">Created:</span>
+          <mat-chip-set>
+            <mat-chip class="chip">{{ data.report.createdAt | date : 'medium' }}</mat-chip>
+          </mat-chip-set>
+        </div>
+        @if (data.report.reviewedAt) {
+        <div class="info-row">
+          <span class="label">Reviewed:</span>
+          <mat-chip-set>
+            <mat-chip class="chip">{{ data.report.reviewedAt | date : 'medium' }}</mat-chip>
+          </mat-chip-set>
+        </div>
+        } @if (data.report.description) {
+        <div class="info-row">
+          <span class="label">Description:</span>
+          <p class="description">{{ data.report.description }}</p>
+        </div>
+        }
+      </div>
+
+      <div class="info-section reported-entity-section">
+        <h3>Reported {{ reportType() }}</h3>
+        <div class="user-card" (click)="onViewReportedEntity()">
+          <mat-icon class="user-avatar">
+            {{ reportType() === 'User' ? 'account_circle' : 'description' }}
+          </mat-icon>
+          <div class="user-info">
+            <span class="user-name">{{ reportedEntityName() }}</span>
+            <span class="user-action">Click to view {{ reportType().toLowerCase() }}</span>
+          </div>
+          <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+        </div>
+      </div>
+
+      <div class="info-section reporter-section">
+        <h3>Reporter</h3>
+        <div class="user-card" (click)="onViewReporter()">
+          <mat-icon class="user-avatar">account_circle</mat-icon>
+          <div class="user-info">
+            <span class="user-name">@{{ data.report.reporter.username }}</span>
+            <span class="user-action">Click to view profile</span>
+          </div>
+          <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+        </div>
+      </div>
+
+      @if (data.report.reviewedBy) {
+      <div class="info-section reviewed-by-section">
+        <h3>Reviewed By</h3>
+        <div class="user-card non-clickable">
+          <mat-icon class="user-avatar">verified_user</mat-icon>
+          <div class="user-info">
+            <span class="user-name">@{{ data.report.reviewedBy.username }}</span>
+            <span class="user-action">Administrator</span>
+          </div>
+        </div>
+        @if (data.report.adminNotes) {
+        <div class="admin-notes">
+          <div class="notes-header">
+            <mat-icon>note</mat-icon>
+            <span>Admin Notes</span>
+          </div>
+          <p class="notes-text">{{ data.report.adminNotes }}</p>
+        </div>
+        }
+      </div>
+      }
+    </div>
+
+    <!-- Resolution Form (only for pending reports) -->
+    @if (isPending()) {
+    <div class="resolution-section">
+      <h3>Resolve Report</h3>
+
+      @if (formError()) {
+      <app-error-banner [message]="formError()" />
+      }
+
+      <form [formGroup]="resolveForm">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Moderation Action</mat-label>
+          <mat-select formControlName="action">
+            @for (action of availableActions(); track action) {
+            <mat-option [value]="action">
+              {{ getModerationActionLabel(action) }}
+            </mat-option>
+            }
+          </mat-select>
+          <mat-hint
+            >Select the action to take when resolving this report (optional if dismissing)</mat-hint
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Admin Notes (optional)</mat-label>
+          <textarea
+            matInput
+            formControlName="adminNotes"
+            rows="3"
+            placeholder="Add any notes about your decision..."
+            maxlength="1000"
+          ></textarea>
+          <mat-hint align="end">{{ adminNotesLength }}/1000</mat-hint>
+        </mat-form-field>
+      </form>
+    </div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" [disabled]="isLoading()">Close</button>
+    @if (isPending()) {
+    <button mat-stroked-button color="accent" (click)="onDismiss()" [disabled]="isLoading()">
+      @if (isLoading()) { Dismissing... } @else { Dismiss }
+    </button>
+    <button mat-flat-button color="primary" (click)="onResolve()" [disabled]="isLoading()">
+      @if (isLoading()) { Resolving... } @else { Resolve }
+    </button>
+    }
+  </mat-dialog-actions>
+</div>

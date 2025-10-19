@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { guestGuard } from '@/guards/guest-guard';
 import { authGuard } from '@/guards/auth-guard';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -47,6 +48,11 @@ export const routes: Routes = [
         path: 'edit-post',
         loadComponent: () => import('./pages/edit-post/edit-post').then((m) => m.EditPost),
       },
+      {
+        path: 'admin',
+        canActivate: [adminGuard],
+        loadComponent: () => import('./pages/admin-dashboard/admin-dashboard').then((m) => m.AdminDashboard)
+      }
     ],
   },
   {
