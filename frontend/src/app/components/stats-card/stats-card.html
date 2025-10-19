@@ -1,0 +1,15 @@
+<mat-card class="stats-card" [class]="color">
+  <mat-card-content>
+    <div class="header">
+      <span class="label">{{ label }}</span>
+      <div class="icon-wrapper">
+        <mat-icon class="icon">{{ icon }}</mat-icon>
+      </div>
+    </div>
+    <div class="value">{{ value | number }}</div>
+    <div class="subtext">
+      <span class="sublabel">{{ sublabel }}:</span>
+      <span class="subvalue">{{ subvalue | number }}</span>
+    </div>
+  </mat-card-content>
+</mat-card>

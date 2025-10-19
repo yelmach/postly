@@ -1,0 +1,189 @@
+.stats-card {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  box-shadow: var(--mat-sys-level2);
+  border-radius: 16px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0.25rem;
+    transition: height 0.3s ease-in-out;
+  }
+
+  &:hover {
+    transform: translateY(-0.1rem);
+    background: var(--mat-sys-surface);
+    box-shadow: var(--mat-sys-level3);
+
+    &::before {
+      height: 0.4rem;
+    }
+
+    .icon {
+      transform: scale(1.1);
+    }
+  }
+
+  &.primary {
+    &::before {
+      background: linear-gradient(135deg, var(--mat-sys-primary), var(--mat-sys-primary-container));
+    }
+
+    .icon-wrapper {
+      background: var(--mat-sys-primary-container);
+    }
+
+    .icon {
+      color: var(--mat-sys-primary);
+    }
+
+    .value {
+      color: var(--mat-sys-primary);
+    }
+
+    .subtext {
+      background: var(--mat-sys-on-primary-fixed-variant);
+    }
+
+    .subvalue,
+    .sublabel {
+      color: var(--mat-sys-primary-fixed);
+    }
+  }
+
+  &.secondary {
+    &::before {
+      background: linear-gradient(
+        135deg,
+        var(--mat-sys-secondary),
+        var(--mat-sys-secondary-container)
+      );
+    }
+
+    .icon-wrapper {
+      background: var(--mat-sys-secondary-container);
+    }
+
+    .icon {
+      color: var(--mat-sys-secondary);
+    }
+
+    .value {
+      color: var(--mat-sys-secondary);
+    }
+
+    .subtext {
+      background: var(--mat-sys-on-secondary-fixed-variant);
+    }
+
+    .subvalue,
+    .sublabel {
+      color: var(--mat-sys-secondary-fixed);
+    }
+  }
+
+  &.tertiary {
+    &::before {
+      background: linear-gradient(
+        135deg,
+        var(--mat-sys-tertiary),
+        var(--mat-sys-tertiary-container)
+      );
+    }
+
+    .icon-wrapper {
+      background: var(--mat-sys-tertiary-container);
+    }
+
+    .icon {
+      color: var(--mat-sys-tertiary);
+    }
+
+    .value {
+      color: var(--mat-sys-tertiary);
+    }
+
+    .subtext {
+      background: var(--mat-sys-on-tertiary-fixed-variant);
+    }
+
+    .subvalue,
+    .sublabel {
+      color: var(--mat-sys-tertiary-fixed);
+    }
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+
+  .icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: var(--mat-sys-corner-large);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .label {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: var(--mat-sys-label-large-size);
+    font-weight: var(--mat-sys-label-large-weight);
+    line-height: var(--mat-sys-label-large-line-height);
+    text-transform: uppercase;
+    letter-spacing: var(--mat-sys-label-large-tracking);
+    flex: 1;
+    text-align: left;
+  }
+
+  .value {
+    font-size: var(--mat-sys-display-small-size);
+    font-weight: var(--mat-sys-bold-font-weight);
+    line-height: var(--mat-sys-display-small-line-height);
+    color: var(--mat-sys-on-surface);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.025rem;
+  }
+
+  .subtext {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    padding: 0.75rem;
+    margin: 0 -1rem -1rem -1rem;
+    background: var(--mat-sys-surface-container-highest);
+    border-radius: 0 0 var(--mat-sys-corner-large) var(--mat-sys-corner-large);
+  }
+
+  .sublabel {
+    color: var(--mat-sys-on-surface-variant);
+    font-size: var(--mat-sys-label-medium-size);
+    font-weight: var(--mat-sys-label-medium-weight);
+    line-height: var(--mat-sys-label-medium-line-height);
+  }
+
+  .subvalue {
+    color: var(--mat-sys-on-surface);
+    font-size: var(--mat-sys-title-medium-size);
+    font-weight: var(--mat-sys-title-medium-weight);
+    line-height: var(--mat-sys-title-medium-line-height);
+  }
+}

@@ -68,7 +68,7 @@ export class MainLayout {
   }
 
   get isAdmin() {
-    return this.currentUser?.role === 'USER';
+    return this.currentUser?.role === 'ADMIN';
   }
 
   toggleTheme() {
