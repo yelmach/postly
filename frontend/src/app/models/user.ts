@@ -12,4 +12,5 @@ export interface User {
   subscribersCount?: number;
   subscribedCount?: number;
   isSubscribed?: boolean;
+  createdAt?: string;
 }
