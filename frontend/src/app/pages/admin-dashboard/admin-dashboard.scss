@@ -1,7 +1,5 @@
 .admin-dashboard {
-  max-width: 87.5rem;
-  margin: 0 auto;
-  padding: 1.5rem;
+  padding: 0 1.5rem;
 
   .dashboard-header {
     margin-bottom: 2rem;
@@ -28,7 +26,6 @@
     color: var(--mat-sys-on-surface);
   }
 
-  // Section 1: Stats
   .stats-section {
     margin-bottom: 2.5rem;
   }
@@ -42,146 +39,191 @@
 
   // Section 2: Tables
   .tables-section {
-    background-color: var(--mat-sys-surface);
-    border-radius: var(--mat-sys-corner-medium);
+    border-radius: var(--mat-sys-corner-large);
     box-shadow: var(--mat-sys-level2);
-    padding: 1.5rem;
-
-    .section-title {
-      margin-bottom: 1.5rem;
-    }
+    overflow: hidden;
   }
 
   .management-tabs {
-    .mat-mdc-tab-body-content {
-      overflow: visible;
+    background-color: var(--mat-sys-surface-container-low);
+
+    ::ng-deep {
+      .mat-mdc-tab-labels {
+        background-color: var(--mat-sys-surface-container);
+        border-bottom: 1px solid var(--mat-sys-outline-variant);
+      }
+
+      .mat-mdc-tab {
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: 600;
+      }
+
+      .mat-mdc-tab.mdc-tab--active {
+        background-color: var(--mat-sys-primary-container);
+
+        .mdc-tab__text-label {
+          color: var(--mat-sys-on-primary-container);
+        }
+      }
     }
   }
 
   .tab-content {
-    padding: 1.5rem 0;
-    min-height: 25rem;
+    min-height: 400px;
   }
 
   // Table Controls
   .table-controls {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1.5rem;
     flex-wrap: wrap;
-    align-items: flex-end;
+    align-items: flex-start;
+    padding: 1.5rem 1.5rem 0 1.5rem;
 
     .search-field {
       flex: 1;
-      min-width: 15.625rem;
-    }
-
-    .filter-field {
-      min-width: 9.375rem;
-    }
-
-    button {
-      height: 3.5rem;
     }
   }
 
-  // Table Container
   .table-container {
     overflow-x: auto;
-    background-color: var(--mat-sys-surface);
-    border-radius: var(--mat-sys-corner-small);
+    border-radius: var(--mat-sys-corner-large);
+    box-shadow: var(--mat-sys-level2);
     border: 1px solid var(--mat-sys-outline-variant);
+    margin: 1rem;
 
     table {
       width: 100%;
 
       th {
         background-color: var(--mat-sys-surface-container);
-        font-weight: 600;
+        font-weight: 500;
         color: var(--mat-sys-on-surface);
         padding: 1rem;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid var(--mat-sys-outline-variant);
+        position: sticky;
+        top: 0;
+        z-index: 10;
       }
 
       td {
         padding: 1rem;
         border-bottom: 1px solid var(--mat-sys-outline-variant);
+        transition: none;
       }
 
       tr.clickable-row {
         cursor: pointer;
-        transition: background-color 0.2s ease;
+        transition: none;
 
         &:hover {
-          background-color: var(--mat-sys-surface-container-highest);
+          background-color: var(--mat-sys-surface-container);
+
+          td {
+            background-color: transparent;
+          }
         }
       }
 
-      tr:hover {
+      tr:hover:not(.clickable-row) {
         background-color: var(--mat-sys-surface-container);
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+    }
+
+    ::ng-deep mat-paginator {
+      background-color: var(--mat-sys-surface-container-low);
+      border-top: 1px solid var(--mat-sys-outline-variant);
+
+      .mat-mdc-paginator-container {
+        padding: 0.875rem 1.5rem;
+      }
+
+      .mat-mdc-paginator-page-size-label,
+      .mat-mdc-paginator-range-label {
+        font-weight: 500;
       }
     }
   }
 
-  // User Cell Styling
   .user-cell {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.875rem;
 
     .user-avatar {
       flex-shrink: 0;
+      position: relative;
 
       img {
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 2.75rem;
+        height: 2.75rem;
         border-radius: 50%;
         object-fit: cover;
-        border: 0.125rem solid var(--mat-sys-outline-variant);
+        border: 1px solid var(--mat-sys-primary);
+        transition: transform 0.2s ease;
+
+        &:hover {
+          transform: scale(1.1);
+        }
       }
 
       .avatar-placeholder {
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 2.75rem;
+        height: 2.75rem;
         border-radius: 50%;
-        background-color: var(--mat-sys-surface-container);
+        background: linear-gradient(
+          135deg,
+          var(--mat-sys-primary-container) 0%,
+          var(--mat-sys-secondary-container) 100%
+        );
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 0.125rem solid var(--mat-sys-outline-variant);
+        border: 1px solid var(--mat-sys-primary);
 
         mat-icon {
           font-size: 1.5rem;
           width: 1.5rem;
           height: 1.5rem;
-          color: var(--mat-sys-on-surface-variant);
+          color: var(--mat-sys-primary);
         }
       }
     }
 
     .user-info {
       flex: 1;
-      min-width: 0; // Allow text truncation
+      min-width: 0;
 
       .user-name {
-        font-size: 0.875rem;
+        font-size: 0.9375rem;
         font-weight: 500;
         color: var(--mat-sys-on-surface);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        line-height: 1.3;
       }
 
       .user-username {
-        font-size: 0.75rem;
+        font-size: 0.8125rem;
         color: var(--mat-sys-on-surface-variant);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        font-weight: 500;
+        margin-top: 0.125rem;
       }
     }
   }
 
-  // Badge Styling
   .role-badge,
   .status-badge,
   .type-badge {
@@ -298,11 +340,13 @@
     color: var(--mat-sys-primary);
     cursor: pointer;
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
+    font-weight: 500;
 
     &:hover {
       color: var(--mat-sys-primary);
       text-decoration: underline;
+      text-decoration-thickness: 2px;
     }
   }
 
@@ -312,17 +356,54 @@
     mat-icon {
       color: var(--mat-sys-error);
     }
+
+    &:hover {
+      background-color: rgba(244, 67, 54, 0.1);
+    }
   }
 
   .view-details-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-weight: 600;
+    letter-spacing: 0.03rem;
 
     mat-icon {
       font-size: 1.125rem;
       width: 1.125rem;
       height: 1.125rem;
+    }
+  }
+
+  ::ng-deep {
+    button[mat-icon-button] {
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: var(--mat-sys-primary-container);
+        transform: scale(1.1);
+      }
+    }
+
+    mat-menu {
+      .mat-mdc-menu-content {
+        padding: 0.5rem;
+      }
+
+      .mat-mdc-menu-item {
+        border-radius: var(--mat-sys-corner-small);
+        margin-bottom: 0.25rem;
+        transition: all 0.2s ease;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        &:hover {
+          transform: translateX(0.25rem);
+        }
+      }
     }
   }
 
@@ -399,7 +480,6 @@
   }
 }
 
-// Global mat-menu styling for danger actions
 ::ng-deep .danger-action {
   .mat-mdc-menu-item-text {
     color: var(--mat-sys-error);

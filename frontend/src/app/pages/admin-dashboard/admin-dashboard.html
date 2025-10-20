@@ -1,9 +1,4 @@
 <div class="admin-dashboard">
-  <div class="dashboard-header">
-    <h1>Admin Dashboard</h1>
-    <p class="dashboard-subtitle">Manage users, posts, and reports</p>
-  </div>
-
   <!-- Section 1: Statistics -->
   <div class="stats-section">
     <h2 class="section-title">Overview Statistics</h2>
@@ -42,9 +37,8 @@
   </div>
 
   <!-- Section 2: Table Management -->
+  <h2 class="section-title">Table Management</h2>
   <div class="tables-section">
-    <h2 class="section-title">Table Management</h2>
-
     <mat-tab-group class="management-tabs" animationDuration="300ms">
       <!-- Users Tab -->
       <mat-tab label="Users">
@@ -80,10 +74,6 @@
               </mat-select>
             </mat-form-field>
 
-            <button mat-raised-button color="primary" (click)="onUsersSearch()">
-              <mat-icon>search</mat-icon>
-              Search
-            </button>
           </div>
 
           <!-- Table -->
@@ -250,10 +240,6 @@
               </mat-select>
             </mat-form-field>
 
-            <button mat-raised-button color="primary" (click)="onPostsSearch()">
-              <mat-icon>search</mat-icon>
-              Search
-            </button>
           </div>
 
           <!-- Table -->
@@ -419,10 +405,6 @@
               </mat-select>
             </mat-form-field>
 
-            <button mat-raised-button color="primary" (click)="loadReports()">
-              <mat-icon>refresh</mat-icon>
-              Refresh
-            </button>
           </div>
 
           <!-- Table -->
@@ -498,7 +480,7 @@
                 <th mat-header-cell *matHeaderCellDef>Actions</th>
                 <td mat-cell *matCellDef="let report">
                   <button
-                    mat-raised-button
+                    mat-stroked-button
                     color="primary"
                     (click)="onViewReportDetails(report)"
                     class="view-details-btn"
