@@ -1,0 +1,177 @@
+<div class="user-details-dialog">
+  <div class="header">
+    <mat-icon>person</mat-icon>
+    <span>User Details</span>
+  </div>
+
+  <mat-dialog-content>
+    <div class="user-content">
+      <!-- Profile Section -->
+      <div class="info-section profile-section">
+        <div class="profile-header">
+          <div class="profile-avatar">
+            @if (data.user.profileUrl) {
+            <img [src]="data.user.profileUrl" [alt]="fullName" />
+            } @else {
+            <div class="avatar-placeholder">
+              <mat-icon>person</mat-icon>
+            </div>
+            }
+          </div>
+          <div class="profile-info">
+            <div class="name-section">
+              <h3 class="user-name">{{ fullName }}</h3>
+            </div>
+            <div class="profile-meta">
+              <div [class]="'role-badge role-badge--' + data.user.role.toLowerCase()">
+                <mat-icon>{{ data.user.role === 'ADMIN' ? 'admin_panel_settings' : 'person' }}</mat-icon>
+                <span>{{ data.user.role }}</span>
+              </div>
+              <div class="status-divider"></div>
+              @if (data.user.isBanned) {
+              <div class="status-badge status-badge--banned">
+                <mat-icon>block</mat-icon>
+                <span>Banned</span>
+              </div>
+              } @else {
+              <div class="status-badge status-badge--active">
+                <mat-icon>check_circle</mat-icon>
+                <span>Active</span>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Basic Information -->
+      <div class="info-section">
+        <h3>Basic Information</h3>
+        <div class="info-rows">
+          <div class="info-row">
+            <span class="label">First Name</span>
+            <mat-chip-set>
+              <mat-chip class="chip">{{ data.user.firstName }}</mat-chip>
+            </mat-chip-set>
+          </div>
+          <div class="info-row">
+            <span class="label">Last Name</span>
+            <mat-chip-set>
+              <mat-chip class="chip">{{ data.user.lastName }}</mat-chip>
+            </mat-chip-set>
+          </div>
+          <div class="info-row">
+            <span class="label">Username</span>
+            <mat-chip-set>
+              <mat-chip class="chip">@{{ data.user.username }}</mat-chip>
+            </mat-chip-set>
+          </div>
+          <div class="info-row">
+            <span class="label">Email</span>
+            <mat-chip-set>
+              <mat-chip class="chip">{{ data.user.email }}</mat-chip>
+            </mat-chip-set>
+          </div>
+          <div class="info-row">
+            <span class="label">Joined</span>
+            <mat-chip-set>
+              <mat-chip class="chip">{{ data.user.createdAt | date: 'medium' }}</mat-chip>
+            </mat-chip-set>
+          </div>
+          <div class="info-row">
+            <span class="label">Role</span>
+            <mat-chip-set>
+              <mat-chip [class]="'chip role-chip role-chip--' + data.user.role.toLowerCase()">
+                {{ data.user.role }}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+          @if (data.user.bio) {
+          <div class="info-row bio-row">
+            <span class="label">Bio</span>
+            <p class="bio-text">{{ data.user.bio }}</p>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Statistics -->
+      <div class="info-section">
+        <h3>Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <mat-icon>article</mat-icon>
+            <div class="stat-content">
+              <span class="stat-value">{{ data.user.postsCount || 0 }}</span>
+              <span class="stat-label">Posts</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <mat-icon>people</mat-icon>
+            <div class="stat-content">
+              <span class="stat-value">{{ data.user.subscribersCount || 0 }}</span>
+              <span class="stat-label">Subscribers</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <mat-icon>person_add</mat-icon>
+            <div class="stat-content">
+              <span class="stat-value">{{ data.user.subscriptionsCount || 0 }}</span>
+              <span class="stat-label">Subscriptions</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <mat-icon>flag</mat-icon>
+            <div class="stat-content">
+              <span class="stat-value">{{ data.user.reportsCount || 0 }}</span>
+              <span class="stat-label">Reports</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ban Information -->
+      @if (data.user.isBanned) {
+      <div class="info-section ban-section">
+        <h3>Ban Information</h3>
+        <div class="ban-content">
+          <div class="ban-alert">
+            <mat-icon>warning</mat-icon>
+            <span>This user has been banned</span>
+          </div>
+          <div class="info-rows">
+            @if (data.user.bannedUntil) {
+            <div class="info-row">
+              <span class="label">Banned Until</span>
+              <mat-chip-set>
+                <mat-chip class="chip ban-chip">{{ data.user.bannedUntil | date: 'medium' }}</mat-chip>
+              </mat-chip-set>
+            </div>
+            } @else {
+            <div class="info-row">
+              <span class="label">Ban Type</span>
+              <mat-chip-set>
+                <mat-chip class="chip ban-permanent-chip">Permanent Ban</mat-chip>
+              </mat-chip-set>
+            </div>
+            } @if (data.user.banReason) {
+            <div class="info-row ban-reason-row">
+              <span class="label">Ban Reason</span>
+              <p class="ban-reason">{{ data.user.banReason }}</p>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onClose()">Close</button>
+    <button mat-flat-button color="primary" (click)="onViewProfile()">
+      <mat-icon>open_in_new</mat-icon>
+      View Profile
+    </button>
+  </mat-dialog-actions>
+</div>
