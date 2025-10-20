@@ -1,0 +1,530 @@
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <h1>Admin Dashboard</h1>
+    <p class="dashboard-subtitle">Manage users, posts, and reports</p>
+  </div>
+
+  <!-- Section 1: Statistics -->
+  <div class="stats-section">
+    <h2 class="section-title">Overview Statistics</h2>
+    @if (statsLoading()) {
+    <app-loading-spinner [size]="'medium'" [message]="'Loading statistics...'" />
+    } @else if (statsError()) {
+    <app-error-state [title]="statsError()" [actionLabel]="'Retry'" (actionClick)="loadStats()" />
+    } @else if (stats()) {
+    <div class="stats-grid">
+      <app-stats-card
+        [icon]="'people'"
+        [label]="'Total Users'"
+        [value]="stats()!.userStats.total"
+        [sublabel]="'New in last 30 days'"
+        [subvalue]="stats()!.userStats.newLastMonth"
+        [color]="'primary'"
+      />
+      <app-stats-card
+        [icon]="'article'"
+        [label]="'Total Posts'"
+        [value]="stats()!.postStats.total"
+        [sublabel]="'New in last 30 days'"
+        [subvalue]="stats()!.postStats.newLastMonth"
+        [color]="'secondary'"
+      />
+      <app-stats-card
+        [icon]="'flag'"
+        [label]="'Total Reports'"
+        [value]="stats()!.reportStats.total"
+        [sublabel]="'Active Pending'"
+        [subvalue]="stats()!.reportStats.activePending"
+        [color]="'tertiary'"
+      />
+    </div>
+    }
+  </div>
+
+  <!-- Section 2: Table Management -->
+  <div class="tables-section">
+    <h2 class="section-title">Table Management</h2>
+
+    <mat-tab-group class="management-tabs" animationDuration="300ms">
+      <!-- Users Tab -->
+      <mat-tab label="Users">
+        <div class="tab-content">
+          <!-- Search and Filters -->
+          <div class="table-controls">
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-label>Search by username or email</mat-label>
+              <input
+                matInput
+                [(ngModel)]="usersSearchQuery"
+                (keyup.enter)="onUsersSearch()"
+                placeholder="Search users..."
+              />
+              <mat-icon matPrefix>search</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Role</mat-label>
+              <mat-select [(ngModel)]="usersRoleFilter" (selectionChange)="onUsersFilterChange()">
+                <mat-option value="">All Roles</mat-option>
+                <mat-option value="USER">User</mat-option>
+                <mat-option value="ADMIN">Admin</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Status</mat-label>
+              <mat-select [(ngModel)]="usersBannedFilter" (selectionChange)="onUsersFilterChange()">
+                <mat-option value="">All Status</mat-option>
+                <mat-option [value]="false">Active</mat-option>
+                <mat-option [value]="true">Banned</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" (click)="onUsersSearch()">
+              <mat-icon>search</mat-icon>
+              Search
+            </button>
+          </div>
+
+          <!-- Table -->
+          @if (usersLoading()) {
+          <app-loading-spinner [size]="'medium'" [message]="'Loading users...'" />
+          } @else if (usersError()) {
+          <app-error-state
+            [title]="usersError()"
+            [actionLabel]="'Retry'"
+            (actionClick)="loadUsers()"
+          />
+          } @else if (users().length === 0) {
+          <app-empty-state [icon]="'people'" [message]="'No users found'" />
+          } @else {
+          <div class="table-container">
+            <table mat-table [dataSource]="users()" class="users-table">
+              <!-- User Column (Avatar + Name + Username) -->
+              <ng-container matColumnDef="user">
+                <th mat-header-cell *matHeaderCellDef>User</th>
+                <td mat-cell *matCellDef="let user">
+                  <div class="user-cell">
+                    <div class="user-avatar">
+                      @if (user.profileUrl) {
+                      <img [src]="user.profileUrl" [alt]="user.firstName + ' ' + user.lastName" />
+                      } @else {
+                      <div class="avatar-placeholder">
+                        <mat-icon>person</mat-icon>
+                      </div>
+                      }
+                    </div>
+                    <div class="user-info">
+                      <div class="user-name">{{ user.firstName }} {{ user.lastName }}</div>
+                      <div class="user-username">@{{ user.username }}</div>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Email Column -->
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>Email</th>
+                <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+              </ng-container>
+
+              <!-- Joined At Column -->
+              <ng-container matColumnDef="joinedAt">
+                <th mat-header-cell *matHeaderCellDef>Joined At</th>
+                <td mat-cell *matCellDef="let user">{{ user.createdAt | date : 'short' }}</td>
+              </ng-container>
+
+              <!-- Role Column -->
+              <ng-container matColumnDef="role">
+                <th mat-header-cell *matHeaderCellDef>Role</th>
+                <td mat-cell *matCellDef="let user">
+                  <div [class]="'role-badge role-badge--' + user.role.toLowerCase()">
+                    <mat-icon>{{ user.role === 'ADMIN' ? 'admin_panel_settings' : 'person' }}</mat-icon>
+                    <span>{{ user.role }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Status Column -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let user">
+                  @if (user.isBanned) {
+                  <div class="status-badge status-badge--banned">
+                    <mat-icon>block</mat-icon>
+                    <span>Banned</span>
+                  </div>
+                  } @else {
+                  <div class="status-badge status-badge--active">
+                    <mat-icon>check_circle</mat-icon>
+                    <span>Active</span>
+                  </div>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let user">
+                  <button
+                    mat-icon-button
+                    [matMenuTriggerFor]="userMenu"
+                    (click)="$event.stopPropagation()"
+                  >
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #userMenu="matMenu" xPosition="before">
+                    @if (!user.isBanned) {
+                    <button mat-menu-item (click)="onBanUser(user, $event)">
+                      <mat-icon>block</mat-icon>
+                      <span>Ban User</span>
+                    </button>
+                    } @else {
+                    <button mat-menu-item (click)="onUnbanUser(user, $event)">
+                      <mat-icon>check_circle</mat-icon>
+                      <span>Unban User</span>
+                    </button>
+                    } @if (user.role === 'USER') {
+                    <button mat-menu-item (click)="onChangeUserRole(user, $event)">
+                      <mat-icon>admin_panel_settings</mat-icon>
+                      <span>Make Admin</span>
+                    </button>
+                    }
+                    <button
+                      mat-menu-item
+                      (click)="onDeleteUser(user, $event)"
+                      class="danger-action"
+                    >
+                      <mat-icon>delete</mat-icon>
+                      <span>Delete User</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="usersDisplayedColumns"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: usersDisplayedColumns"
+                class="clickable-row"
+                (click)="onUserRowClick(row, $event)"
+              ></tr>
+            </table>
+
+            <mat-paginator
+              [length]="usersTotalElements()"
+              [pageSize]="usersPageSize()"
+              [pageIndex]="usersPage()"
+              [pageSizeOptions]="[10, 20, 50, 100]"
+              (page)="onUsersPageChange($event)"
+              showFirstLastButtons
+            ></mat-paginator>
+          </div>
+          }
+        </div>
+      </mat-tab>
+
+      <!-- Posts Tab -->
+      <mat-tab label="Posts">
+        <div class="tab-content">
+          <!-- Search and Filters -->
+          <div class="table-controls">
+            <mat-form-field appearance="outline" class="search-field">
+              <mat-label>Search by title</mat-label>
+              <input
+                matInput
+                [(ngModel)]="postsSearchQuery"
+                (keyup.enter)="onPostsSearch()"
+                placeholder="Search posts..."
+              />
+              <mat-icon matPrefix>search</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Status</mat-label>
+              <mat-select [(ngModel)]="postsHiddenFilter" (selectionChange)="onPostsFilterChange()">
+                <mat-option value="">All Status</mat-option>
+                <mat-option [value]="false">Visible</mat-option>
+                <mat-option [value]="true">Hidden</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" (click)="onPostsSearch()">
+              <mat-icon>search</mat-icon>
+              Search
+            </button>
+          </div>
+
+          <!-- Table -->
+          @if (postsLoading()) {
+          <app-loading-spinner [size]="'medium'" [message]="'Loading posts...'" />
+          } @else if (postsError()) {
+          <app-error-state
+            [title]="postsError()"
+            [actionLabel]="'Retry'"
+            (actionClick)="loadPosts()"
+          />
+          } @else if (posts().length === 0) {
+          <app-empty-state [icon]="'article'" [message]="'No posts found'" />
+          } @else {
+          <div class="table-container">
+            <table mat-table [dataSource]="posts()" class="posts-table">
+              <!-- Author Column (Avatar + Name + Username) -->
+              <ng-container matColumnDef="author">
+                <th mat-header-cell *matHeaderCellDef>Author</th>
+                <td mat-cell *matCellDef="let post">
+                  <div class="user-cell">
+                    <div class="user-avatar">
+                      @if (post.author.profileUrl) {
+                      <img [src]="post.author.profileUrl" [alt]="post.author.fullName" />
+                      } @else {
+                      <div class="avatar-placeholder">
+                        <mat-icon>person</mat-icon>
+                      </div>
+                      }
+                    </div>
+                    <div class="user-info">
+                      <div class="user-name">{{ post.author.fullName }}</div>
+                      <div class="user-username">
+                        <a
+                          class="author-link"
+                          (click)="
+                            onViewUserProfile(post.author.username); $event.stopPropagation()
+                          "
+                          [title]="'View @' + post.author.username"
+                        >
+                          @{{ post.author.username }}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Title Column -->
+              <ng-container matColumnDef="title">
+                <th mat-header-cell *matHeaderCellDef>Title</th>
+                <td mat-cell *matCellDef="let post">{{ truncateText(post.title, 50) }}</td>
+              </ng-container>
+
+              <!-- Created At Column -->
+              <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>Created At</th>
+                <td mat-cell *matCellDef="let post">{{ post.createdAt | date : 'short' }}</td>
+              </ng-container>
+
+              <!-- Status Column -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let post">
+                  @if (post.isHidden) {
+                  <div class="status-badge status-badge--hidden">
+                    <mat-icon>visibility_off</mat-icon>
+                    <span>Hidden</span>
+                  </div>
+                  } @else {
+                  <div class="status-badge status-badge--visible">
+                    <mat-icon>visibility</mat-icon>
+                    <span>Visible</span>
+                  </div>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let post">
+                  <button
+                    mat-icon-button
+                    [matMenuTriggerFor]="postMenu"
+                    (click)="$event.stopPropagation()"
+                  >
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #postMenu="matMenu">
+                    @if (!post.isHidden) {
+                    <button mat-menu-item (click)="onHidePost(post, $event)">
+                      <mat-icon>visibility_off</mat-icon>
+                      <span>Hide Post</span>
+                    </button>
+                    } @else {
+                    <button mat-menu-item (click)="onRestorePost(post, $event)">
+                      <mat-icon>visibility</mat-icon>
+                      <span>Restore Post</span>
+                    </button>
+                    }
+                    <button
+                      mat-menu-item
+                      (click)="onDeletePost(post, $event)"
+                      class="danger-action"
+                    >
+                      <mat-icon>delete</mat-icon>
+                      <span>Delete Post</span>
+                    </button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="postsDisplayedColumns"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: postsDisplayedColumns"
+                class="clickable-row"
+                (click)="onPostRowClick(row, $event)"
+              ></tr>
+            </table>
+
+            <mat-paginator
+              [length]="postsTotalElements()"
+              [pageSize]="postsPageSize()"
+              [pageIndex]="postsPage()"
+              [pageSizeOptions]="[10, 20, 50, 100]"
+              (page)="onPostsPageChange($event)"
+              showFirstLastButtons
+            ></mat-paginator>
+          </div>
+          }
+        </div>
+      </mat-tab>
+
+      <!-- Reports Tab -->
+      <mat-tab label="Reports">
+        <div class="tab-content">
+          <!-- Filters -->
+          <div class="table-controls">
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Status</mat-label>
+              <mat-select
+                [(ngModel)]="reportsStatusFilter"
+                (selectionChange)="onReportsFilterChange()"
+              >
+                <mat-option value="">All Status</mat-option>
+                <mat-option value="PENDING">Pending</mat-option>
+                <mat-option value="RESOLVED">Resolved</mat-option>
+                <mat-option value="DISMISSED">Dismissed</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Type</mat-label>
+              <mat-select
+                [(ngModel)]="reportsTypeFilter"
+                (selectionChange)="onReportsFilterChange()"
+              >
+                <mat-option value="">All Types</mat-option>
+                <mat-option value="user">User Report</mat-option>
+                <mat-option value="post">Post Report</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" (click)="loadReports()">
+              <mat-icon>refresh</mat-icon>
+              Refresh
+            </button>
+          </div>
+
+          <!-- Table -->
+          @if (reportsLoading()) {
+          <app-loading-spinner [size]="'medium'" [message]="'Loading reports...'" />
+          } @else if (reportsError()) {
+          <app-error-state
+            [title]="reportsError()"
+            [actionLabel]="'Retry'"
+            (actionClick)="loadReports()"
+          />
+          } @else if (reports().length === 0) {
+          <app-empty-state [icon]="'flag'" [message]="'No reports found'" />
+          } @else {
+          <div class="table-container">
+            <table mat-table [dataSource]="reports()" class="reports-table">
+              <!-- Type Column -->
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Type</th>
+                <td mat-cell *matCellDef="let report">
+                  <div [class]="'type-badge type-badge--' + getReportType(report).toLowerCase()">
+                    <mat-icon>{{ getReportType(report) === 'USER' ? 'person' : 'article' }}</mat-icon>
+                    <span>{{ getReportType(report) }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Reason Column -->
+              <ng-container matColumnDef="reason">
+                <th mat-header-cell *matHeaderCellDef>Reason</th>
+                <td mat-cell *matCellDef="let report">{{ report.reason.replace('_', ' ') }}</td>
+              </ng-container>
+
+              <!-- Reported By Column -->
+              <ng-container matColumnDef="reportedBy">
+                <th mat-header-cell *matHeaderCellDef>Reported By</th>
+                <td mat-cell *matCellDef="let report">@{{ report.reporter.username }}</td>
+              </ng-container>
+
+              <!-- Description Column -->
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>Description</th>
+                <td mat-cell *matCellDef="let report">
+                  {{ truncateText(report.description, 40) }}
+                </td>
+              </ng-container>
+
+              <!-- Status Column -->
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let report">
+                  @if (report.status === 'PENDING') {
+                  <div class="status-badge status-badge--pending">
+                    <mat-icon>schedule</mat-icon>
+                    <span>{{ report.status }}</span>
+                  </div>
+                  } @else if (report.status === 'RESOLVED') {
+                  <div class="status-badge status-badge--resolved">
+                    <mat-icon>check_circle</mat-icon>
+                    <span>{{ report.status }}</span>
+                  </div>
+                  } @else if (report.status === 'DISMISSED') {
+                  <div class="status-badge status-badge--dismissed">
+                    <mat-icon>cancel</mat-icon>
+                    <span>{{ report.status }}</span>
+                  </div>
+                  }
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let report">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="onViewReportDetails(report)"
+                    class="view-details-btn"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                    View Details
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="reportsDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: reportsDisplayedColumns"></tr>
+            </table>
+
+            <mat-paginator
+              [length]="reportsTotalElements()"
+              [pageSize]="reportsPageSize()"
+              [pageIndex]="reportsPage()"
+              [pageSizeOptions]="[10, 20, 50, 100]"
+              (page)="onReportsPageChange($event)"
+              showFirstLastButtons
+            ></mat-paginator>
+          </div>
+          }
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
