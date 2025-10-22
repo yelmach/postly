@@ -8,7 +8,6 @@ public class UserResponse {
     private Long id;
     private String firstName;
     private String lastName;
-    private String fullName;
     private String username;
     private String email;
     private Role role;
@@ -23,7 +22,6 @@ public class UserResponse {
         this.id = builder.id;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
-        this.fullName = builder.fullName;
         this.username = builder.username;
         this.email = builder.email;
         this.role = builder.role;
@@ -44,7 +42,6 @@ public class UserResponse {
                 .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .fullName(user.getFullName())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .role(user.getRole())
@@ -56,7 +53,6 @@ public class UserResponse {
         private Long id;
         private String firstName;
         private String lastName;
-        private String fullName;
         private String username;
         private String email;
         private Role role;
@@ -107,11 +103,6 @@ public class UserResponse {
 
         public Builder profileUrl(String profileUrl) {
             this.profileUrl = profileUrl;
-            return this;
-        }
-
-        public Builder fullName(String fullName) {
-            this.fullName = fullName;
             return this;
         }
 
@@ -170,10 +161,6 @@ public class UserResponse {
 
     public String getProfileUrl() {
         return profileUrl;
-    }
-
-    public String getFullName() {
-        return fullName;
     }
 
     public Long getPostsCount() {

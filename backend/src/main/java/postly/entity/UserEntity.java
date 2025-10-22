@@ -62,7 +62,7 @@ public class UserEntity implements UserDetails {
     @Column(name = "bio", length = 255)
     private String bio;
 
-    @Size(max = 500, message = "Profile URL must not exceed 512 characters")
+    @Size(max = 512, message = "Profile URL must not exceed 512 characters")
     @Column(name = "profile_url", length = 512)
     private String profileUrl;
 
@@ -172,10 +172,6 @@ public class UserEntity implements UserDetails {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public String getFullName() {
-        return firstName + " " + lastName;
     }
 
     public boolean isAdmin() {
