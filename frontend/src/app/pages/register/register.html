@@ -1,119 +1,129 @@
 <div class="register-container">
-    <section class="form-section">
-        <div class="form-wrapper">
-            <div class="logo-section">
-                <mat-icon class="logo-icon">article</mat-icon>
-                <h1>Postly</h1>
-            </div>
+  <section class="form-section">
+    <div class="form-wrapper">
+      <div class="logo-section">
+        <mat-icon class="logo-icon">article</mat-icon>
+        <h1>Postly</h1>
+      </div>
 
-            <div class="form-header">
-                <h2>Create your account</h2>
-            </div>
+      <div class="form-header">
+        <h2>Create your account</h2>
+      </div>
 
-            @if (formError()) {
-            <app-error-banner [message]="formError()" />
-            }
+      @if (formError()) {
+      <app-error-banner [message]="formError()" />
+      }
 
-            <form class="register-form" [formGroup]="registerForm" (submit)="onFormSubmit($event)">
-                <div class="name-group">
-                    <mat-form-field appearance="outline" class="half-width">
-                        <mat-label>First Name</mat-label>
-                        <input matInput type="text" placeholder="John" formControlName="firstName" />
+      <form class="register-form" [formGroup]="registerForm" (submit)="onFormSubmit($event)">
+        <div class="name-group">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>First Name</mat-label>
+            <input matInput type="text" placeholder="John" formControlName="firstName" />
 
-                        <mat-error>{{getErrorMessage('firstName')}}</mat-error>
-                    </mat-form-field>
+            <mat-error>{{ getErrorMessage('firstName') }}</mat-error>
+          </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="half-width">
-                        <mat-label>Last Name</mat-label>
-                        <input matInput type="text" placeholder="Doe" formControlName="lastName" />
-                        <mat-error>{{getErrorMessage('lastName')}}</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <mat-form-field appearance="outline">
-                    <mat-label>Username</mat-label>
-                    <input matInput type="text" placeholder="johndoe" formControlName="username" />
-                    <mat-icon matPrefix>alternate_email</mat-icon>
-                    <mat-error>{{getErrorMessage('username')}}</mat-error>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                    <mat-label>Email</mat-label>
-                    <input matInput type="email" placeholder="john@example.com" formControlName="email" />
-                    <mat-icon matPrefix>email</mat-icon>
-                    <mat-error>{{getErrorMessage('email')}}</mat-error>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                    <mat-label>Password</mat-label>
-                    <input matInput [type]="hidePassword() ? 'password' : 'text'" placeholder="Enter your password"
-                        formControlName="password" />
-                    <mat-icon matPrefix>lock</mat-icon>
-                    <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
-                        <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                    </button>
-                    <mat-error>{{getErrorMessage('password')}}</mat-error>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                    <mat-label>Bio (Optional)</mat-label>
-                    <textarea matInput rows="3" placeholder="Tell us about yourself..."
-                        formControlName="bio"></textarea>
-                    <mat-error>{{getErrorMessage('bio')}}</mat-error>
-                </mat-form-field>
-
-                <button matButton="filled" class="submit-btn" type="submit"
-                    [disabled]="registerForm.invalid || registerForm.untouched ? true : false">
-                    @if (isLoading()) {
-                    <div class="button-content">
-                        <mat-spinner color="secondary" diameter="20"></mat-spinner>
-                        <span>Creating Account...</span>
-                    </div>
-                    } @else {
-                    <span>Create Account</span>
-                    }
-                </button>
-
-                <div class="login-link">
-                    Already have an account? <a routerLink="/login">Sign in</a>
-                </div>
-            </form>
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Last Name</mat-label>
+            <input matInput type="text" placeholder="Doe" formControlName="lastName" />
+            <mat-error>{{ getErrorMessage('lastName') }}</mat-error>
+          </mat-form-field>
         </div>
-    </section>
 
-    <section class="welcome-section">
-        <div class="welcome-content">
-            <div class="welcome-header">
-                <mat-icon class="feature-icon">auto_stories</mat-icon>
-                <h2>Welcome to Your Learning Journey</h2>
-                <p class="subtitle">Share your experiences, connect with learners, and grow together</p>
-            </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Username</mat-label>
+          <input matInput type="text" placeholder="johndoe" formControlName="username" />
+          <mat-icon matPrefix>alternate_email</mat-icon>
+          <mat-error>{{ getErrorMessage('username') }}</mat-error>
+        </mat-form-field>
 
-            <div class="features-grid">
-                <div class="feature-card">
-                    <mat-icon color="primary">create</mat-icon>
-                    <h3>Share Your Story</h3>
-                    <p>Document your learning progress with rich content including images and videos</p>
-                </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" placeholder="john@example.com" formControlName="email" />
+          <mat-icon matPrefix>email</mat-icon>
+          <mat-error>{{ getErrorMessage('email') }}</mat-error>
+        </mat-form-field>
 
-                <div class="feature-card">
-                    <mat-icon color="primary">group</mat-icon>
-                    <h3>Connect & Subscribe</h3>
-                    <p>Follow other learners and get notified when they share new insights</p>
-                </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            [type]="hidePassword() ? 'password' : 'text'"
+            placeholder="Enter your password"
+            formControlName="password"
+          />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error>{{ getErrorMessage('password') }}</mat-error>
+        </mat-form-field>
 
-                <div class="feature-card">
-                    <mat-icon color="primary">forum</mat-icon>
-                    <h3>Engage & Interact</h3>
-                    <p>Like and comment on posts to build meaningful discussions</p>
-                </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Bio (Optional)</mat-label>
+          <textarea
+            matInput
+            rows="3"
+            placeholder="Tell us about yourself..."
+            formControlName="bio"
+          ></textarea>
+          <mat-error>{{ getErrorMessage('bio') }}</mat-error>
+        </mat-form-field>
 
-                <div class="feature-card">
-                    <mat-icon color="primary">workspace_premium</mat-icon>
-                    <h3>Track Your Growth</h3>
-                    <p>Create your personal block and showcase your learning achievements</p>
-                </div>
-            </div>
+        <button
+          matButton="filled"
+          class="submit-btn"
+          type="submit"
+          [disabled]="registerForm.invalid || registerForm.untouched ? true : false"
+        >
+          @if (isLoading()) {
+          <div class="button-content">
+            <mat-spinner color="secondary" diameter="20"></mat-spinner>
+            <span>Creating Account...</span>
+          </div>
+          } @else {
+          <span>Create Account</span>
+          }
+        </button>
+
+        <div class="login-link">Already have an account? <a routerLink="/login">Sign in</a></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="welcome-section">
+    <div class="welcome-content">
+      <div class="welcome-header">
+        <mat-icon class="feature-icon">auto_stories</mat-icon>
+        <h2>Welcome to Your Learning Journey</h2>
+        <p class="subtitle">Share your experiences, connect with learners, and grow together</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <mat-icon color="primary">create</mat-icon>
+          <h3>Share Your Story</h3>
+          <p>Document your learning progress with rich content including images and videos</p>
         </div>
-    </section>
+
+        <div class="feature-card">
+          <mat-icon color="primary">group</mat-icon>
+          <h3>Connect & Subscribe</h3>
+          <p>Follow other learners and get notified when they share new insights</p>
+        </div>
+
+        <div class="feature-card">
+          <mat-icon color="primary">forum</mat-icon>
+          <h3>Engage & Interact</h3>
+          <p>Like and comment on posts to build meaningful discussions</p>
+        </div>
+
+        <div class="feature-card">
+          <mat-icon color="primary">workspace_premium</mat-icon>
+          <h3>Track Your Growth</h3>
+          <p>Create your personal block and showcase your learning achievements</p>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>

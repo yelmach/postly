@@ -47,12 +47,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 } else {
-                    request.setAttribute("jwt_error", "Token expired");
+                    request.setAttribute("jwt_error", "Token has expired. Please login again.");
                 }
 
             }
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: " + e.getMessage());
             request.setAttribute("jwt_error", e.getMessage());
         }
 

@@ -3,6 +3,8 @@ package postly.dto.response;
 import postly.entity.Role;
 import postly.entity.UserEntity;
 
+import java.time.LocalDateTime;
+
 public class UserResponse {
 
     private Long id;
@@ -13,10 +15,11 @@ public class UserResponse {
     private Role role;
     private String bio;
     private String profileUrl;
-    private Long postsCount;
-    private Long subscribersCount;
-    private Long subscribedCount;
-    private Boolean isSubscribed;
+    private Long postsCount = 0L;
+    private Long subscribersCount = 0L;
+    private Long subscribedCount = 0L;
+    private Boolean isSubscribed = null;
+    private LocalDateTime createdAt;
 
     private UserResponse(Builder builder) {
         this.id = builder.id;
@@ -31,6 +34,7 @@ public class UserResponse {
         this.subscribersCount = builder.subscribersCount;
         this.subscribedCount = builder.subscribedCount;
         this.isSubscribed = builder.isSubscribed;
+        this.createdAt = builder.createdAt;
     }
 
     public static Builder builder() {
@@ -46,7 +50,8 @@ public class UserResponse {
                 .email(user.getEmail())
                 .role(user.getRole())
                 .bio(user.getBio())
-                .profileUrl(user.getProfileUrl());
+                .profileUrl(user.getProfileUrl())
+                .createdAt(user.getCreatedAt());
     }
 
     public static class Builder {
@@ -62,6 +67,7 @@ public class UserResponse {
         private Long subscribersCount;
         private Long subscribedCount;
         private Boolean isSubscribed;
+        private LocalDateTime createdAt;
 
         private Builder() {
         }
@@ -126,6 +132,11 @@ public class UserResponse {
             return this;
         }
 
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
         public UserResponse build() {
             return new UserResponse(this);
         }
@@ -185,5 +196,9 @@ public class UserResponse {
 
     public Boolean getIsSubscribed() {
         return isSubscribed;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

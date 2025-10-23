@@ -35,10 +35,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
         UserEntity user = authService.register(registerRequest);
-        UserResponse currentUser = userService.getUserByUsername(user.getUsername());
         String jwtToken = jwtProvider.generateToken(user);
-        
-        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(jwtToken, currentUser));
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new AuthResponse(jwtToken, UserResponse.fromUser(user).build()));
     }
 
     @PostMapping("/login")

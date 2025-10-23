@@ -30,14 +30,6 @@ public class JwtEntryPoint implements AuthenticationEntryPoint {
         Object jwtError = request.getAttribute("jwt_error");
         if (jwtError != null) {
             errorMessage = jwtError.toString();
-        } else if (authException.getMessage() != null) {
-            if (authException.getMessage().contains("expired")) {
-                errorMessage = "Token has expired. Please login again.";
-            } else if (authException.getMessage().contains("malformed")) {
-                errorMessage = "Invalid token format";
-            } else if (authException.getMessage().contains("signature")) {
-                errorMessage = "Token signature verification failed";
-            }
         }
 
         ErrorResponse err = new ErrorResponse(401, "Unauthorized", errorMessage);

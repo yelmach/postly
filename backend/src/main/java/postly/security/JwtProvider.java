@@ -36,7 +36,7 @@ public class JwtProvider {
                     .signWith(getSigningKey())
                     .compact();
         } catch (Exception e) {
-            throw new JwtException("Failed to generate JWT token", e);
+            throw new JwtException("Failed to generate JWT token");
         }
     }
 
@@ -45,7 +45,7 @@ public class JwtProvider {
             byte[] keyBytes = secretKey.getBytes();
             return Keys.hmacShaKeyFor(keyBytes);
         } catch (Exception e) {
-            throw new JwtException("Failed to create JWT signing key", e);
+            throw new JwtException("Failed to create JWT signing key");
         }
     }
 
@@ -70,11 +70,11 @@ public class JwtProvider {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
-            throw new JwtException("JWT token is expired", e);
+            throw new JwtException("Token has expired.");
         } catch (SignatureException e) {
-            throw new JwtException("JWT token signature validation failed", e);
+            throw new JwtException("JWT token signature validation failed");
         } catch (Exception e) {
-            throw new JwtException("invalid JWT token", e);
+            throw new JwtException("invalid JWT token");
         }
     }
 
@@ -86,11 +86,11 @@ public class JwtProvider {
                     .parseClaimsJws(token);
             return !isTokenExpired(token);
         } catch (ExpiredJwtException e) {
-            throw new JwtException("JWT token is expired", e);
+            throw new JwtException("Token has expired.");
         } catch (SignatureException e) {
-            throw new JwtException("JWT token signature validation failed", e);
+            throw new JwtException("JWT token signature validation failed");
         } catch (Exception e) {
-            throw new JwtException("invalid JWT token", e);
+            throw new JwtException("invalid JWT token");
         }
     }
 

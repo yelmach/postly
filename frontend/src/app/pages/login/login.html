@@ -1,91 +1,103 @@
 <div class="login-container">
-    <section class="form-section">
-        <div class="form-wrapper">
-            <div class="logo-section">
-                <mat-icon class="logo-icon">article</mat-icon>
-                <h1>Postly</h1>
-            </div>
+  <section class="form-section">
+    <div class="form-wrapper">
+      <div class="logo-section">
+        <mat-icon class="logo-icon">article</mat-icon>
+        <h1>Postly</h1>
+      </div>
 
-            <div class="form-header">
-                <h2>Login to your account</h2>
-            </div>
+      <div class="form-header">
+        <h2>Login to your account</h2>
+      </div>
 
-            @if (formError()) {
-            <app-error-banner [message]="formError()" />
-            }
+      @if (formError()) {
+      <app-error-banner [message]="formError()" />
+      }
 
-            <form class="login-form" [formGroup]="loginForm" (submit)="onFormSubmit($event)">
-                <mat-form-field appearance="outline">
-                    <mat-label>Credentials</mat-label>
-                    <input matInput type="text" placeholder="email or username" formControlName="credentials" />
-                    <mat-icon matPrefix>alternate_email</mat-icon>
-                    <mat-error>{{getErrorMessage('credentials')}}</mat-error>
-                </mat-form-field>
+      <form class="login-form" [formGroup]="loginForm" (submit)="onFormSubmit($event)">
+        <mat-form-field appearance="outline">
+          <mat-label>Credentials</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="email or username"
+            formControlName="credentials"
+          />
+          <mat-icon matPrefix>alternate_email</mat-icon>
+          <mat-error>{{ getErrorMessage('credentials') }}</mat-error>
+        </mat-form-field>
 
-                <mat-form-field appearance="outline">
-                    <mat-label>Password</mat-label>
-                    <input matInput [type]="hidePassword() ? 'password' : 'text'" placeholder="Enter your password"
-                        formControlName="password" />
-                    <mat-icon matPrefix>lock</mat-icon>
-                    <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
-                        <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                    </button>
-                    <mat-error>{{getErrorMessage('password')}}</mat-error>
-                </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            [type]="hidePassword() ? 'password' : 'text'"
+            placeholder="Enter your password"
+            formControlName="password"
+          />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error>{{ getErrorMessage('password') }}</mat-error>
+        </mat-form-field>
 
-                <button matButton="filled" class="submit-btn" type="submit"
-                    [disabled]="loginForm.invalid || loginForm.untouched ? true : false">
-                    @if (isLoading()) {
-                    <div class="button-content">
-                        <mat-spinner color="secondary" diameter="20"></mat-spinner>
-                        <span>Login...</span>
-                    </div>
-                    } @else {
-                    <span>Login</span>
-                    }
-                </button>
+        <button
+          matButton="filled"
+          class="submit-btn"
+          type="submit"
+          [disabled]="loginForm.invalid || loginForm.untouched ? true : false"
+        >
+          @if (isLoading()) {
+          <div class="button-content">
+            <mat-spinner color="secondary" diameter="20"></mat-spinner>
+            <span>Login...</span>
+          </div>
+          } @else {
+          <span>Login</span>
+          }
+        </button>
 
-
-                <div class="register-link">
-                    You don't have an account? <a routerLink="/register">Register</a>
-                </div>
-            </form>
+        <div class="register-link">
+          You don't have an account? <a routerLink="/register">Register</a>
         </div>
-    </section>
+      </form>
+    </div>
+  </section>
 
-    <section class="welcome-section">
-        <div class="welcome-content">
-            <div class="welcome-header">
-                <mat-icon class="feature-icon">waving_hand</mat-icon>
-                <h2>Welcome Back!</h2>
-                <p class="subtitle">Continue your learning journey and catch up with your community</p>
-            </div>
+  <section class="welcome-section">
+    <div class="welcome-content">
+      <div class="welcome-header">
+        <mat-icon class="feature-icon">waving_hand</mat-icon>
+        <h2>Welcome Back!</h2>
+        <p class="subtitle">Continue your learning journey and catch up with your community</p>
+      </div>
 
-            <div class="features-grid">
-                <div class="feature-card">
-                    <mat-icon color="primary">notifications_active</mat-icon>
-                    <h3>New Updates</h3>
-                    <p>Check fresh posts from learners you follow</p>
-                </div>
-
-                <div class="feature-card">
-                    <mat-icon color="primary">trending_up</mat-icon>
-                    <h3>Your Progress</h3>
-                    <p>Continue where you left off and track your growth</p>
-                </div>
-
-                <div class="feature-card">
-                    <mat-icon color="primary">chat_bubble</mat-icon>
-                    <h3>Active Discussions</h3>
-                    <p>Reply to comments and engage with your community</p>
-                </div>
-
-                <div class="feature-card">
-                    <mat-icon color="primary">bookmark</mat-icon>
-                    <h3>Saved Content</h3>
-                    <p>Access your bookmarked posts and favorite topics</p>
-                </div>
-            </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <mat-icon color="primary">notifications_active</mat-icon>
+          <h3>New Updates</h3>
+          <p>Check fresh posts from learners you follow</p>
         </div>
-    </section>
+
+        <div class="feature-card">
+          <mat-icon color="primary">trending_up</mat-icon>
+          <h3>Your Progress</h3>
+          <p>Continue where you left off and track your growth</p>
+        </div>
+
+        <div class="feature-card">
+          <mat-icon color="primary">chat_bubble</mat-icon>
+          <h3>Active Discussions</h3>
+          <p>Reply to comments and engage with your community</p>
+        </div>
+
+        <div class="feature-card">
+          <mat-icon color="primary">bookmark</mat-icon>
+          <h3>Saved Content</h3>
+          <p>Access your bookmarked posts and favorite topics</p>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>

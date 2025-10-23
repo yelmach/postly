@@ -36,6 +36,8 @@ export class AuthService {
   getCurrentUser(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/auth/me`).pipe(
       tap((user) => {
+        console.log("setting user");
+        
         this.currentUser.set(user);
       })
     );
