@@ -61,23 +61,46 @@ html {
   --mat-sys-neutral10: light-dark(#1a1b22, #1a1b22);
 
   /* Elevation level system variables. These are used as the value for box-shadow CSS property. */
-  --mat-sys-level0: 0px 0px 0px 0px var(--mat-sys-umbra-color),
-    0px 0px 0px 0px var(--mat-sys-penumbra-color), 0px 0px 0px 0px var(--mat-sys-ambient-color);
-  --mat-sys-level1: 0px 2px 1px -1px var(--mat-sys-umbra-color),
-    0px 1px 1px 0px var(--mat-sys-penumbra-color), 0px 1px 3px 0px var(--mat-sys-ambient-color);
-  --mat-sys-level2: 0px 3px 3px -2px var(--mat-sys-umbra-color),
-    0px 3px 4px 0px var(--mat-sys-penumbra-color), 0px 1px 8px 0px var(--mat-sys-ambient-color);
-  --mat-sys-level3: 0px 3px 5px -1px var(--mat-sys-umbra-color),
-    0px 6px 10px 0px var(--mat-sys-penumbra-color), 0px 1px 18px 0px var(--mat-sys-ambient-color);
-  --mat-sys-level4: 0px 5px 5px -3px var(--mat-sys-umbra-color),
-    0px 8px 10px 1px var(--mat-sys-penumbra-color), 0px 3px 14px 2px var(--mat-sys-ambient-color);
-  --mat-sys-level5: 0px 7px 8px -4px var(--mat-sys-umbra-color),
-    0px 12px 17px 2px var(--mat-sys-penumbra-color), 0px 5px 22px 4px var(--mat-sys-ambient-color);
+/* Enhanced shadow variables with light glow (top) + dark shadow (bottom) */
+--mat-sys-level0: 
+  0px 0px 0px 0px var(--mat-sys-umbra-color),
+  0px 0px 0px 0px var(--mat-sys-penumbra-color), 
+  0px 0px 0px 0px var(--mat-sys-ambient-color);
 
-  /* Box shadow colors. Only used in the elevation level system variables. */
-  --mat-sys-umbra-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 80%);
-  --mat-sys-penumbra-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 86%);
-  --mat-sys-ambient-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 88%);
+--mat-sys-level1: 
+  0px -1px 2px 0px color-mix(in srgb, var(--mat-sys-surface-bright), transparent 40%),
+  0px 2px 1px -1px var(--mat-sys-umbra-color),
+  0px 1px 1px 0px var(--mat-sys-penumbra-color), 
+  0px 1px 3px 0px var(--mat-sys-ambient-color);
+
+--mat-sys-level2: 
+  0px -1px 3px 0px color-mix(in srgb, var(--mat-sys-surface-bright), transparent 50%),
+  0px 3px 3px -2px var(--mat-sys-umbra-color),
+  0px 3px 4px 0px var(--mat-sys-penumbra-color), 
+  0px 1px 8px 0px var(--mat-sys-ambient-color);
+
+--mat-sys-level3: 
+  0px -2px 4px 0px color-mix(in srgb, var(--mat-sys-surface-bright), transparent 60%),
+  0px 3px 5px -1px var(--mat-sys-umbra-color),
+  0px 6px 10px 0px var(--mat-sys-penumbra-color), 
+  0px 1px 18px 0px var(--mat-sys-ambient-color);
+
+--mat-sys-level4: 
+  0px -2px 6px 0px color-mix(in srgb, var(--mat-sys-surface-bright), transparent 65%),
+  0px 5px 5px -3px var(--mat-sys-umbra-color),
+  0px 8px 10px 1px var(--mat-sys-penumbra-color), 
+  0px 3px 14px 2px var(--mat-sys-ambient-color);
+
+--mat-sys-level5: 
+  0px -3px 8px 0px color-mix(in srgb, var(--mat-sys-surface-bright), transparent 70%),
+  0px 7px 8px -4px var(--mat-sys-umbra-color),
+  0px 12px 17px 2px var(--mat-sys-penumbra-color), 
+  0px 5px 22px 4px var(--mat-sys-ambient-color);
+
+/* Box shadow colors. Only used in the elevation level system variables. */
+--mat-sys-umbra-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 80%);
+--mat-sys-penumbra-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 86%);
+--mat-sys-ambient-color: color-mix(in srgb, var(--mat-sys-shadow), transparent 88%);
 
   /* Error palette variables */
   --mat-sys-error: light-dark(#ba1a1a, #ffb4ab);
