@@ -49,7 +49,7 @@ export class EditProfileDialog {
     ]),
     email: new FormControl('', [Validators.required, Validators.email, Validators.maxLength(100)]),
     password: new FormControl('', [Validators.minLength(6), Validators.maxLength(100)]),
-    bio: new FormControl('', [Validators.maxLength(512)]),
+    bio: new FormControl('', [Validators.maxLength(255)]),
   });
 
   hidePassword = signal(true);

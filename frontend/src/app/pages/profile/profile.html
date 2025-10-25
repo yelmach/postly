@@ -24,7 +24,10 @@
       <div class="header-section">
         <div class="name-section">
           <h1 class="full-name">{{ user()?.firstName }} {{ user()?.lastName }}</h1>
-          <span class="username">@{{ user()?.username }}</span>
+          <div class="username-wrapper">
+            <mat-icon>alternate_email</mat-icon>
+            <span class="username">{{ user()?.username }}</span>
+          </div>
         </div>
         <div class="action-section">
           @if (isMyProfile()) {
@@ -40,8 +43,7 @@
           } @else {
           <div class="action-buttons">
             <button
-              mat-flat-button
-              [color]="isSubscribed() ? 'accent' : 'primary'"
+              [matButton]="isSubscribed() ? 'outlined' : 'filled'"
               class="subscribe-btn"
               (click)="toggleSubscribe()"
             >
@@ -67,8 +69,24 @@
         </div>
       </div>
 
-      @if (user()?.bio) {
-      <p class="bio">{{ user()?.bio }}</p>
+      <div class="bio-section">
+        <div class="bio-wrapper">
+          <mat-icon>description</mat-icon>
+          <div class="bio-content">
+            @if (user()?.bio) {
+            <p class="bio">{{ user()?.bio }}</p>
+            } @else {
+            <p class="bio no-bio">No bio available</p>
+            }
+          </div>
+        </div>
+      </div>
+
+      @if (user()?.createdAt) {
+      <div class="joined-date">
+        <mat-icon>calendar_today</mat-icon>
+        <span>Joined {{ user()?.createdAt | date : 'MMMM yyyy' }}</span>
+      </div>
       }
 
       <div class="stats-row">

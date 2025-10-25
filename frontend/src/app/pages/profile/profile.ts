@@ -85,7 +85,6 @@ export class Profile implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    // Reset tab data when navigating to a different profile
     this.selectedTabIndex.set(0);
     this.subscribers.set([]);
     this.subscriptions.set([]);
@@ -105,6 +104,8 @@ export class Profile implements OnInit {
           this.subscribersCount.set(user.subscribersCount || 0);
           this.subscribedCount.set(user.subscribedCount || 0);
           this.isSubscribed.set(user.isSubscribed || false);
+          this.loadPosts(user.id);
+
           this.isLoading.set(false);
         },
         error: (error: HttpErrorResponse) => {
@@ -130,6 +131,7 @@ export class Profile implements OnInit {
       this.postsCount.set(currentUser.postsCount || 0);
       this.subscribersCount.set(currentUser.subscribersCount || 0);
       this.subscribedCount.set(currentUser.subscribedCount || 0);
+      this.loadPosts(currentUser.id);
       this.isLoading.set(false);
     } else {
       this.router.navigate(['/login']);
@@ -208,6 +210,8 @@ export class Profile implements OnInit {
   }
 
   loadSubscribers(userId: number) {
+    if (this.subscribers().length > 0) return;
+
     this.subscribersLoading.set(true);
     this.userService.getSubscribers(userId).subscribe({
       next: (users: User[]) => {
@@ -222,6 +226,8 @@ export class Profile implements OnInit {
   }
 
   loadSubscriptions(userId: number) {
+    if (this.subscriptions().length > 0) return;
+
     this.subscriptionsLoading.set(true);
     this.userService.getSubscriptions(userId).subscribe({
       next: (users: User[]) => {
