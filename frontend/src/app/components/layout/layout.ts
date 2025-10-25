@@ -77,7 +77,7 @@ export class MainLayout {
 
   navigateToProfile() {
     if (this.currentUser?.username) {
-      this.router.navigate(['/profile', this.currentUser.username]);
+      this.router.navigate(['/profile']);
     }
   }
 

@@ -14,8 +14,7 @@
   </div>
   @if (shouldShowSubscribeButton()) {
   <button
-    mat-flat-button
-    [color]="user().isSubscribed ? 'accent' : 'primary'"
+    [matButton]="user().isSubscribed ? 'outlined' : 'filled'"
     class="subscribe-btn-small"
     (click)="onSubscribeClick($event)"
   >

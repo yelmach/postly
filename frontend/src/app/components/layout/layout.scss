@@ -2,7 +2,10 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: var(--mat-sys-surface-dim);
+  background: var(--mat-sys-surface);
+}
+
+.container {
   overflow-y: auto;
 }
 
@@ -24,7 +27,8 @@
   top: 0;
   background: var(--mat-sys-surface-container);
   color: var(--mat-sys-on-surface);
-  box-shadow: var(--mat-sys-level2);
+  box-shadow: 0px 3px 3px -2px var(--mat-sys-umbra-color),
+    0px 3px 4px 0px var(--mat-sys-penumbra-color), 0px 1px 8px 0px var(--mat-sys-ambient-color);
   padding: 0 1rem;
   height: 60px;
   z-index: 1000;
@@ -44,8 +48,12 @@
     margin: 0 auto;
     gap: 2rem;
 
-    @media (max-width: 968px) {
+    @media (max-width: 768px) {
       gap: 1rem;
+    }
+
+    @media (max-width: 568px) {
+      gap: 0.5rem;
     }
   }
 }
@@ -73,13 +81,15 @@ app-header-search {
     font-size: 2rem;
     width: 2rem;
     height: 2rem;
-    @media (max-width: 468px) {
+
+    @media (max-width: 568px) {
       display: none;
     }
   }
 
   span {
-    font-size: 1.375rem;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
     font-weight: 700;
 
     @media (max-width: 768px) {
@@ -132,15 +142,14 @@ app-header-search {
 
     &:hover {
       background: var(--mat-sys-surface-container-highest);
-      color: var(--mat-sys-on-surface);
     }
   }
 
   .theme-toggle,
   .notification-btn,
   .profile-btn {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     color: var(--mat-sys-on-surface);
     transition: all 0.2s ease;
     display: flex;
@@ -156,6 +165,17 @@ app-header-search {
       font-size: 2rem;
       width: 2rem;
       height: 2rem;
+
+      @media (max-width: 678px) {
+        font-size: 1.7rem;
+        width: 1.7rem;
+        height: 1.7rem;
+      }
+    }
+
+    @media (max-width: 678px) {
+      width: 35px;
+      height: 35px;
     }
   }
 
@@ -177,8 +197,9 @@ app-header-search {
 ::ng-deep {
   .cdk-overlay-pane {
     .mat-mdc-menu-panel {
-      margin-top: 0.5rem;
+      margin-top: 0.7rem;
       border-radius: 10px;
+      background: var(--mat-sys-surface-container-high);
 
       .mat-mdc-menu-content {
         padding: 0;

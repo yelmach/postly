@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { UserService } from '@/services/user.service';
-import { AuthService } from '@/services/auth.service';
 import { User } from '@/models/user';
 import { UserCardComponent } from '@/components/user-card/user-card.component';
 import { EmptyStateComponent } from '@/components/empty-state/empty-state.component';
