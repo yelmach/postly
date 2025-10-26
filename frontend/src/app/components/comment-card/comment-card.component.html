@@ -14,15 +14,70 @@
   </div>
 
   <div class="comment">
-    <div class="author-info" (click)="onAuthorClick($event)">
-      <div class="author-name">
-        {{ comment().author.firstName }} {{ comment().author.lastName }}
+    <div class="comment-header">
+      <div class="author-info" (click)="onAuthorClick($event)">
+        <div class="author-name">
+          {{ comment().author.firstName }} {{ comment().author.lastName }}
+        </div>
+        <div class="comment-time">
+          {{ getRelativeTime(comment().createdAt) }}
+          @if (comment().updatedAt) {
+          <span class="edited-indicator">(edited)</span>
+          }
+        </div>
       </div>
-      <div class="comment-time">{{ getRelativeTime(comment().createdAt) }}</div>
+
+      @if (isCommentOwner()) {
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        class="menu-button"
+        aria-label="Comment options"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="onEditClick()">
+          <mat-icon>edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        <button mat-menu-item (click)="onDeleteClick()" class="delete-option">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+      }
     </div>
 
+    @if (!isEditing()) {
     <div class="comment-content">
       <p>{{ comment().content }}</p>
     </div>
+    } @else {
+    <div class="edit-form">
+      <mat-form-field class="edit-input" appearance="outline">
+        <mat-label>Edit comment</mat-label>
+        <textarea
+          matInput
+          [(ngModel)]="editContent"
+          rows="4"
+          maxlength="1000"
+          [disabled]="isSubmitting()"
+        ></textarea>
+        <mat-hint align="end">{{ editContent().length }}/1000</mat-hint>
+      </mat-form-field>
+      <div class="edit-actions">
+        <button mat-button (click)="onCancelEdit()" [disabled]="isSubmitting()">Cancel</button>
+        <button
+          mat-flat-button
+          (click)="onSaveEdit()"
+          [disabled]="!editContent().trim() || isSubmitting()"
+        >
+          {{ isSubmitting() ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </div>
+    }
   </div>
 </div>

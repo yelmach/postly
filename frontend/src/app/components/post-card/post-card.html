@@ -13,7 +13,12 @@
         <span class="author-name">
           {{ post().author.firstName }} {{ post().author.lastName }}
         </span>
-        <span class="post-time">{{ getRelativeTime(post().createdAt) }}</span>
+        <span class="post-time">
+          {{ getRelativeTime(post().createdAt) }}
+          @if (isEdited()) {
+          <span class="edited-indicator">(edited)</span>
+          }
+        </span>
       </div>
     </div>
 

@@ -31,4 +31,19 @@ export class CommentService {
       params: { page: page.toString(), size: size.toString() },
     });
   }
+
+  updateComment(
+    postId: number,
+    commentId: number,
+    request: CommentRequest
+  ): Observable<CommentResponse> {
+    return this.http.put<CommentResponse>(
+      `${this.apiUrl}/posts/${postId}/comments/${commentId}`,
+      request
+    );
+  }
+
+  deleteComment(postId: number, commentId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/posts/${postId}/comments/${commentId}`);
+  }
 }

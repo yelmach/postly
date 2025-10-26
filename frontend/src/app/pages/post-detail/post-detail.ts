@@ -177,6 +177,17 @@ export class PostDetail implements OnInit {
     });
   }
 
+  onCommentUpdated(updatedComment: CommentResponse) {
+    this.comments.update((current) =>
+      current.map((comment) => (comment.id === updatedComment.id ? updatedComment : comment))
+    );
+  }
+
+  onCommentDeleted(commentId: number) {
+    this.comments.update((current) => current.filter((comment) => comment.id !== commentId));
+    this.post.update((p) => (p ? { ...p, commentsCount: p.commentsCount - 1 } : p));
+  }
+
   onEditClick() {
     const post = this.post();
     if (post) {
@@ -234,6 +245,16 @@ export class PostDetail implements OnInit {
     const post = this.post();
     const currentUser = this.authService.currentUser();
     return currentUser !== null && post !== null && currentUser.id === post.author.id;
+  }
+
+  isEdited(): boolean {
+    const post = this.post();
+    if (!post || !post.updatedAt) return false;
+
+    const created = new Date(post.createdAt).getTime();
+    const updated = new Date(post.updatedAt).getTime();
+
+    return updated - created > 1000;
   }
 
   getRelativeTime(dateString: string): string {

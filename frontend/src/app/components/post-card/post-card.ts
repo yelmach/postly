@@ -180,6 +180,16 @@ export class PostCard {
     return currentId !== undefined && currentId === this.post().author.id;
   }
 
+  isEdited(): boolean {
+    const post = this.post();
+    if (!post.updatedAt) return false;
+
+    const created = new Date(post.createdAt).getTime();
+    const updated = new Date(post.updatedAt).getTime();
+
+    return updated - created > 1000;
+  }
+
   getRelativeTime(dateString: string): string {
     const date = new Date(dateString);
     const now = new Date();

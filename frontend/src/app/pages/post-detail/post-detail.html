@@ -19,11 +19,6 @@
   </button>
 
   <mat-card class="post-detail-card">
-    <!-- Post Title Header -->
-    <mat-card-header class="title-header">
-      <h1 class="post-title">{{ post()!.title }}</h1>
-    </mat-card-header>
-
     <!-- User Info Section -->
     <div class="user-info-section">
       <div class="author-info" (click)="onAuthorClick($event)">
@@ -42,7 +37,12 @@
           <span class="author-name">
             {{ post()!.author.firstName }} {{ post()!.author.lastName }}
           </span>
-          <span class="post-time">{{ getRelativeTime(post()!.createdAt) }}</span>
+          <span class="post-time">
+            {{ getRelativeTime(post()!.createdAt) }}
+            @if (isEdited()) {
+            <span class="edited-indicator">(edited)</span>
+            }
+          </span>
         </div>
       </div>
 
@@ -58,7 +58,11 @@
         <span class="like-count">{{ likesCount() }}</span>
 
         <!-- Three-dot menu -->
-        <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="menu"
+          class="menu-button"
+        >
           <mat-icon>more_vert</mat-icon>
         </button>
 
@@ -81,6 +85,11 @@
         </mat-menu>
       </div>
     </div>
+
+    <!-- Post Title Header -->
+    <mat-card-header class="title-header">
+      <h1 class="post-title">{{ post()!.title }}</h1>
+    </mat-card-header>
 
     <!-- Post Content -->
     <mat-card-content class="post-content">
@@ -144,7 +153,12 @@
       } @else {
       <div class="comments-list">
         @for (comment of comments(); track comment.id) {
-        <app-comment-card [comment]="comment" />
+        <app-comment-card
+          [comment]="comment"
+          [postId]="post()!.id"
+          (commentUpdated)="onCommentUpdated($event)"
+          (commentDeleted)="onCommentDeleted($event)"
+        />
         }
       </div>
       }
