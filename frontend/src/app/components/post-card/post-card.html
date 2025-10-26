@@ -1,77 +1,72 @@
 <mat-card class="post-card" (click)="onPostClick()">
   <!-- Post Header -->
-  <mat-card-header>
-    <div class="post-header">
-      <div class="author-info" (click)="onAuthorClick($event)">
-        @if (post().author.profileUrl) {
-        <img
-          [src]="post().author.profileUrl"
-          [alt]="post().author.username"
-          class="author-avatar"
-        />
-        } @else {
-        <div class="author-avatar-placeholder">
-          <mat-icon>person</mat-icon>
-        </div>
-        }
-        <div class="author-details">
-          <span class="author-name">
-            {{ post().author.firstName }} {{ post().author.lastName }}
-          </span>
-          <span class="post-time"> {{ getRelativeTime(post().createdAt) }} </span>
-        </div>
+  <div class="post-header">
+    <div class="author-info" (click)="onAuthorClick($event)">
+      @if (post().author.profileUrl) {
+      <img [src]="post().author.profileUrl" [alt]="post().author.username" class="author-avatar" />
+      } @else {
+      <div class="author-avatar-placeholder">
+        <mat-icon>person</mat-icon>
       </div>
-
-      <!-- Three-dot menu -->
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="menu"
-        (click)="$event.stopPropagation()"
-        class="menu-button"
-      >
-        <mat-icon>more_vert</mat-icon>
-      </button>
-
-      <mat-menu #menu="matMenu" xPosition="before">
-        @if (isPostOwner()) {
-        <button mat-menu-item (click)="onEditClick($event)">
-          <mat-icon>edit</mat-icon>
-          <span>Edit</span>
-        </button>
-        <button mat-menu-item (click)="onDeleteClick($event)" class="delete-option">
-          <mat-icon>delete</mat-icon>
-          <span>Delete</span>
-        </button>
-        } @else {
-        <button mat-menu-item (click)="onReportClick($event)">
-          <mat-icon>flag</mat-icon>
-          <span>Report</span>
-        </button>
-        }
-      </mat-menu>
+      }
+      <div class="author-details">
+        <span class="author-name">
+          {{ post().author.firstName }} {{ post().author.lastName }}
+        </span>
+        <span class="post-time">{{ getRelativeTime(post().createdAt) }}</span>
+      </div>
     </div>
-  </mat-card-header>
+
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      (click)="$event.stopPropagation()"
+      class="menu-button"
+    >
+      <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #menu="matMenu" xPosition="before">
+      @if (isPostOwner()) {
+      <button mat-menu-item (click)="onEditClick($event)">
+        <mat-icon>edit</mat-icon>
+        <span>Edit</span>
+      </button>
+      <button mat-menu-item (click)="onDeleteClick($event)" class="delete-option">
+        <mat-icon>delete</mat-icon>
+        <span>Delete</span>
+      </button>
+      } @else {
+      <button mat-menu-item (click)="onReportClick($event)">
+        <mat-icon>flag</mat-icon>
+        <span>Report</span>
+      </button>
+      }
+    </mat-menu>
+  </div>
 
   <!-- Post Content -->
-  <mat-card-content>
-    @if (post().title) {
+  <div class="post-body">
     <h2 class="post-title">{{ post().title }}</h2>
-    }
+
+    <!-- Content Text -->
+    @if (plainTextContent()) {
     <p class="post-content">{{ plainTextContent() }}</p>
+    }
 
     <!-- Media Preview -->
-    @if (post().mediaUrls && post().mediaUrls.length > 0) {
+    @if (firstMedia()) {
     <div class="post-media">
-      @if (post().mediaUrls[0].mediaType === 'IMAGE') {
+      @if (firstMedia()!.mediaType === 'IMAGE') {
       <img
-        [src]="post().mediaUrls[0].mediaUrl"
-        [alt]="post().mediaUrls[0].id || 'Post image'"
+        [src]="firstMedia()!.mediaUrl"
+        [alt]="'Post image'"
         class="media-image"
-        (click)="onMediaClick($event, post().mediaUrls[0].mediaUrl)"
+        (click)="onMediaClick($event, firstMedia()!.mediaUrl)"
       />
-      } @else if (post().mediaUrls[0].mediaType === 'VIDEO') {
+      } @else if (firstMedia()!.mediaType === 'VIDEO') {
       <video
-        [src]="post().mediaUrls[0].mediaUrl"
+        [src]="firstMedia()!.mediaUrl"
         class="media-video"
         controls
         (click)="$event.stopPropagation()"
@@ -81,10 +76,10 @@
       }
     </div>
     }
-  </mat-card-content>
+  </div>
 
   <!-- Post Actions -->
-  <mat-card-actions class="post-actions">
+  <div class="post-actions">
     <button
       mat-button
       (click)="onLikeClick($event)"
@@ -92,11 +87,11 @@
       [class.liked]="isLiked()"
     >
       <mat-icon>{{ isLiked() ? 'favorite' : 'favorite_border' }}</mat-icon>
-      <span>{{ likesCount() }}</span>
+      <span class="action-count">{{ likesCount() }} like</span>
     </button>
     <button mat-button (click)="onPostClick()" class="action-button">
       <mat-icon>comment</mat-icon>
-      <span>{{ post().commentsCount }}</span>
+      <span class="action-count">{{ post().commentsCount }} Comments</span>
     </button>
-  </mat-card-actions>
+  </div>
 </mat-card>

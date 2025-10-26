@@ -3,8 +3,6 @@ package postly.service;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +11,6 @@ import postly.dto.response.UserResponse;
 import postly.entity.MediaType;
 import postly.entity.PostMediaEntity;
 import postly.entity.UserEntity;
-import postly.exception.ApiException;
 import postly.repository.PostMediaRepository;
 import postly.repository.PostRepository;
 import postly.repository.SubscriptionRepository;
@@ -23,6 +20,9 @@ import postly.repository.UserRepository;
 public class MediaUploadService {
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private PostMediaRepository postMediaRepository;
@@ -66,10 +66,7 @@ public class MediaUploadService {
     }
 
     public UserResponse updateProfilePicture(MultipartFile file) {
-        UserEntity currentUser = getCurrentUserEntity();
-
-        UserEntity user = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> ApiException.notFound("User not found"));
+        UserEntity user = userService.getCurrentUserEntity();
 
         if (user.getProfileUrl() != null && !user.getProfileUrl().isEmpty()) {
             fileStorageService.deleteFile(user.getProfileUrl());
@@ -84,10 +81,7 @@ public class MediaUploadService {
     }
 
     public UserResponse removeProfilePicture() {
-        UserEntity currentUser = getCurrentUserEntity();
-
-        UserEntity user = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> ApiException.notFound("User not found"));
+        UserEntity user = userService.getCurrentUserEntity();
 
         if (user.getProfileUrl() != null && !user.getProfileUrl().isEmpty()) {
             fileStorageService.deleteFile(user.getProfileUrl());
@@ -98,11 +92,6 @@ public class MediaUploadService {
         UserEntity updatedUser = userRepository.save(user);
 
         return buildUserResponse(updatedUser);
-    }
-
-    private UserEntity getCurrentUserEntity() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (UserEntity) auth.getPrincipal();
     }
 
     private UserResponse buildUserResponse(UserEntity user) {

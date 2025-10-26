@@ -37,11 +37,19 @@ export class PostCard {
     });
   }
 
+  firstMedia = computed(() => {
+    const mediaUrls = this.post().mediaUrls;
+    return mediaUrls && mediaUrls.length > 0 ? mediaUrls[0] : null;
+  });
+
   plainTextContent = computed(() => {
     const content = this.post().content;
 
-    // Remove images: ![alt](url)
-    let plainText = content.replace(/!\[.*?\]\(.*?\)/g, '');
+    // Remove HTML video tags: <video...>...</video>
+    let plainText = content.replace(/<video[^>]*>.*?<\/video>/gs, '');
+
+    // Remove all media (images): ![alt](url) or other media markdown
+    plainText = plainText.replace(/!\[.*?\]\(.*?\)/g, '');
 
     // Remove links but keep text: [text](url) -> text
     plainText = plainText.replace(/\[(.*?)\]\(.*?\)/g, '$1');
@@ -73,8 +81,6 @@ export class PostCard {
     plainText = plainText.replace(/^\d+\.\s+/gm, '');
 
     // Clean up extra whitespace and newlines
-    plainText = plainText.replace(/\n\n+/g, ' ');
-    plainText = plainText.replace(/\n/g, ' ');
     plainText = plainText.trim();
 
     // Truncate if needed
@@ -167,17 +173,6 @@ export class PostCard {
   onMediaClick(event: Event, mediaUrl: string) {
     event.stopPropagation();
     window.open(mediaUrl, '_blank');
-  }
-
-  getTruncatedContent(): string {
-    const content = this.post().content;
-    const maxLength = this.maxContentLength();
-
-    if (content.length <= maxLength) {
-      return content;
-    }
-
-    return content.substring(0, maxLength) + '...';
   }
 
   isPostOwner(): boolean {

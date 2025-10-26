@@ -38,9 +38,9 @@ html {
   --mat-sys-surface-dim: light-dark(#bebcc2, #0d0e14);
   --mat-sys-surface-bright: light-dark(#ffffff, #3e3f46);
   --mat-sys-surface: light-dark(#e5e4e7, #15161e);
-  --mat-sys-surface-container: light-dark(#f7f6f9, #22222a);
-  --mat-sys-surface-container-high: light-dark(#fafafe, #272730);
-  --mat-sys-surface-container-highest: light-dark(#ffffff, #34343b);
+  --mat-sys-surface-container: light-dark(#f7f6f9, hsl(240, 15%, 15%));
+  --mat-sys-surface-container-high: light-dark(#fafafe, hsl(240, 15%, 19%));
+  --mat-sys-surface-container-highest: light-dark(#ffffff, hsl(240, 15%, 23%));
 
   --mat-sys-on-surface: light-dark(#1a1b22, #e3e1ea);
   --mat-sys-surface-variant: light-dark(#e2e1f1, #22222a);
@@ -92,7 +92,7 @@ html {
   /* Error palette variables */
   --mat-sys-error: light-dark(#ba1a1a, #ffb4ab);
   --mat-sys-on-error: light-dark(#ffffff, #690005);
-  --mat-sys-error-container: light-dark(#ffdad6, #93000a);
+  --mat-sys-error-container: light-dark(#ffdad6, #52031d);
   --mat-sys-on-error-container: light-dark(#410002, #ffdad6);
 
   /* Neutral variant palette variables */

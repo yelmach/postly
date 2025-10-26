@@ -78,10 +78,7 @@ public class UserService {
     }
 
     public UserResponse updateUser(UpdateProfileRequest request) {
-        UserEntity currentUser = getCurrentUserEntity();
-
-        UserEntity user = userRepository.findById(currentUser.getId())
-                .orElseThrow(() -> ApiException.notFound("User not found"));
+        UserEntity user = getCurrentUserEntity();
 
         if (request.firstName() != null && !request.firstName().isBlank()) {
             user.setFirstName(request.firstName().trim());
