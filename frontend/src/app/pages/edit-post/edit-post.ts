@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { PostService } from '@/services/post.service';
@@ -16,6 +16,8 @@ import { ErrorStateComponent } from '@/components/error-state/error-state.compon
 export class EditPost implements OnInit {
   private postService = inject(PostService);
   private router = inject(Router);
+
+  postFormComponent = viewChild<PostFormComponent>(PostFormComponent);
 
   post = signal<PostResponse | null>(null);
   errorMessage = signal<string>('');
@@ -51,13 +53,7 @@ export class EditPost implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         this.isSubmitting.set(false);
-        if (error.error?.message) {
-          this.setFormError(error.error.message);
-        } else if (error.error?.details) {
-          this.setFormError('Please check your input and try again.');
-        } else {
-          this.setFormError('Failed to update post. Please try again.');
-        }
+        this.handleError(error);
       },
     });
   }
@@ -71,8 +67,32 @@ export class EditPost implements OnInit {
     }
   }
 
+  private handleError(error: HttpErrorResponse) {
+    const formComponent = this.postFormComponent();
+    if (!formComponent) return;
+
+    // Handle field-specific errors
+    if (error.error?.details) {
+      const details = error.error.details;
+      formComponent.setError(details);
+      return;
+    }
+
+    // Handle general error message
+    if (error.error?.message) {
+      formComponent.setError(error.error.message);
+      return;
+    }
+
+    // Fallback error
+    formComponent.setError('Failed to update post. Please try again.');
+  }
+
   setFormError(error: string) {
-    console.error('Form error:', error);
+    const formComponent = this.postFormComponent();
+    if (formComponent) {
+      formComponent.setError(error);
+    }
   }
 
   goBack() {

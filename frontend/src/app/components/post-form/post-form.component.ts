@@ -51,6 +51,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
   });
 
   formError = signal('');
+  fieldErrors = signal<{ [key: string]: string }>({});
   uploadedMedia = signal<PostMediaResponse[]>([]);
   isUploadingMedia = signal(false);
 
@@ -229,6 +230,11 @@ export class PostFormComponent implements OnInit, OnDestroy {
   }
 
   getErrorMessage(fieldName: string): string {
+    const backendError = this.fieldErrors()[fieldName];
+    if (backendError) {
+      return backendError;
+    }
+
     const field = this.postForm.get(fieldName);
     if (!field || field.valid || field.untouched) return '';
 
@@ -244,8 +250,22 @@ export class PostFormComponent implements OnInit, OnDestroy {
     return '';
   }
 
-  setError(error: string) {
-    this.formError.set(error);
+  setError(error: string | { [key: string]: string }) {
+    if (typeof error === 'string') {
+      this.formError.set(error);
+      this.fieldErrors.set({});
+    } else {
+      this.fieldErrors.set(error);
+      this.formError.set('');
+
+      Object.keys(error).forEach((fieldName) => {
+        const control = this.postForm.get(fieldName);
+        if (control) {
+          control.setErrors({ backend: error[fieldName] });
+          control.markAsTouched();
+        }
+      });
+    }
   }
 
   getTitle(): string {
