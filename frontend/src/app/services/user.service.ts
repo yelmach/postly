@@ -20,7 +20,11 @@ export class UserService {
   }
 
   updateProfilePicture(formData: FormData): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/users/picture`, formData);
+    return this.http.put<User>(`${this.apiUrl}/media/profile-picture`, formData);
+  }
+
+  removeProfilePicture(): Observable<User> {
+    return this.http.delete<User>(`${this.apiUrl}/media/profile-picture`);
   }
 
   subscribe(userId: number): Observable<void> {

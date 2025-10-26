@@ -55,8 +55,10 @@ export class EditProfileDialog {
   hidePassword = signal(true);
   isLoading = signal(false);
   formError = signal('');
+  fieldErrors = signal<{ [key: string]: string }>({});
   selectedFile = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
+  shouldRemovePicture = signal(false);
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User }) {
     this.editForm.patchValue({
@@ -84,6 +86,7 @@ export class EditProfileDialog {
       }
 
       this.selectedFile.set(file);
+      this.shouldRemovePicture.set(false);
       this.formError.set('');
 
       const reader = new FileReader();
@@ -95,6 +98,12 @@ export class EditProfileDialog {
   }
 
   clearSelectedFile() {
+    this.selectedFile.set(null);
+    this.previewUrl.set(null);
+  }
+
+  onRemovePicture() {
+    this.shouldRemovePicture.set(true);
     this.selectedFile.set(null);
     this.previewUrl.set(null);
   }
@@ -111,11 +120,19 @@ export class EditProfileDialog {
 
   async onSave() {
     this.formError.set('');
+    this.fieldErrors.set({});
     this.isLoading.set(true);
+
+    if (this.editForm.invalid) {
+      this.isLoading.set(false);
+      return;
+    }
 
     try {
       if (this.selectedFile()) {
         await this.uploadProfilePicture();
+      } else if (this.shouldRemovePicture()) {
+        await this.removeProfilePicture();
       }
 
       if (this.editForm.dirty) {
@@ -128,6 +145,18 @@ export class EditProfileDialog {
       this.isLoading.set(false);
       this.handleError(error as HttpErrorResponse);
     }
+  }
+
+  private removeProfilePicture(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.userService.removeProfilePicture().subscribe({
+        next: (updatedUser) => {
+          this.authService.currentUser.set(updatedUser);
+          resolve();
+        },
+        error: (error) => reject(error),
+      });
+    });
   }
 
   private uploadProfilePicture(): Promise<void> {
@@ -153,11 +182,6 @@ export class EditProfileDialog {
 
   private updateProfileData(): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (this.editForm.invalid) {
-        reject(new Error('Form is invalid'));
-        return;
-      }
-
       const formData = this.editForm.value;
 
       const updateData: any = {};
@@ -193,16 +217,39 @@ export class EditProfileDialog {
   }
 
   private handleError(error: HttpErrorResponse) {
+    if (error.error?.details) {
+      const details = error.error.details;
+      this.fieldErrors.set(details);
+
+      Object.keys(details).forEach((fieldName) => {
+        const control = this.editForm.get(fieldName);
+        if (control) {
+          control.setErrors({ backend: details[fieldName] });
+          control.markAsTouched();
+        }
+      });
+      return;
+    }
+
     if (error.error?.message) {
       this.formError.set(error.error.message);
-    } else if (error.error?.error) {
-      this.formError.set(error.error.error);
-    } else {
-      this.formError.set('Failed to update profile. Please try again.');
+      return;
     }
+
+    if (error.error?.error) {
+      this.formError.set(error.error.error);
+      return;
+    }
+
+    this.formError.set('Failed to update profile. Please try again.');
   }
 
   getErrorMessage(fieldName: string): string {
+    const backendError = this.fieldErrors()[fieldName];
+    if (backendError) {
+      return backendError;
+    }
+
     const field = this.editForm.get(fieldName);
     if (!field || field.valid || field.untouched) return '';
 

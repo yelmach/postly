@@ -7,7 +7,7 @@
       <div class="current-picture">
         @if (previewUrl()) {
         <img [src]="previewUrl()" alt="Profile preview" class="preview-avatar" />
-        } @else if (data.user.profileUrl) {
+        } @else if (data.user.profileUrl && !shouldRemovePicture()) {
         <img [src]="data.user.profileUrl" alt="Current profile" class="preview-avatar" />
         } @else {
         <div class="preview-avatar-placeholder">
@@ -25,14 +25,19 @@
             (change)="onFileSelected($event)"
             style="display: none"
           />
-          <button mat-stroked-button color="primary" (click)="fileInput.click()">
+          <button mat-stroked-button (click)="fileInput.click()">
             <mat-icon>upload</mat-icon>
             Change Picture
           </button>
           @if (selectedFile()) {
-          <button mat-stroked-button color="warn" (click)="clearSelectedFile()">
+          <button mat-button class="warn-button" (click)="clearSelectedFile()">
             <mat-icon>close</mat-icon>
             Clear
+          </button>
+          } @else if (data.user.profileUrl && !shouldRemovePicture()) {
+          <button mat-flat-button class="warn-button" (click)="onRemovePicture()">
+            <mat-icon>delete</mat-icon>
+            Remove Picture
           </button>
           }
         </div>
@@ -104,7 +109,11 @@
       mat-flat-button
       color="primary"
       (click)="onSave()"
-      [disabled]="isLoading() || (!editForm.dirty && !selectedFile())"
+      [disabled]="
+        isLoading() ||
+        (!editForm.dirty && !selectedFile() && !shouldRemovePicture()) ||
+        editForm.invalid
+      "
     >
       @if (isLoading()) {
       <mat-spinner diameter="20" color="accent"></mat-spinner>
