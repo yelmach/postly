@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 
 import postly.entity.CommentEntity;
 
-public record CommentResponse(Long id, String content, UserResponse author, LocalDateTime createdAt) {
+public record CommentResponse(Long id, String content, UserResponse author, LocalDateTime createdAt,
+        LocalDateTime updatedAt) {
 
     public static CommentResponse fromComment(CommentEntity comment) {
         UserResponse author = UserResponse.fromUser(comment.getUser()).build();
@@ -13,6 +14,7 @@ public record CommentResponse(Long id, String content, UserResponse author, Loca
                 comment.getId(),
                 comment.getContent(),
                 author,
-                comment.getCreatedAt());
+                comment.getCreatedAt(),
+                comment.getUpdatedAt());
     }
 }

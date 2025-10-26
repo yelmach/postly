@@ -50,4 +50,33 @@ public class CommentService {
     public long countCommentsByPost(Long postId) {
         return commentRepository.countByPostId(postId);
     }
+
+    @Transactional
+    public CommentResponse updateComment(Long commentId, CommentRequest request) {
+        UserEntity currentUser = userService.getCurrentUserEntity();
+        CommentEntity comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> ApiException.notFound("Comment not found"));
+
+        if (!comment.getUser().getId().equals(currentUser.getId())) {
+            throw ApiException.forbidden("You are not authorized to update this comment");
+        }
+
+        comment.setContent(request.content());
+        comment = commentRepository.save(comment);
+
+        return CommentResponse.fromComment(comment);
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId) {
+        UserEntity currentUser = userService.getCurrentUserEntity();
+        CommentEntity comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> ApiException.notFound("Comment not found"));
+
+        if (!comment.getUser().getId().equals(currentUser.getId())) {
+            throw ApiException.forbidden("You are not authorized to delete this comment");
+        }
+
+        commentRepository.delete(comment);
+    }
 }
