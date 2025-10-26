@@ -84,18 +84,19 @@ public class UserService {
                 .orElseThrow(() -> ApiException.notFound("User not found"));
 
         if (request.firstName() != null && !request.firstName().isBlank()) {
-            user.setFirstName(request.firstName());
+            user.setFirstName(request.firstName().trim());
         }
 
         if (request.lastName() != null && !request.lastName().isBlank()) {
-            user.setLastName(request.lastName());
+            user.setLastName(request.lastName().trim());
         }
 
         if (request.email() != null && !request.email().isBlank()) {
-            if (!request.email().equals(user.getEmail()) && userRepository.existsByEmail(request.email())) {
+            String trimmedEmail = request.email().trim();
+            if (!trimmedEmail.equals(user.getEmail()) && userRepository.existsByEmail(trimmedEmail)) {
                 throw ApiException.conflict("Email is already taken");
             }
-            user.setEmail(request.email());
+            user.setEmail(trimmedEmail);
         }
 
         if (request.password() != null && !request.password().isBlank()) {
@@ -103,7 +104,7 @@ public class UserService {
         }
 
         if (request.bio() != null) {
-            user.setBio(request.bio());
+            user.setBio(request.bio().trim());
         }
 
         UserEntity updatedUser = userRepository.save(user);

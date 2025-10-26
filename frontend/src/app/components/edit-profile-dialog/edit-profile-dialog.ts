@@ -123,16 +123,25 @@ export class EditProfileDialog {
     this.fieldErrors.set({});
     this.isLoading.set(true);
 
+    Object.keys(this.editForm.controls).forEach((key) => {
+      const control = this.editForm.get(key);
+      if (control && typeof control.value === 'string' && key !== 'password') {
+        control.setValue(control.value.trim(), { emitEvent: false });
+      }
+    });
+
     if (this.editForm.invalid) {
       this.isLoading.set(false);
       return;
     }
 
     try {
+      if (this.shouldRemovePicture()) {
+        await this.removeProfilePicture();
+      }
+
       if (this.selectedFile()) {
         await this.uploadProfilePicture();
-      } else if (this.shouldRemovePicture()) {
-        await this.removeProfilePicture();
       }
 
       if (this.editForm.dirty) {

@@ -72,6 +72,13 @@ export class Register {
     this.formError.set('');
     this.fieldErrors.set({});
 
+    Object.keys(this.registerForm.controls).forEach((key) => {
+      const control = this.registerForm.get(key);
+      if (control && typeof control.value === 'string' && key !== 'password') {
+        control.setValue(control.value.trim(), { emitEvent: false });
+      }
+    });
+
     if (this.registerForm.invalid) {
       return;
     }

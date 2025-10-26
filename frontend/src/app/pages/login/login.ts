@@ -48,6 +48,11 @@ export class Login {
     this.formError.set('');
     this.fieldErrors.set({});
 
+    const credentialsControl = this.loginForm.get('credentials');
+    if (credentialsControl && typeof credentialsControl.value === 'string') {
+      credentialsControl.setValue(credentialsControl.value.trim(), { emitEvent: false });
+    }
+
     if (this.loginForm.invalid) {
       return;
     }

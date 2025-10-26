@@ -27,22 +27,28 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     public UserEntity register(RegisterRequest request) {
-        if (userRepository.existsByUsername(request.username())) {
+        String firstName = request.firstName() != null ? request.firstName().trim() : null;
+        String lastName = request.lastName() != null ? request.lastName().trim() : null;
+        String username = request.username() != null ? request.username().trim() : null;
+        String email = request.email() != null ? request.email().trim() : null;
+        String bio = request.bio() != null ? request.bio().trim() : null;
+
+        if (userRepository.existsByUsername(username)) {
             throw ApiException.badRequest("Username is already taken");
         }
 
-        if (userRepository.existsByEmail(request.email())) {
+        if (userRepository.existsByEmail(email)) {
             throw ApiException.badRequest("Email is already registered");
         }
 
         UserEntity user = new UserEntity();
-        user.setFirstName(request.firstName());
-        user.setLastName(request.lastName());
-        user.setUsername(request.username());
-        user.setEmail(request.email());
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setUsername(username);
+        user.setEmail(email);
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(Role.USER);
-        user.setBio(request.bio());
+        user.setBio(bio);
 
         UserEntity savedUser = userRepository.save(user);
 
