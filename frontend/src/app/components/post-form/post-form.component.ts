@@ -1,4 +1,14 @@
-import { Component, inject, OnInit, OnDestroy, signal, input, output, effect } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  OnDestroy,
+  signal,
+  input,
+  output,
+  effect,
+  AfterViewInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,11 +17,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { PostService } from '@/services/post.service';
 import { PostMediaResponse, MediaType, PostResponse } from '@/models/post';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorBannerComponent } from '@/components/error-banner/error-banner.component';
 import EasyMDE from 'easymde';
+import { ConfirmDialogService } from '@/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-post-form',
@@ -24,13 +36,16 @@ import EasyMDE from 'easymde';
     MatIconModule,
     MatProgressSpinnerModule,
     MatChipsModule,
+    MatTooltipModule,
     ErrorBannerComponent,
   ],
   templateUrl: './post-form.component.html',
   styleUrl: './post-form.component.scss',
 })
-export class PostFormComponent implements OnInit, OnDestroy {
+export class PostFormComponent implements AfterViewInit, OnDestroy {
   private postService = inject(PostService);
+
+  private confirmDialog = inject(ConfirmDialogService);
 
   // Inputs
   mode = input<'create' | 'edit'>('create');
@@ -77,10 +92,8 @@ export class PostFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    setTimeout(() => {
-      this.initializeEditor();
-    }, 0);
+  ngAfterViewInit() {
+    this.initializeEditor();
   }
 
   ngOnDestroy() {
@@ -124,8 +137,7 @@ export class PostFormComponent implements OnInit, OnDestroy {
         'preview',
       ],
       status: ['lines', 'words', 'cursor'],
-      minHeight: '400px',
-      maxHeight: '500px',
+      maxHeight: '450px',
     });
 
     // Set initial value if in edit mode
@@ -137,6 +149,13 @@ export class PostFormComponent implements OnInit, OnDestroy {
     this.easyMDE.codemirror.on('change', () => {
       const content = this.easyMDE?.value() || '';
       this.postForm.patchValue({ content }, { emitEvent: false });
+    });
+
+    this.easyMDE.codemirror.on('blur', () => {
+      const contentControl = this.postForm.get('content');
+      if (contentControl) {
+        contentControl.markAsTouched();
+      }
     });
   }
 
@@ -198,13 +217,12 @@ export class PostFormComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.formError.set('');
 
+    Object.keys(this.postForm.controls).forEach((key) => {
+      const control = this.postForm.get(key);
+      control?.setValue(control.value.trim(), { emitEvent: false });
+    });
+
     if (this.postForm.invalid) {
-      Object.keys(this.postForm.controls).forEach((key) => {
-        const control = this.postForm.get(key);
-        if (control?.invalid) {
-          control.markAsTouched();
-        }
-      });
       return;
     }
 
@@ -219,12 +237,13 @@ export class PostFormComponent implements OnInit, OnDestroy {
   }
 
   onCancel() {
-    const message =
-      this.mode() === 'edit'
-        ? 'Are you sure you want to discard your changes?'
-        : 'Are you sure you want to discard this post?';
-
-    if (confirm(message)) {
+    if (this.mode() === 'edit' || this.postForm.dirty || this.easyMDE?.value() !== '') {
+      this.confirmDialog.confirmDiscard('changes').subscribe((confirmed) => {
+        if (confirmed) {
+          this.formCancel.emit();
+        }
+      });
+    } else {
       this.formCancel.emit();
     }
   }

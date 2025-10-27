@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { PostService } from '@/services/post.service';
-import { PostRequest } from '@/models/post';
+import { PostRequest, PostResponse } from '@/models/post';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PostFormComponent } from '@/components/post-form/post-form.component';
 
@@ -28,13 +28,12 @@ export class NewPost {
     };
 
     this.postService.createPost(postRequest).subscribe({
-      next: (response) => {
+      next: (response: PostResponse) => {
         this.isSubmitting.set(false);
-        this.router.navigate(['/profile']);
+        this.router.navigate(['/post', response.id]);
       },
       error: (error: HttpErrorResponse) => {
         this.isSubmitting.set(false);
-        // Error handling is done in the form component
         console.error('Failed to create post:', error);
       },
     });

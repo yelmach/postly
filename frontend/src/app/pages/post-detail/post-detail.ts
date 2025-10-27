@@ -23,6 +23,7 @@ import { ErrorStateComponent } from '@/components/error-state/error-state.compon
 import { CommentCardComponent } from '@/components/comment-card/comment-card.component';
 import { ReportDialog } from '@/components/report-dialog/report-dialog';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ConfirmDialogService } from '@/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-post-detail',
@@ -52,6 +53,7 @@ export class PostDetail implements OnInit {
   private sanitizer = inject(DomSanitizer);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private confirmDialog = inject(ConfirmDialogService);
 
   post = signal<PostResponse | null>(null);
   isLoading = signal(true);
@@ -199,17 +201,19 @@ export class PostDetail implements OnInit {
     const post = this.post();
     if (!post) return;
 
-    if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
-      this.postService.deletePost(post.id).subscribe({
-        next: () => {
-          this.router.navigate(['/home']);
-        },
-        error: (error) => {
-          console.error('Failed to delete post:', error);
-          alert('Failed to delete post. Please try again.');
-        },
-      });
-    }
+    this.confirmDialog.confirmDelete('post').subscribe((confirmed) => {
+      if (confirmed) {
+        this.postService.deletePost(post.id).subscribe({
+          next: () => {
+            this.router.navigate(['/post', post.id]);
+          },
+          error: (error) => {
+            console.error('Failed to delete post:', error);
+            alert('Failed to delete post. Please try again.');
+          },
+        });
+      }
+    });
   }
 
   onReportClick() {

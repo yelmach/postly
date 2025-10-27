@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="post-header">
     <div class="title">
-      <mat-icon class="header-icon">{{ 'edit_note' }}</mat-icon>
+      <mat-icon class="header-icon">{{ mode() === 'edit' ? 'edit_note' : 'create' }}</mat-icon>
       <h1>{{ getTitle() }}</h1>
     </div>
     <button mat-icon-button class="close-btn" (click)="onCancel()" matTooltip="Cancel">
@@ -33,10 +33,12 @@
 
     <!-- Content Editor -->
     <div class="editor-section">
-      <label class="editor-label">Content</label>
       <textarea id="content-editor" formControlName="content"></textarea>
       @if (postForm.get('content')?.invalid && postForm.get('content')?.touched) {
-      <div class="editor-error">{{ getErrorMessage('content') }}</div>
+      <div class="editor-error">
+        <mat-icon class="error-icon">error</mat-icon>
+        <span>{{ getErrorMessage('content') }}</span>
+      </div>
       }
     </div>
 
@@ -50,7 +52,13 @@
 
     <!-- Action Buttons -->
     <div class="form-actions">
-      <button mat-stroked-button type="button" (click)="onCancel()" [disabled]="isSubmitting()">
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="onCancel()"
+        [disabled]="isSubmitting()"
+        class="cancel-btn"
+      >
         <mat-icon>close</mat-icon>
         Cancel
       </button>
