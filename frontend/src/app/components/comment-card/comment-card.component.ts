@@ -11,6 +11,7 @@ import { CommentResponse } from '@/models/comment';
 import { Router } from '@angular/router';
 import { AuthService } from '@/services/auth.service';
 import { CommentService } from '@/services/comment.service';
+import { ConfirmDialogService } from '@/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-comment-card',
@@ -28,6 +29,8 @@ import { CommentService } from '@/services/comment.service';
   styleUrl: './comment-card.component.scss',
 })
 export class CommentCardComponent {
+  private confirmDialog = inject(ConfirmDialogService);
+
   comment = input.required<CommentResponse>();
   postId = input.required<number>();
 
@@ -84,16 +87,18 @@ export class CommentCardComponent {
   }
 
   onDeleteClick(): void {
-    if (confirm('Are you sure you want to delete this comment? This action cannot be undone.')) {
-      this.commentService.deleteComment(this.postId(), this.comment().id).subscribe({
-        next: () => {
-          this.commentDeleted.emit(this.comment().id);
-        },
-        error: (error) => {
-          console.error('Failed to delete comment:', error);
-        },
-      });
-    }
+    this.confirmDialog.confirmDelete('comment').subscribe((confirmed) => {
+      if (confirmed) {
+        this.commentService.deleteComment(this.postId(), this.comment().id).subscribe({
+          next: () => {
+            this.commentDeleted.emit(this.comment().id);
+          },
+          error: (error) => {
+            console.error('Failed to delete comment:', error);
+          },
+        });
+      }
+    });
   }
 
   getRelativeTime(dateString: string): string {

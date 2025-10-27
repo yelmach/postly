@@ -199,6 +199,12 @@ app-header-search {
 
 // ============= MENU STYLES =============
 ::ng-deep {
+  mat-dialog-container {
+    .mat-mdc-dialog-surface {
+      background: var(--mat-sys-surface-container);
+    }
+  }
+
   .cdk-overlay-pane {
     .mat-mdc-menu-panel {
       margin-top: 0.7rem;

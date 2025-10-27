@@ -10,6 +10,7 @@ import { PostResponse } from '@/models/post';
 import { Router } from '@angular/router';
 import { PostService } from '@/services/post.service';
 import { ReportDialog } from '@/components/report-dialog/report-dialog';
+import { ConfirmDialogService } from '@/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-post-card',
@@ -18,6 +19,8 @@ import { ReportDialog } from '@/components/report-dialog/report-dialog';
   styleUrl: './post-card.scss',
 })
 export class PostCard {
+  private confirmDialog = inject(ConfirmDialogService);
+
   private postService = inject(PostService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
@@ -128,18 +131,19 @@ export class PostCard {
 
   onDeleteClick(event: Event) {
     event.stopPropagation();
-
-    if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
-      this.postService.deletePost(this.post().id).subscribe({
-        next: () => {
-          window.location.reload();
-        },
-        error: (error) => {
-          console.error('Failed to delete post:', error);
-          alert('Failed to delete post. Please try again.');
-        },
-      });
-    }
+    this.confirmDialog.confirmDelete('post').subscribe((confirmed) => {
+      if (confirmed) {
+        this.postService.deletePost(this.post().id).subscribe({
+          next: () => {
+            window.location.reload();
+          },
+          error: (error) => {
+            console.error('Failed to delete post:', error);
+            alert('Failed to delete post. Please try again.');
+          },
+        });
+      }
+    });
   }
 
   onReportClick(event: Event) {

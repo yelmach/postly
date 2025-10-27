@@ -36,6 +36,7 @@ import { UserDetailsDialog } from '@/components/user-details-dialog/user-details
 import { LoadingSpinnerComponent } from '@/components/loading-spinner/loading-spinner.component';
 import { ErrorStateComponent } from '@/components/error-state/error-state.component';
 import { EmptyStateComponent } from '@/components/empty-state/empty-state.component';
+import { ConfirmDialogService } from '@/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -68,6 +69,7 @@ export class AdminDashboard implements OnInit {
   authService = inject(AuthService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private confirmDialog = inject(ConfirmDialogService);
 
   // Stats
   stats = signal<DashboardStatsResponse | null>(null);
@@ -214,51 +216,56 @@ export class AdminDashboard implements OnInit {
 
   onUnbanUser(user: AdminUser, event?: MouseEvent) {
     event?.stopPropagation();
-    if (confirm(`Are you sure you want to unban @${user.username}?`)) {
-      this.moderationService.unbanUser(user.id).subscribe({
-        next: () => {
-          this.showSuccess('User unbanned successfully');
-          this.loadUsers();
-          this.loadStats();
-        },
-        error: (error: HttpErrorResponse) => {
-          this.showError('Failed to unban user');
-        },
-      });
-    }
+    this.confirmDialog.confirmAdminAction('Unban', user.username).subscribe((confirmed) => {
+      if (confirmed) {
+        this.moderationService.unbanUser(user.id).subscribe({
+          next: () => {
+            this.showSuccess('User unbanned successfully');
+            this.loadUsers();
+            this.loadStats();
+          },
+          error: (error: HttpErrorResponse) => {
+            this.showError('Failed to unban user');
+          },
+        });
+      }
+    });
   }
 
   onDeleteUser(user: AdminUser, event?: MouseEvent) {
     event?.stopPropagation();
-    if (
-      confirm(`Are you sure you want to delete @${user.username}? This action cannot be undone.`)
-    ) {
-      this.moderationService.deleteUser(user.id).subscribe({
-        next: () => {
-          this.showSuccess('User deleted successfully');
-          this.loadUsers();
-          this.loadStats();
-        },
-        error: (error: HttpErrorResponse) => {
-          this.showError('Failed to delete user');
-        },
-      });
-    }
+
+    this.confirmDialog.confirmDelete('user').subscribe((confirmed) => {
+      if (confirmed) {
+        this.moderationService.deleteUser(user.id).subscribe({
+          next: () => {
+            this.showSuccess('User deleted successfully');
+            this.loadUsers();
+            this.loadStats();
+          },
+          error: (error: HttpErrorResponse) => {
+            this.showError('Failed to delete user');
+          },
+        });
+      }
+    });
   }
 
   onChangeUserRole(user: AdminUser, event?: MouseEvent) {
     event?.stopPropagation();
-    if (confirm(`Are you sure you want to make @${user.username} an admin?`)) {
-      this.moderationService.changeUserRole(user.id).subscribe({
-        next: () => {
-          this.showSuccess('User role updated successfully');
-          this.loadUsers();
-        },
-        error: (error: HttpErrorResponse) => {
-          this.showError('Failed to update user role');
-        },
-      });
-    }
+    this.confirmDialog.confirmAdminAction('Make admin', user.username).subscribe((confirmed) => {
+      if (confirmed) {
+        this.moderationService.changeUserRole(user.id).subscribe({
+          next: () => {
+            this.showSuccess('User role updated successfully');
+            this.loadUsers();
+          },
+          error: (error: HttpErrorResponse) => {
+            this.showError('Failed to update user role');
+          },
+        });
+      }
+    });
   }
 
   // Posts Methods
@@ -341,38 +348,45 @@ export class AdminDashboard implements OnInit {
 
   onRestorePost(post: AdminPost, event?: MouseEvent) {
     event?.stopPropagation();
-    if (confirm(`Are you sure you want to restore the post "${post.title}"?`)) {
-      this.moderationService.restorePost(post.id).subscribe({
-        next: () => {
-          this.showSuccess('Post restored successfully');
-          this.loadPosts();
-          this.loadStats();
-        },
-        error: (error: HttpErrorResponse) => {
-          this.showError('Failed to restore post');
-        },
+    this.confirmDialog
+      .confirm({
+        title: 'restore post?',
+        message: `Are you sure you want to restore "${post.title}"?`,
+        confirmText: 'restore',
+        cancelText: 'Cancel',
+      })
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.moderationService.restorePost(post.id).subscribe({
+            next: () => {
+              this.showSuccess('Post restored successfully');
+              this.loadPosts();
+              this.loadStats();
+            },
+            error: (error: HttpErrorResponse) => {
+              this.showError('Failed to restore post');
+            },
+          });
+        }
       });
-    }
   }
 
   onDeletePost(post: AdminPost, event?: MouseEvent) {
     event?.stopPropagation();
-    if (
-      confirm(
-        `Are you sure you want to delete the post "${post.title}"? This action cannot be undone.`
-      )
-    ) {
-      this.moderationService.deletePost(post.id).subscribe({
-        next: () => {
-          this.showSuccess('Post deleted successfully');
-          this.loadPosts();
-          this.loadStats();
-        },
-        error: (error: HttpErrorResponse) => {
-          this.showError('Failed to delete post');
-        },
-      });
-    }
+    this.confirmDialog.confirmDelete('post').subscribe((confirmed) => {
+      if (confirmed) {
+        this.moderationService.deletePost(post.id).subscribe({
+          next: () => {
+            this.showSuccess('Post deleted successfully');
+            this.loadPosts();
+            this.loadStats();
+          },
+          error: (error: HttpErrorResponse) => {
+            this.showError('Failed to delete post');
+          },
+        });
+      }
+    });
   }
 
   // Reports Methods
