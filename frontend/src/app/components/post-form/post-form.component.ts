@@ -227,11 +227,15 @@ export class PostFormComponent implements AfterViewInit, OnDestroy {
     }
 
     const formValue = this.postForm.value;
-    const mediaUrls = this.uploadedMedia().map((m) => m.mediaUrl);
+    const content = formValue.content || '';
+
+    const mediaUrls = this.uploadedMedia()
+      .map((m) => m.mediaUrl)
+      .filter((url) => content.includes(url));
 
     this.formSubmit.emit({
       title: formValue.title || '',
-      content: formValue.content || '',
+      content: content,
       mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
     });
   }
