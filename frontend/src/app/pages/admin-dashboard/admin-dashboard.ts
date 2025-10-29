@@ -37,6 +37,7 @@ import { LoadingSpinnerComponent } from '@/components/loading-spinner/loading-sp
 import { ErrorStateComponent } from '@/components/error-state/error-state.component';
 import { EmptyStateComponent } from '@/components/empty-state/empty-state.component';
 import { ConfirmDialogService } from '@/services/confirm-dialog.service';
+import { getAdminDisplayDate } from '@/utils/date-utils';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -197,6 +198,10 @@ export class AdminDashboard implements OnInit {
       data: { user },
       width: '700px',
     });
+  }
+  
+  getAdminDisplayDate(date: Date | string): string {
+    return getAdminDisplayDate(date);
   }
 
   onBanUser(user: AdminUser, event?: MouseEvent) {

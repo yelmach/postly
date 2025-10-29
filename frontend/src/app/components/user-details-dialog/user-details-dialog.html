@@ -24,7 +24,9 @@
             </div>
             <div class="profile-meta">
               <div [class]="'role-badge role-badge--' + data.user.role.toLowerCase()">
-                <mat-icon>{{ data.user.role === 'ADMIN' ? 'admin_panel_settings' : 'person' }}</mat-icon>
+                <mat-icon>{{
+                  data.user.role === 'ADMIN' ? 'admin_panel_settings' : 'person'
+                }}</mat-icon>
                 <span>{{ data.user.role }}</span>
               </div>
               <div class="status-divider"></div>
@@ -47,48 +49,59 @@
       <!-- Basic Information -->
       <div class="info-section">
         <h3>Basic Information</h3>
-        <div class="info-rows">
-          <div class="info-row">
-            <span class="label">First Name</span>
-            <mat-chip-set>
-              <mat-chip class="chip">{{ data.user.firstName }}</mat-chip>
-            </mat-chip-set>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-item-header">
+              <mat-icon>badge</mat-icon>
+              <span class="info-label">First Name</span>
+            </div>
+            <span class="info-value">{{ data.user.firstName }}</span>
           </div>
-          <div class="info-row">
-            <span class="label">Last Name</span>
-            <mat-chip-set>
-              <mat-chip class="chip">{{ data.user.lastName }}</mat-chip>
-            </mat-chip-set>
+          <div class="info-item">
+            <div class="info-item-header">
+              <mat-icon>badge</mat-icon>
+              <span class="info-label">Last Name</span>
+            </div>
+            <span class="info-value">{{ data.user.lastName }}</span>
           </div>
-          <div class="info-row">
-            <span class="label">Username</span>
-            <mat-chip-set>
-              <mat-chip class="chip">@{{ data.user.username }}</mat-chip>
-            </mat-chip-set>
+          <div class="info-item">
+            <div class="info-item-header">
+              <mat-icon>alternate_email</mat-icon>
+              <span class="info-label">Username</span>
+            </div>
+            <span class="info-value">@{{ data.user.username }}</span>
           </div>
-          <div class="info-row">
-            <span class="label">Email</span>
-            <mat-chip-set>
-              <mat-chip class="chip">{{ data.user.email }}</mat-chip>
-            </mat-chip-set>
+          <div class="info-item">
+            <div class="info-item-header">
+              <mat-icon>email</mat-icon>
+              <span class="info-label">Email</span>
+            </div>
+            <span class="info-value">{{ data.user.email }}</span>
           </div>
-          <div class="info-row">
-            <span class="label">Joined</span>
-            <mat-chip-set>
-              <mat-chip class="chip">{{ data.user.createdAt | date: 'medium' }}</mat-chip>
-            </mat-chip-set>
+          <div class="info-item">
+            <div class="info-item-header">
+              <mat-icon>calendar_today</mat-icon>
+              <span class="info-label">Joined</span>
+            </div>
+            <span class="info-value">{{ getAdminDisplayDate(data.user.createdAt) }}</span>
           </div>
-          <div class="info-row">
-            <span class="label">Role</span>
-            <mat-chip-set>
-              <mat-chip [class]="'chip role-chip role-chip--' + data.user.role.toLowerCase()">
-                {{ data.user.role }}
-              </mat-chip>
-            </mat-chip-set>
+          <div class="info-item">
+            <div class="info-item-header">
+              <mat-icon>{{
+                data.user.role === 'ADMIN' ? 'admin_panel_settings' : 'person'
+              }}</mat-icon>
+              <span class="info-label">Role</span>
+            </div>
+            <div class="info-value">
+              {{ data.user.role }}
+            </div>
           </div>
           @if (data.user.bio) {
-          <div class="info-row bio-row">
-            <span class="label">Bio</span>
+          <div class="info-item info-item-full">
+            <div class="info-item-header">
+              <mat-icon>description</mat-icon>
+              <span class="info-label">Bio</span>
+            </div>
             <p class="bio-text">{{ data.user.bio }}</p>
           </div>
           }
@@ -141,14 +154,16 @@
           </div>
           <div class="info-rows">
             @if (data.user.bannedUntil) {
-            <div class="info-row">
+            <div class="info-row-ban">
               <span class="label">Banned Until</span>
               <mat-chip-set>
-                <mat-chip class="chip ban-chip">{{ data.user.bannedUntil | date: 'medium' }}</mat-chip>
+                <mat-chip class="chip ban-chip">{{
+                  getAdminDisplayDate(data.user.bannedUntil)
+                }}</mat-chip>
               </mat-chip-set>
             </div>
             } @else {
-            <div class="info-row">
+            <div class="info-row-ban">
               <span class="label">Ban Type</span>
               <mat-chip-set>
                 <mat-chip class="chip ban-permanent-chip">Permanent Ban</mat-chip>

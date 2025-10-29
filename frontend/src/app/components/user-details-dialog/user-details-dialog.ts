@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { AdminUser } from '@/models/admin';
+import { getAdminDisplayDate } from '@/utils/date-utils';
 
 export interface UserDetailsDialogData {
   user: AdminUser;
@@ -31,6 +32,10 @@ export class UserDetailsDialog {
 
   get fullName(): string {
     return `${this.data.user.firstName} ${this.data.user.lastName}`;
+  }
+
+  getAdminDisplayDate(date: Date | string): string {
+    return getAdminDisplayDate(date);
   }
 
   onViewProfile() {

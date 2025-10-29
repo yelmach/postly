@@ -39,7 +39,7 @@
   <!-- Section 2: Table Management -->
   <h2 class="section-title">Table Management</h2>
   <div class="tables-section">
-    <mat-tab-group class="management-tabs" animationDuration="300ms">
+    <mat-tab-group class="management-tabs">
       <!-- Users Tab -->
       <mat-tab label="Users">
         <div class="tab-content">
@@ -73,7 +73,6 @@
                 <mat-option [value]="true">Banned</mat-option>
               </mat-select>
             </mat-form-field>
-
           </div>
 
           <!-- Table -->
@@ -121,7 +120,7 @@
               <!-- Joined At Column -->
               <ng-container matColumnDef="joinedAt">
                 <th mat-header-cell *matHeaderCellDef>Joined At</th>
-                <td mat-cell *matCellDef="let user">{{ user.createdAt | date : 'short' }}</td>
+                <td mat-cell *matCellDef="let user">{{ getAdminDisplayDate(user.createdAt) }}</td>
               </ng-container>
 
               <!-- Role Column -->
@@ -129,7 +128,9 @@
                 <th mat-header-cell *matHeaderCellDef>Role</th>
                 <td mat-cell *matCellDef="let user">
                   <div [class]="'role-badge role-badge--' + user.role.toLowerCase()">
-                    <mat-icon>{{ user.role === 'ADMIN' ? 'admin_panel_settings' : 'person' }}</mat-icon>
+                    <mat-icon>{{
+                      user.role === 'ADMIN' ? 'admin_panel_settings' : 'person'
+                    }}</mat-icon>
                     <span>{{ user.role }}</span>
                   </div>
                 </td>
@@ -239,7 +240,6 @@
                 <mat-option [value]="true">Hidden</mat-option>
               </mat-select>
             </mat-form-field>
-
           </div>
 
           <!-- Table -->
@@ -404,7 +404,6 @@
                 <mat-option value="post">Post Report</mat-option>
               </mat-select>
             </mat-form-field>
-
           </div>
 
           <!-- Table -->
@@ -426,7 +425,9 @@
                 <th mat-header-cell *matHeaderCellDef>Type</th>
                 <td mat-cell *matCellDef="let report">
                   <div [class]="'type-badge type-badge--' + getReportType(report).toLowerCase()">
-                    <mat-icon>{{ getReportType(report) === 'USER' ? 'person' : 'article' }}</mat-icon>
+                    <mat-icon>{{
+                      getReportType(report) === 'USER' ? 'person' : 'article'
+                    }}</mat-icon>
                     <span>{{ getReportType(report) }}</span>
                   </div>
                 </td>

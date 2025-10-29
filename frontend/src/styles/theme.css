@@ -95,6 +95,25 @@ html {
   --mat-sys-error-container: light-dark(#ffdad6, #52031d);
   --mat-sys-on-error-container: light-dark(#410002, #ffdad6);
 
+  /* STATUS SYSTEM VARIABLES */
+  --status-success: light-dark(#16631a, #a5e9a7);
+  --status-success-bg: light-dark(#d4edd6, #154718);
+
+  --status-warning: light-dark(#e75100, #ffcc7e);
+  --status-warning-bg: light-dark(#f9dec8, #a74a0c);
+
+  --status-error: light-dark(#f43636, #fc9b94);
+  --status-error-bg: light-dark(#f5d6d6, #880202);
+
+  --status-archived: light-dark(#414040, #c7c6c6);
+  --status-archived-bg: light-dark(#dad6d6, #414141);
+
+  --status-info: light-dark(#0760c5, #8ec8f7);
+  --status-info-bg: light-dark(#d5eaf8, #0d47a1);
+
+  --status-info-variant: light-dark(#6a1b9a, #eeaafa);
+  --status-info-variant-bg: light-dark(#f1dbf5, #4a148c);
+
   /* Neutral variant palette variables */
   --mat-sys-neutral-variant20: light-dark(#2e303b, #2e303b);
 
@@ -246,8 +265,6 @@ html {
   --mat-sys-title-small-size: 0.875rem;
   --mat-sys-title-small-tracking: 0.006rem;
   --mat-sys-title-small-weight: var(--mat-sys-medium-font-weight);
-
-  /* ELEVATION SYSTEM VARIABLES */
 
   /* SHAPE SYSTEM VARIABLES */
   --mat-sys-corner-extra-large: 28px;

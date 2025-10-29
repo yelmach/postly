@@ -19,6 +19,7 @@ import {
 } from '@/models/admin';
 import { ErrorBannerComponent } from '@/components/error-banner/error-banner.component';
 import { MatTooltip } from '@angular/material/tooltip';
+import { getAdminDisplayDate } from '@/utils/date-utils';
 
 export interface ReportDetailsDialogData {
   report: ReportResponse;
@@ -73,6 +74,10 @@ export class ReportDetailsDialog {
 
   get adminNotesLength() {
     return this.resolveForm.get('adminNotes')?.value?.length || 0;
+  }
+
+  getAdminDisplayDate(date: Date | string): string {
+    return getAdminDisplayDate(date);
   }
 
   getReasonLabel(reason: string): string {

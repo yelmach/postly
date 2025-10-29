@@ -9,45 +9,67 @@
     <div class="report-info">
       <div class="info-section">
         <h3>Report Information</h3>
-        <div class="info-row">
-          <span class="label">Type:</span>
-          <mat-chip-set>
-            <mat-chip class="chip">{{ reportType() }} Report</mat-chip>
-          </mat-chip-set>
-        </div>
-        <div class="info-row">
-          <span class="label">Status:</span>
-          <mat-chip-set class="title-status">
-            <mat-chip [class]="'status-chip status-chip--' + data.report.status.toLowerCase()">
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-item-header">
+              <mat-icon>{{ reportType() === 'User' ? 'person' : 'article' }}</mat-icon>
+              <span class="info-label">Type</span>
+            </div>
+            <div
+              [class]="
+                'status-badge-inline status-badge-inline--type-' + reportType().toLowerCase()
+              "
+            >
+              {{ reportType() }} Report
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-header">
+              <mat-icon>flag_circle</mat-icon>
+              <span class="info-label">Status</span>
+            </div>
+            <div
+              [class]="
+                'status-badge-inline status-badge-inline--' + data.report.status.toLowerCase()
+              "
+            >
               {{ data.report.status }}
-            </mat-chip>
-          </mat-chip-set>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-header">
+              <mat-icon>error_outline</mat-icon>
+              <span class="info-label">Reason</span>
+            </div>
+            <div class="status-badge-inline status-badge-inline--reason">
+              {{ getReasonLabel(data.report.reason) }}
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-header">
+              <mat-icon>schedule</mat-icon>
+              <span class="info-label">Created</span>
+            </div>
+            <span class="info-value">{{ getAdminDisplayDate(data.report.createdAt) }}</span>
+          </div>
+          @if (data.report.reviewedAt) {
+          <div class="info-item">
+            <div class="info-item-header">
+              <mat-icon>verified</mat-icon>
+              <span class="info-label">Reviewed</span>
+            </div>
+            <span class="info-value">{{ getAdminDisplayDate(data.report.reviewedAt) }}</span>
+          </div>
+          } @if (data.report.description) {
+          <div class="info-item info-item-full">
+            <div class="info-item-header">
+              <mat-icon>description</mat-icon>
+              <span class="info-label">Description</span>
+            </div>
+            <p class="description-text">{{ data.report.description }}</p>
+          </div>
+          }
         </div>
-        <div class="info-row">
-          <span class="label">Reason:</span>
-          <mat-chip-set>
-            <mat-chip class="chip">{{ getReasonLabel(data.report.reason) }}</mat-chip>
-          </mat-chip-set>
-        </div>
-        <div class="info-row">
-          <span class="label">Created:</span>
-          <mat-chip-set>
-            <mat-chip class="chip">{{ data.report.createdAt | date : 'medium' }}</mat-chip>
-          </mat-chip-set>
-        </div>
-        @if (data.report.reviewedAt) {
-        <div class="info-row">
-          <span class="label">Reviewed:</span>
-          <mat-chip-set>
-            <mat-chip class="chip">{{ data.report.reviewedAt | date : 'medium' }}</mat-chip>
-          </mat-chip-set>
-        </div>
-        } @if (data.report.description) {
-        <div class="info-row">
-          <span class="label">Description:</span>
-          <p class="description">{{ data.report.description }}</p>
-        </div>
-        }
       </div>
 
       <div class="info-section reported-entity-section">

@@ -3,7 +3,7 @@
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
-  box-shadow: var(--mat-sys-level2);
+  background: var(--mat-sys-surface-container);
   border-radius: 16px;
 
   &::before {
@@ -19,7 +19,6 @@
   &:hover {
     transform: translateY(-0.1rem);
     background: var(--mat-sys-surface);
-    box-shadow: var(--mat-sys-level3);
 
     &::before {
       height: 0.4rem;
