@@ -4,13 +4,13 @@
   justify-content: space-between;
   padding: 1rem;
   background: var(--mat-sys-surface-container-high);
-  box-shadow: var(--mat-sys-level1);
   border-radius: 8px;
   transition: background 0.2s ease;
+  border: 1px solid var(--mat-sys-outline-variant);
 
   &:hover {
     background: var(--mat-sys-surface-container-highest);
-    box-shadow: var(--mat-sys-level2);
+    box-shadow: var(--mat-sys-level1);
   }
 
   .user-info {

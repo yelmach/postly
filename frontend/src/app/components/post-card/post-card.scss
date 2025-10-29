@@ -3,7 +3,7 @@
   cursor: pointer;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: var(--mat-sys-level2);
+  box-shadow: var(--mat-sys-level1);
   background: var(--mat-sys-surface-container);
 }
 
@@ -183,7 +183,6 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  background: var(--mat-sys-surface-container);
 
   .action-button {
     display: flex;
@@ -200,9 +199,8 @@
     }
 
     &.liked {
-      color: var(--mat-sys-primary);
-
       mat-icon {
+        color: var(--mat-sys-primary);
         animation: heartBeat 0.3s ease;
       }
     }

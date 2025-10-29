@@ -52,7 +52,7 @@ html {
   --mat-sys-inverse-surface: light-dark(#2f3037, #e3e1ea);
   --mat-sys-inverse-on-surface: light-dark(#f2eff9, #2f3037);
   --mat-sys-on-background: light-dark(#1a1b22, #e3e1ea);
-  --mat-sys-background: light-dark(#e5e4e7, #15161e);
+  --mat-sys-background: light-dark(#f7f6f9, hsl(240, 15%, 15%));
   --mat-sys-surface-container-lowest: light-dark(#bebcc2, #0d0e14);
   --mat-sys-surface-container-low: light-dark(#bebcc2, #0d0e14);
   --mat-sys-shadow: light-dark(#000000, #000000);

@@ -1,4 +1,4 @@
-<mat-card class="profile-info-card" (click)="navigateToProfile()">
+<mat-card class="profile-info-card">
   <div class="card-content">
     <!-- Avatar -->
     <div class="avatar-section">
@@ -23,14 +23,22 @@
         <span class="stat-value">{{ user().postsCount || 0 }}</span>
         <span class="stat-label">Posts</span>
       </div>
+      <div class="stat-divider"></div>
       <div class="stat-item">
         <span class="stat-value">{{ user().subscribersCount || 0 }}</span>
         <span class="stat-label">Subscribers</span>
       </div>
+      <div class="stat-divider"></div>
       <div class="stat-item">
         <span class="stat-value">{{ user().subscribedCount || 0 }}</span>
         <span class="stat-label">Subscribed</span>
       </div>
     </div>
+
+    <!-- Action Button -->
+    <button mat-stroked-button class="view-profile-btn" (click)="navigateToProfile()">
+      <mat-icon>account_circle</mat-icon>
+      View Profile
+    </button>
   </div>
 </mat-card>

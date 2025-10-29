@@ -1,14 +1,10 @@
 .profile-info-card {
-  cursor: pointer;
-  transition: box-shadow 0.3s ease;
+  overflow: hidden;
   box-shadow: var(--mat-sys-level1);
-
-  &:hover {
-    box-shadow: var(--mat-sys-level2);
-  }
+  background: var(--mat-sys-surface-container);
 
   .card-content {
-    padding: 1rem;
+    padding: 1.4rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -23,11 +19,11 @@
         height: 100px;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid var(--mat-sys-primary);
+        border: 3px solid var(--mat-sys-primary);
       }
 
       .profile-avatar-placeholder {
-        border: 2px solid var(--mat-sys-primary);
+        border: 3px solid var(--mat-sys-primary);
         width: 100px;
         height: 100px;
         border-radius: 50%;
@@ -50,40 +46,67 @@
       width: 100%;
 
       .user-name {
-        font-size: 1.5rem;
-        font-weight: 600;
+        font-size: 1.25rem;
+        font-weight: 500;
         margin: 0 0 4px 0;
+        line-height: 1.3;
       }
 
       .username {
-        font-size: 1rem;
+        font-size: 0.9rem;
         color: var(--mat-sys-on-surface-variant);
         margin: 0;
       }
     }
 
     .stats-section {
-      border-top: 1px solid var(--mat-sys-outline-variant);
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
       width: 100%;
-      padding-top: 12px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
+      gap: 8px;
+      padding-top: 8px;
 
       .stat-item {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 4px;
+        flex: 1;
 
         .stat-value {
-          font-size: 1.1rem;
-          font-weight: 600;
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: var(--mat-sys-primary);
         }
 
         .stat-label {
-          font-size: 12px;
+          font-size: 0.75rem;
           color: var(--mat-sys-on-surface-variant);
+          text-transform: uppercase;
+          font-weight: 500;
+          letter-spacing: 0.5px;
         }
+      }
+
+      .stat-divider {
+        width: 1px;
+        height: 32px;
+        background: var(--mat-sys-outline-variant);
+        opacity: 0.5;
+      }
+    }
+
+    .view-profile-btn {
+      width: 100%;
+      height: 40px;
+      font-weight: 500;
+      border-radius: 8px;
+
+      mat-icon {
+        margin-right: 8px;
       }
     }
 
