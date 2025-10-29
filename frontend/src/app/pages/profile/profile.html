@@ -125,9 +125,15 @@
           <app-loading-spinner [size]="'small'" [message]="'Loading posts...'" />
           } @else if (posts().length > 0) {
           <div class="posts-list">
-            @for (post of posts(); track post.id) {
+            @for (post of posts(); track post.id; let isLast = $last) {
             <app-post-card [post]="post" [currentUserId]="authService.currentUser()?.id" />
-            }
+            @if (isLast && isLoadingMorePosts()) {
+            <div class="overlay-spinner">
+              <app-loading-spinner [size]="'small'" [message]="'Loading more posts...'" />
+            </div>
+            } @if (isLast && hasMorePosts() && !isLoadingMorePosts()) {
+            <div appInfiniteScroll (scrolled)="loadMorePosts()" [threshold]="0.5"></div>
+            } }
           </div>
           } @else {
           <app-empty-state [icon]="'article'" [message]="'No posts yet'" />

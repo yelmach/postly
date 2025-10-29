@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { PostMediaResponse, PostRequest, PostResponse } from '@/models/post';
+import { Page } from '@/models/pagination';
 
 @Injectable({ providedIn: 'root' })
 export class PostService {
@@ -24,14 +25,18 @@ export class PostService {
     return this.http.get<PostResponse>(`${this.apiUrl}/posts/${id}`);
   }
 
-  getAllPosts(page: number = 0, size: number = 20): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/posts`, {
+  getAllPosts(page: number = 0, size: number = 20): Observable<Page<PostResponse>> {
+    return this.http.get<Page<PostResponse>>(`${this.apiUrl}/posts`, {
       params: { page: page.toString(), size: size.toString() },
     });
   }
 
-  getUserPosts(userId: number, page: number = 0, size: number = 20): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/posts/user/${userId}`, {
+  getUserPosts(
+    userId: number,
+    page: number = 0,
+    size: number = 20
+  ): Observable<Page<PostResponse>> {
+    return this.http.get<Page<PostResponse>>(`${this.apiUrl}/posts/user/${userId}`, {
       params: { page: page.toString(), size: size.toString() },
     });
   }

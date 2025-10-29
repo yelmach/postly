@@ -9,16 +9,15 @@
     <div class="main-content">
       @if (posts().length > 0) {
       <div class="posts-list">
-        @for (post of posts(); track post.id) {
+        @for (post of posts(); track post.id; let isLast = $last) {
         <app-post-card [post]="post" [currentUserId]="authService.currentUser()?.id" />
-        }
-
-        <!-- Load More Button -->
-        @if (isLoadingMore()) {
-        <div class="load-more-container">
+        @if (isLast && isLoadingMore()) {
+        <div class="overlay-spinner">
           <app-loading-spinner [size]="'small'" [message]="'Loading more posts...'" />
         </div>
-        }
+        } @if (isLast && hasMorePosts() && !isLoadingMore()) {
+        <div appInfiniteScroll (scrolled)="loadMorePosts()"></div>
+        } }
       </div>
       } @else {
       <app-empty-state

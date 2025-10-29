@@ -408,4 +408,10 @@
   @media (max-width: 425px) {
     gap: 0.5rem;
   }
+
+  .overlay-spinner {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
 }

@@ -3,14 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { CommentRequest, CommentResponse } from '@/models/comment';
-
-export interface PageResponse<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-}
+import { Page } from '@/models/pagination';
 
 @Injectable({ providedIn: 'root' })
 export class CommentService {
@@ -26,8 +19,8 @@ export class CommentService {
     postId: number,
     page: number = 0,
     size: number = 20
-  ): Observable<PageResponse<CommentResponse>> {
-    return this.http.get<PageResponse<CommentResponse>>(`${this.apiUrl}/posts/${postId}/comments`, {
+  ): Observable<Page<CommentResponse>> {
+    return this.http.get<Page<CommentResponse>>(`${this.apiUrl}/posts/${postId}/comments`, {
       params: { page: page.toString(), size: size.toString() },
     });
   }

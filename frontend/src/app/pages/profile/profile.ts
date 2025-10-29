@@ -21,6 +21,8 @@ import { PostCard } from '@/components/post-card/post-card';
 import { LoadingSpinnerComponent } from '@/components/loading-spinner/loading-spinner.component';
 import { ErrorStateComponent } from '@/components/error-state/error-state.component';
 import { EmptyStateComponent } from '@/components/empty-state/empty-state.component';
+import { Page } from '@/models/pagination';
+import { InfiniteScrollDirective } from '@/directives/infinite-scroll.directive';
 
 @Component({
   selector: 'app-profile',
@@ -37,6 +39,7 @@ import { EmptyStateComponent } from '@/components/empty-state/empty-state.compon
     LoadingSpinnerComponent,
     ErrorStateComponent,
     EmptyStateComponent,
+    InfiniteScrollDirective,
   ],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
@@ -69,6 +72,10 @@ export class Profile implements OnInit {
   postsLoading = signal(false);
   subscribersLoading = signal(false);
   subscriptionsLoading = signal(false);
+
+  currentPostsPage = signal(0);
+  hasMorePosts = signal(true);
+  isLoadingMorePosts = signal(false);
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
@@ -198,13 +205,41 @@ export class Profile implements OnInit {
 
     this.postsLoading.set(true);
     this.postService.getUserPosts(userId, 0, 20).subscribe({
-      next: (response: any) => {
+      next: (response: Page<PostResponse>) => {
         this.posts.set(response.content || []);
+        this.hasMorePosts.set(!response.last);
+        this.currentPostsPage.set(0);
         this.postsLoading.set(false);
       },
       error: (error: HttpErrorResponse) => {
         console.error('Failed to load posts:', error);
         this.postsLoading.set(false);
+      },
+    });
+  }
+
+  loadMorePosts() {
+    const currentUser = this.user();
+    if (!currentUser || !this.hasMorePosts() || this.isLoadingMorePosts()) return;
+
+    this.isLoadingMorePosts.set(true);
+    const nextPage = this.currentPostsPage() + 1;
+
+    this.postService.getUserPosts(currentUser.id, nextPage, 20).subscribe({
+      next: (response: Page<PostResponse>) => {
+        const newPosts = response.content || [];
+        this.posts.update((current) => [...current, ...newPosts]);
+        this.hasMorePosts.set(!response.last);
+        this.currentPostsPage.set(nextPage);
+        this.isLoadingMorePosts.set(false);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.snackBar.open('Failed to load more posts. Please try again.', 'Close', {
+          duration: 4000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
+        this.isLoadingMorePosts.set(false);
       },
     });
   }

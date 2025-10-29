@@ -15,7 +15,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
 import { PostService } from '@/services/post.service';
 import { AuthService } from '@/services/auth.service';
-import { CommentService, PageResponse } from '@/services/comment.service';
+import { CommentService } from '@/services/comment.service';
 import { PostResponse } from '@/models/post';
 import { CommentResponse } from '@/models/comment';
 import { LoadingSpinnerComponent } from '@/components/loading-spinner/loading-spinner.component';
@@ -24,6 +24,8 @@ import { CommentCardComponent } from '@/components/comment-card/comment-card.com
 import { ReportDialog } from '@/components/report-dialog/report-dialog';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConfirmDialogService } from '@/services/confirm-dialog.service';
+import { Page } from '@/models/pagination';
+import { InfiniteScrollDirective } from '@/directives/infinite-scroll.directive';
 
 @Component({
   selector: 'app-post-detail',
@@ -40,6 +42,7 @@ import { ConfirmDialogService } from '@/services/confirm-dialog.service';
     LoadingSpinnerComponent,
     ErrorStateComponent,
     CommentCardComponent,
+    InfiniteScrollDirective,
   ],
   templateUrl: './post-detail.html',
   styleUrl: './post-detail.scss',
@@ -69,6 +72,10 @@ export class PostDetail implements OnInit {
   commentsLoading = signal<boolean>(false);
   commentText = signal<string>('');
   isSubmittingComment = signal<boolean>(false);
+
+  currentCommentsPage = signal(0);
+  hasMoreComments = signal(true);
+  isLoadingMoreComments = signal(false);
 
   ngOnInit() {
     const postId = this.route.snapshot.paramMap.get('id');
@@ -107,13 +114,41 @@ export class PostDetail implements OnInit {
     this.commentsLoading.set(true);
 
     this.commentService.getComments(postId, page).subscribe({
-      next: (response: PageResponse<CommentResponse>) => {
+      next: (response: Page<CommentResponse>) => {
         this.comments.set(response.content);
+        this.hasMoreComments.set(!response.last);
+        this.currentCommentsPage.set(0);
         this.commentsLoading.set(false);
       },
       error: (error: HttpErrorResponse) => {
         console.error('Failed to load comments:', error);
         this.commentsLoading.set(false);
+      },
+    });
+  }
+
+  loadMoreComments() {
+    const post = this.post();
+    if (!post || !this.hasMoreComments() || this.isLoadingMoreComments()) return;
+
+    this.isLoadingMoreComments.set(true);
+    const nextPage = this.currentCommentsPage() + 1;
+
+    this.commentService.getComments(post.id, nextPage).subscribe({
+      next: (response: Page<CommentResponse>) => {
+        const newComments = response.content || [];
+        this.comments.update((current) => [...current, ...newComments]);
+        this.hasMoreComments.set(!response.last);
+        this.currentCommentsPage.set(nextPage);
+        this.isLoadingMoreComments.set(false);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.snackBar.open('Failed to load more comments. Please try again.', 'Close', {
+          duration: 4000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
+        this.isLoadingMoreComments.set(false);
       },
     });
   }

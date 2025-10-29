@@ -58,11 +58,7 @@
         <span class="like-count">{{ likesCount() }}</span>
 
         <!-- Three-dot menu -->
-        <button
-          mat-icon-button
-          [matMenuTriggerFor]="menu"
-          class="menu-button"
-        >
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
           <mat-icon>more_vert</mat-icon>
         </button>
 
@@ -152,14 +148,20 @@
       </div>
       } @else {
       <div class="comments-list">
-        @for (comment of comments(); track comment.id) {
+        @for (comment of comments(); track comment.id; let isLast = $last) {
         <app-comment-card
           [comment]="comment"
           [postId]="post()!.id"
           (commentUpdated)="onCommentUpdated($event)"
           (commentDeleted)="onCommentDeleted($event)"
         />
-        }
+        @if (isLast && isLoadingMoreComments()) {
+        <div class="overlay-spinner">
+          <app-loading-spinner [size]="'small'" [message]="'Loading more comments...'" />
+        </div>
+        } @if (isLast && hasMoreComments() && !isLoadingMoreComments()) {
+        <div appInfiniteScroll (scrolled)="loadMoreComments()" [threshold]="0.5"></div>
+        } }
       </div>
       }
     </mat-card-content>

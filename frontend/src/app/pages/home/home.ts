@@ -10,6 +10,9 @@ import { LoadingSpinnerComponent } from '@/components/loading-spinner/loading-sp
 import { EmptyStateComponent } from '@/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '@/components/error-state/error-state.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Page } from '@/models/pagination';
+import { InfiniteScrollDirective } from '@/directives/infinite-scroll.directive';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +24,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     LoadingSpinnerComponent,
     EmptyStateComponent,
     ErrorStateComponent,
+    InfiniteScrollDirective,
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',
@@ -28,6 +32,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class Home implements OnInit {
   postService = inject(PostService);
   authService = inject(AuthService);
+  snackBar = inject(MatSnackBar);
 
   posts = signal<PostResponse[]>([]);
   isLoading = signal(true);
@@ -47,7 +52,7 @@ export class Home implements OnInit {
     this.errorMessage.set('');
 
     this.postService.getAllPosts(0, this.pageSize).subscribe({
-      next: (response: any) => {
+      next: (response: Page<PostResponse>) => {
         this.posts.set(response.content || []);
         this.hasMorePosts.set(!response.last);
         this.currentPage.set(0);
@@ -68,7 +73,7 @@ export class Home implements OnInit {
     const nextPage = this.currentPage() + 1;
 
     this.postService.getAllPosts(nextPage, this.pageSize).subscribe({
-      next: (response: any) => {
+      next: (response: Page<PostResponse>) => {
         const newPosts = response.content || [];
         this.posts.update((current) => [...current, ...newPosts]);
         this.hasMorePosts.set(!response.last);
@@ -76,40 +81,14 @@ export class Home implements OnInit {
         this.isLoadingMore.set(false);
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Failed to load more posts:', error);
+        this.snackBar.open('Failed to load more posts. Please try again.', 'Close', {
+          duration: 4000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
         this.isLoadingMore.set(false);
       },
     });
-  }
-
-  onPostClick(post: PostResponse) {
-    // TODO: Navigate to post detail page when implemented
-    console.log('Post clicked:', post);
-  }
-
-  onLikeClick(post: PostResponse) {
-    // TODO: Implement like functionality
-    console.log('Like clicked:', post);
-  }
-
-  onCommentClick(post: PostResponse) {
-    // TODO: Implement comment functionality
-    console.log('Comment clicked:', post);
-  }
-
-  onEditClick(post: PostResponse) {
-    // TODO: Implement edit functionality
-    console.log('Edit clicked:', post);
-  }
-
-  onDeleteClick(post: PostResponse) {
-    // TODO: Implement delete functionality
-    console.log('Delete clicked:', post);
-  }
-
-  onReportClick(post: PostResponse) {
-    // TODO: Implement report functionality
-    console.log('Report clicked:', post);
   }
 
   retry() {
