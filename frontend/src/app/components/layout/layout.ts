@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -12,9 +12,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '@/services/auth.service';
+import { NotificationService } from '@/services/notification.service';
 import { Router } from '@angular/router';
 import { HeaderSearchComponent } from '@/components/header-search/header-search';
+import { NotificationItem } from '@/components/notification-item/notification-item';
 
 @Component({
   selector: 'app-main-layout',
@@ -32,17 +35,20 @@ import { HeaderSearchComponent } from '@/components/header-search/header-search'
     MatSlideToggleModule,
     MatDividerModule,
     MatTooltipModule,
+    MatProgressSpinnerModule,
     HeaderSearchComponent,
+    NotificationItem,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.scss',
 })
-export class MainLayout {
+export class MainLayout implements OnInit, OnDestroy {
   authService = inject(AuthService);
+  notificationService = inject(NotificationService);
   router = inject(Router);
 
   isDarkMode = signal(false);
-  notificationCount = signal(5);
+  notificationsLoaded = signal(false);
 
   constructor() {
     const savedTheme = localStorage.getItem('theme');
@@ -69,6 +75,41 @@ export class MainLayout {
 
   get isAdmin() {
     return this.currentUser?.role === 'ADMIN';
+  }
+
+  get notificationCount() {
+    return this.notificationService.unreadCount();
+  }
+
+  get notifications() {
+    return this.notificationService.notifications();
+  }
+
+  get isSSEConnected() {
+    return this.notificationService.connected();
+  }
+
+  ngOnInit() {
+    this.notificationService.connectSSE();
+  }
+
+  ngOnDestroy() {
+    this.notificationService.disconnectSSE();
+  }
+
+  onNotificationMenuOpened() {
+    if (!this.notificationsLoaded()) {
+      this.notificationService.loadNotifications(0, 20);
+      this.notificationsLoaded.set(true);
+    }
+  }
+
+  markAllAsRead() {
+    this.notificationService.markAllNotificationsAsRead();
+  }
+
+  refreshNotifications() {
+    this.notificationService.loadNotifications(0, 20);
   }
 
   toggleTheme() {

@@ -1,0 +1,18 @@
+<div class="notification-item" [class.unread]="!notification().isRead" (click)="onClick()">
+  <div class="notification-icon">
+    <mat-icon [color]="getIconColor()">{{ getIcon() }}</mat-icon>
+  </div>
+
+  <div class="notification-content">
+    <div class="notification-message">
+      {{ notification().message }}
+    </div>
+    <div class="notification-time">
+      {{ getRelativeTime() }}
+    </div>
+  </div>
+
+  @if (!notification().isRead) {
+  <div class="unread-indicator"></div>
+  }
+</div>

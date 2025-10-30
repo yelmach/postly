@@ -39,26 +39,57 @@
           mat-icon-button
           class="notification-btn"
           [matMenuTriggerFor]="notificationMenu"
+          (menuOpened)="onNotificationMenuOpened()"
           matTooltip="Notifications"
         >
           <mat-icon
-            [matBadge]="notificationCount()"
+            [matBadge]="notificationCount"
             matBadgeColor="warn"
-            [matBadgeHidden]="notificationCount() === 0"
+            [matBadgeHidden]="notificationCount === 0"
           >
             notifications
           </mat-icon>
         </button>
 
         <mat-menu #notificationMenu="matMenu" class="notification-menu" xPosition="before">
-          <div class="menu-header">
+          <div class="menu-header" (click)="$event.stopPropagation()">
             <h3>Notifications</h3>
-            <button mat-button color="primary">Mark all as read</button>
+            <div class="menu-actions">
+              <button
+                mat-icon-button
+                (click)="refreshNotifications()"
+                matTooltip="Refresh"
+                class="refresh-btn"
+              >
+                <mat-icon>refresh</mat-icon>
+              </button>
+              @if (notificationCount > 0 && notificationCount > 0) {
+              <button mat-button color="primary" (click)="markAllAsRead()">Mark all as read</button>
+              }
+            </div>
           </div>
           <mat-divider></mat-divider>
           <div class="notification-list">
-            <p class="empty-state">No new notifications</p>
+            @if (!notificationsLoaded()) {
+            <div class="loading-state">
+              <mat-spinner diameter="40"></mat-spinner>
+              <p>Loading notifications...</p>
+            </div>
+            } @else if (notifications.length === 0) {
+            <div class="empty-state">
+              <mat-icon>notifications_none</mat-icon>
+              <p>No notifications yet</p>
+            </div>
+            } @else { @for (notification of notifications; track notification.id) {
+            <app-notification-item [notification]="notification"> </app-notification-item>
+            } }
           </div>
+          @if (!isSSEConnected && notificationsLoaded()) {
+          <div class="connection-warning" (click)="$event.stopPropagation()">
+            <mat-icon>warning</mat-icon>
+            <span>Real-time updates disconnected</span>
+          </div>
+          }
         </mat-menu>
 
         <!-- Profile Menu -->

@@ -5,6 +5,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { Observable, tap } from 'rxjs';
+import { NotificationService } from './notification.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
 
   http = inject(HttpClient);
   router = inject(Router);
+  private notificationService = inject(NotificationService);
 
   register(registerData: RegisterRequest): Observable<AuthResponse> {
     return this.http
@@ -28,6 +30,8 @@ export class AuthService {
   }
 
   logout() {
+    this.notificationService.disconnectSSE();
+
     localStorage.removeItem('jwt_token');
     this.currentUser.set(null);
     this.router.navigate(['/login']);
@@ -36,8 +40,6 @@ export class AuthService {
   getCurrentUser(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/auth/me`).pipe(
       tap((user) => {
-        console.log("setting user");
-        
         this.currentUser.set(user);
       })
     );
@@ -46,6 +48,8 @@ export class AuthService {
   handleAuthSuccess = (response: AuthResponse) => {
     localStorage.setItem('jwt_token', response.accessToken);
     this.currentUser.set(response.currentUser);
+
+    this.notificationService.connectSSE();
   };
 
   isTokenExpired(token: string): boolean {

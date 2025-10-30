@@ -37,10 +37,10 @@ html {
   /* =========== Neutral palette variables ================================================= */
   --mat-sys-surface-dim: light-dark(#bebcc2, #0d0e14);
   --mat-sys-surface-bright: light-dark(#ffffff, #3e3f46);
-  --mat-sys-surface: light-dark(#e5e4e7, #15161e);
-  --mat-sys-surface-container: light-dark(#f7f6f9, hsl(240, 15%, 15%));
-  --mat-sys-surface-container-high: light-dark(#fafafe, hsl(240, 15%, 19%));
-  --mat-sys-surface-container-highest: light-dark(#ffffff, hsl(240, 15%, 23%));
+  --mat-sys-surface: light-dark(#dfe1ec, #15161e);
+  --mat-sys-surface-container: light-dark(#f3f3f7, #21212c);
+  --mat-sys-surface-container-high: light-dark(#fcfcfd, #292938);
+  --mat-sys-surface-container-highest: light-dark(#ffffff, #323243);
 
   --mat-sys-on-surface: light-dark(#1a1b22, #e3e1ea);
   --mat-sys-surface-variant: light-dark(#e2e1f1, #22222a);
@@ -48,7 +48,7 @@ html {
   --mat-sys-outline: light-dark(#757684, #8f909e);
   --mat-sys-outline-variant: light-dark(#c5c5d4, #454652);
 
-  --mat-sys-surface-tint: light-dark(#4355b9, #bac3ff);
+  --mat-sys-surface-tint: light-dark(#4254b8, #bac3ff);
   --mat-sys-inverse-surface: light-dark(#2f3037, #e3e1ea);
   --mat-sys-inverse-on-surface: light-dark(#f2eff9, #2f3037);
   --mat-sys-on-background: light-dark(#1a1b22, #e3e1ea);
