@@ -25,6 +25,9 @@ public class SubscriptionService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    NotificationService notificationService;
+
     @Transactional
     public void subscribe(Long targetUserId) {
         UserEntity currentUser = getCurrentUserEntity();
@@ -42,6 +45,9 @@ public class SubscriptionService {
 
         SubscriptionEntity subscription = new SubscriptionEntity(currentUser, targetUser);
         subscriptionRepository.save(subscription);
+
+        // Create notification for the subscribed user
+        notificationService.createSubscriberNotification(targetUserId, currentUser.getId());
     }
 
     @Transactional

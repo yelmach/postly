@@ -18,6 +18,7 @@ import postly.entity.UserEntity;
 import postly.exception.ApiException;
 import postly.repository.PostMediaRepository;
 import postly.repository.PostRepository;
+import postly.repository.SubscriptionRepository;
 
 @Service
 public class PostService {
@@ -39,6 +40,12 @@ public class PostService {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
 
     @Transactional
     public PostResponse createPost(PostRequest request) {
@@ -62,6 +69,16 @@ public class PostService {
             }
 
             postMediaRepository.saveAll(temporaryMedia);
+        }
+
+        // Create notifications for all subscribers asynchronously
+        List<Long> subscriberIds = subscriptionRepository.findBySubscribedToId(currentUser.getId())
+                .stream()
+                .map(subscription -> subscription.getSubscriber().getId())
+                .collect(Collectors.toList());
+
+        if (!subscriberIds.isEmpty()) {
+            notificationService.createPostNotification(post.getId(), currentUser.getId(), subscriberIds);
         }
 
         return PostResponse.fromPost(post);
