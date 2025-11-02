@@ -132,40 +132,40 @@ INSERT INTO notifications (reciever_id, sender_id, post_id, type, message, is_re
 
 -- Lucas's followers get notified (popular backend architect)
 INSERT INTO notifications (reciever_id, sender_id, post_id, type, message, is_read, created_at) VALUES
-(5, 11, 55, 'NEW_POST', 'lucas_r published a new post: Microservices Architecture', TRUE, CURRENT_TIMESTAMP - INTERVAL '78 days'),
-(8, 11, 55, 'NEW_POST', 'lucas_r published a new post: Microservices Architecture', TRUE, CURRENT_TIMESTAMP - INTERVAL '78 days'),
-(12, 11, 55, 'NEW_POST', 'lucas_r published a new post: Microservices Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '78 days'),
+(5, 11, 25, 'NEW_POST', 'lucas_r published a new post: Microservices Architecture', TRUE, CURRENT_TIMESTAMP - INTERVAL '78 days'),
+(8, 11, 25, 'NEW_POST', 'lucas_r published a new post: Microservices Architecture', TRUE, CURRENT_TIMESTAMP - INTERVAL '78 days'),
+(12, 11, 25, 'NEW_POST', 'lucas_r published a new post: Microservices Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '78 days'),
 
-(5, 11, 56, 'NEW_POST', 'lucas_r published a new post: Event-Driven Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '18 days'),
-(8, 11, 56, 'NEW_POST', 'lucas_r published a new post: Event-Driven Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '18 days'),
-(12, 11, 56, 'NEW_POST', 'lucas_r published a new post: Event-Driven Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '18 days'),
-(15, 11, 56, 'NEW_POST', 'lucas_r published a new post: Event-Driven Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '18 days'),
-(19, 11, 56, 'NEW_POST', 'lucas_r published a new post: Event-Driven Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '18 days'),
-(21, 11, 56, 'NEW_POST', 'lucas_r published a new post: Event-Driven Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '18 days');
+(5, 11, 26, 'NEW_POST', 'lucas_r published a new post: Event-Driven Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '18 days'),
+(8, 11, 26, 'NEW_POST', 'lucas_r published a new post: Event-Driven Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '18 days'),
+(12, 11, 26, 'NEW_POST', 'lucas_r published a new post: Event-Driven Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '18 days'),
+(15, 11, 26, 'NEW_POST', 'lucas_r published a new post: Event-Driven Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '18 days'),
+(19, 11, 26, 'NEW_POST', 'lucas_r published a new post: Event-Driven Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '18 days'),
+(21, 11, 26, 'NEW_POST', 'lucas_r published a new post: Event-Driven Architecture', FALSE, CURRENT_TIMESTAMP - INTERVAL '18 days');
 
 -- Sophia's recent post notifications
 INSERT INTO notifications (reciever_id, sender_id, post_id, type, message, is_read, created_at) VALUES
-(2, 8, 50, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
-(11, 8, 50, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
-(12, 8, 50, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
-(16, 8, 50, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
-(20, 8, 50, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
-(22, 8, 50, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
-(25, 8, 50, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
-(26, 8, 50, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days');
+(2, 8, 20, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
+(11, 8, 20, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
+(12, 8, 20, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
+(16, 8, 20, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
+(20, 8, 20, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
+(22, 8, 20, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
+(25, 8, 20, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
+(26, 8, 20, 'NEW_POST', 'sophia_dev published a new post: Debugging Tips', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days');
 
 -- Recent notifications from newer users
 INSERT INTO notifications (reciever_id, sender_id, post_id, type, message, is_read, created_at) VALUES
-(2, 28, 71, 'NEW_POST', 'ella_l published a new post: Bootcamp Graduate', FALSE, CURRENT_TIMESTAMP - INTERVAL '4 days'),
-(3, 28, 71, 'NEW_POST', 'ella_l published a new post: Bootcamp Graduate', FALSE, CURRENT_TIMESTAMP - INTERVAL '4 days'),
-(4, 28, 71, 'NEW_POST', 'ella_l published a new post: Bootcamp Graduate', FALSE, CURRENT_TIMESTAMP - INTERVAL '4 days'),
-(12, 28, 71, 'NEW_POST', 'ella_l published a new post: Bootcamp Graduate', FALSE, CURRENT_TIMESTAMP - INTERVAL '4 days');
+(2, 28, 41, 'NEW_POST', 'ella_l published a new post: Bootcamp Graduate', FALSE, CURRENT_TIMESTAMP - INTERVAL '4 days'),
+(3, 28, 41, 'NEW_POST', 'ella_l published a new post: Bootcamp Graduate', FALSE, CURRENT_TIMESTAMP - INTERVAL '4 days'),
+(4, 28, 41, 'NEW_POST', 'ella_l published a new post: Bootcamp Graduate', FALSE, CURRENT_TIMESTAMP - INTERVAL '4 days'),
+(12, 28, 41, 'NEW_POST', 'ella_l published a new post: Bootcamp Graduate', FALSE, CURRENT_TIMESTAMP - INTERVAL '4 days');
 
 INSERT INTO notifications (reciever_id, sender_id, post_id, type, message, is_read, created_at) VALUES
-(2, 30, 72, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
-(3, 30, 72, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
-(4, 30, 72, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
-(8, 30, 72, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
-(11, 30, 72, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
-(12, 30, 72, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
-(28, 30, 72, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days');
+(2, 30, 42, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
+(3, 30, 42, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
+(4, 30, 42, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
+(8, 30, 42, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
+(11, 30, 42, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
+(12, 30, 42, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
+(28, 30, 42, 'NEW_POST', 'sofia_s published a new post: Working Remotely from Bali', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days');

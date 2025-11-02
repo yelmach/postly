@@ -23,10 +23,10 @@ VALUES
     ),
     -- User 2
     (
-        'Sarah',
-        'Johnson',
-        'sarah_j',
-        'sarah.johnson@email.com',
+        'safae',
+        'beytour',
+        'sbeytour',
+        'safae@email.com',
         '$2a$10$ylGHjWFEiMfXnZGuG8pjx.lpp9Hh.lKeCbKSJ.xExCLU1sHhCz2uS',
         'USER',
         'Full-stack developer | Coffee enthusiast ☕ | Learning Spring Boot',

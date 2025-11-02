@@ -23,22 +23,22 @@ INSERT INTO reports (reporter_id, reported_user_id, reported_post_id, reason, de
 (25, 16, NULL, 'MISINFORMATION', 'Spreading false information about security vulnerabilities that could harm others.', 'PENDING', CURRENT_TIMESTAMP - INTERVAL '1 day');
 
 -- POST REPORTS
--- Report 6: User 8 reports Post 46 (will_a's React Native Tips) for spam
+-- Report 6: User 8 reports Post 16 (will_a's React Native Tips) for spam
 INSERT INTO reports (reporter_id, reported_user_id, reported_post_id, reason, description, status, reviewed_by, admin_notes, created_at, reviewed_at) VALUES
-(8, NULL, 46, 'SPAM', 'This post is just advertising a paid course with no real content.', 'RESOLVED', 1, 'Post reviewed - contains legitimate tips. No action taken.', CURRENT_TIMESTAMP - INTERVAL '12 days', CURRENT_TIMESTAMP - INTERVAL '11 days');
+(8, NULL, 16, 'SPAM', 'This post is just advertising a paid course with no real content.', 'RESOLVED', 1, 'Post reviewed - contains legitimate tips. No action taken.', CURRENT_TIMESTAMP - INTERVAL '12 days', CURRENT_TIMESTAMP - INTERVAL '11 days');
 
--- Report 7: User 17 reports Post 51 for inappropriate content
+-- Report 7: User 17 reports Post 21 for inappropriate content
 INSERT INTO reports (reporter_id, reported_user_id, reported_post_id, reason, description, status, reviewed_by, admin_notes, created_at, reviewed_at) VALUES
-(17, NULL, 51, 'INAPPROPRIATE_CONTENT', 'Post contains inappropriate images and offensive language.', 'RESOLVED', 1, 'Post removed. User warned about community guidelines.', CURRENT_TIMESTAMP - INTERVAL '8 days', CURRENT_TIMESTAMP - INTERVAL '7 days');
+(17, NULL, 21, 'INAPPROPRIATE_CONTENT', 'Post contains inappropriate images and offensive language.', 'RESOLVED', 1, 'Post removed. User warned about community guidelines.', CURRENT_TIMESTAMP - INTERVAL '8 days', CURRENT_TIMESTAMP - INTERVAL '7 days');
 
--- Report 8: User 20 reports Post 58 for misinformation
+-- Report 8: User 20 reports Post 28 for misinformation
 INSERT INTO reports (reporter_id, reported_user_id, reported_post_id, reason, description, status, reviewed_by, admin_notes, created_at, reviewed_at) VALUES
-(20, NULL, 58, 'MISINFORMATION', 'Post contains false technical information that could mislead developers.', 'DISMISSED', 1, 'Technical content reviewed by senior dev. Information is accurate.', CURRENT_TIMESTAMP - INTERVAL '5 days', CURRENT_TIMESTAMP - INTERVAL '4 days');
+(20, NULL, 28, 'MISINFORMATION', 'Post contains false technical information that could mislead developers.', 'DISMISSED', 1, 'Technical content reviewed by senior dev. Information is accurate.', CURRENT_TIMESTAMP - INTERVAL '5 days', CURRENT_TIMESTAMP - INTERVAL '4 days');
 
--- Report 9: User 24 reports Post 64 for spam (PENDING)
+-- Report 9: User 24 reports Post 34 for spam (PENDING)
 INSERT INTO reports (reporter_id, reported_user_id, reported_post_id, reason, description, status, created_at) VALUES
-(24, NULL, 64, 'SPAM', 'Post is full of promotional links and advertisements, not real content.', 'PENDING', CURRENT_TIMESTAMP - INTERVAL '2 days');
+(24, NULL, 34, 'SPAM', 'Post is full of promotional links and advertisements, not real content.', 'PENDING', CURRENT_TIMESTAMP - INTERVAL '2 days');
 
--- Report 10: User 29 reports Post 68 for other reason (PENDING)
+-- Report 10: User 29 reports Post 38 for other reason (PENDING)
 INSERT INTO reports (reporter_id, reported_user_id, reported_post_id, reason, description, status, created_at) VALUES
-(29, NULL, 68, 'OTHER', 'This post seems to be plagiarized from another developer blog without attribution.', 'PENDING', CURRENT_TIMESTAMP - INTERVAL '12 hours');
+(29, NULL, 38, 'OTHER', 'This post seems to be plagiarized from another developer blog without attribution.', 'PENDING', CURRENT_TIMESTAMP - INTERVAL '12 hours');
