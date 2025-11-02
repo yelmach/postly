@@ -243,7 +243,31 @@ The application will automatically open in your browser at `http://localhost:420
 
 ## 🎮 Running the Application
 
-### Development Mode
+### Quick Start (Recommended)
+
+Use the provided startup script to run the entire application with a single command:
+
+```bash
+./run.sh
+```
+
+This script will:
+- Start the PostgreSQL database in Docker
+- Launch the backend server
+- Install frontend dependencies (if needed)
+- Start the frontend development server
+
+To stop all services:
+
+```bash
+./stop.sh
+```
+
+Or press `Ctrl+C` in the terminal where you ran `./run.sh`.
+
+### Manual Setup (Development Mode)
+
+If you prefer to run services individually:
 
 1. **Start the Database**:
 
