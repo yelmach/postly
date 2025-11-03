@@ -19,6 +19,11 @@ export class NotificationService {
   public notifications = signal<AppNotification[]>([]);
   public unreadCount = signal<number>(0);
   public connected = signal<boolean>(false);
+  public loading = signal<boolean>(false);
+  public hasMore = signal<boolean>(true);
+
+  private currentPage = 0;
+  private pageSize = 20;
 
   private eventSource?: EventSource;
   private reconnectAttempts = 0;
@@ -147,17 +152,42 @@ export class NotificationService {
     });
   }
 
-  loadNotifications(page: number = 0, size: number = 20): void {
-    this.getNotifications(page, size).subscribe({
+  loadNotifications(): void {
+    this.currentPage = 0;
+    this.hasMore.set(true);
+    this.loading.set(true);
+
+    this.getNotifications(this.currentPage, this.pageSize).subscribe({
       next: (response) => {
-        if (page === 0) {
-          this.notifications.set(response.content);
-        } else {
-          this.notifications.update((notifs) => [...notifs, ...response.content]);
-        }
+        this.notifications.set(response.content);
+        this.hasMore.set(!response.last);
+        this.loading.set(false);
       },
       error: (error) => {
         console.error('Failed to fetch notifications:', error);
+        this.loading.set(false);
+      },
+    });
+  }
+
+  loadMoreNotifications(): void {
+    if (this.loading() || !this.hasMore()) {
+      return;
+    }
+
+    this.loading.set(true);
+    this.currentPage++;
+
+    this.getNotifications(this.currentPage, this.pageSize).subscribe({
+      next: (response) => {
+        this.notifications.update((notifs) => [...notifs, ...response.content]);
+        this.hasMore.set(!response.last);
+        this.loading.set(false);
+      },
+      error: (error) => {
+        console.error('Failed to fetch more notifications:', error);
+        this.loading.set(false);
+        this.currentPage--;
       },
     });
   }

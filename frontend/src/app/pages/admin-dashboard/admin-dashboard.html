@@ -297,7 +297,7 @@
               <!-- Created At Column -->
               <ng-container matColumnDef="createdAt">
                 <th mat-header-cell *matHeaderCellDef>Created At</th>
-                <td mat-cell *matCellDef="let post">{{ post.createdAt | date : 'short' }}</td>
+                <td mat-cell *matCellDef="let post">{{ getAdminDisplayDate(post.createdAt) }}</td>
               </ng-container>
 
               <!-- Status Column -->

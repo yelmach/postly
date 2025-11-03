@@ -38,9 +38,9 @@ html {
   --mat-sys-surface-dim: light-dark(#bebcc2, #0d0e14);
   --mat-sys-surface-bright: light-dark(#ffffff, #3e3f46);
   --mat-sys-surface: light-dark(#dfe1ec, #15161e);
-  --mat-sys-surface-container: light-dark(#f3f3f7, #21212c);
-  --mat-sys-surface-container-high: light-dark(#fcfcfd, #292938);
-  --mat-sys-surface-container-highest: light-dark(#ffffff, #323243);
+  --mat-sys-surface-container: light-dark(#f3f3f7, hsl(240, 18%, 15%));
+  --mat-sys-surface-container-high: light-dark(#fcfcfd, hsl(240, 20%, 20%));
+  --mat-sys-surface-container-highest: light-dark(#ffffff, hsl(240, 18%, 23%));
 
   --mat-sys-on-surface: light-dark(#1a1b22, #e3e1ea);
   --mat-sys-surface-variant: light-dark(#e2e1f1, #22222a);

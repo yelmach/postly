@@ -18,6 +18,7 @@ import { NotificationService } from '@/services/notification.service';
 import { Router } from '@angular/router';
 import { HeaderSearchComponent } from '@/components/header-search/header-search';
 import { NotificationItem } from '@/components/notification-item/notification-item';
+import { InfiniteScrollDirective } from '@/directives/infinite-scroll.directive';
 
 @Component({
   selector: 'app-main-layout',
@@ -38,6 +39,7 @@ import { NotificationItem } from '@/components/notification-item/notification-it
     MatProgressSpinnerModule,
     HeaderSearchComponent,
     NotificationItem,
+    InfiniteScrollDirective,
   ],
   templateUrl: './layout.html',
   styleUrl: './layout.scss',
@@ -99,7 +101,7 @@ export class MainLayout implements OnInit, OnDestroy {
 
   onNotificationMenuOpened() {
     if (!this.notificationsLoaded()) {
-      this.notificationService.loadNotifications(0, 20);
+      this.notificationService.loadNotifications();
       this.notificationsLoaded.set(true);
     }
   }
@@ -109,7 +111,11 @@ export class MainLayout implements OnInit, OnDestroy {
   }
 
   refreshNotifications() {
-    this.notificationService.loadNotifications(0, 20);
+    this.notificationService.loadNotifications();
+  }
+
+  loadMoreNotifications() {
+    this.notificationService.loadMoreNotifications();
   }
 
   toggleTheme() {

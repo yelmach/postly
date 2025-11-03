@@ -80,9 +80,26 @@
               <mat-icon>notifications_none</mat-icon>
               <p>No notifications yet</p>
             </div>
-            } @else { @for (notification of notifications; track notification.id) {
-            <app-notification-item [notification]="notification"> </app-notification-item>
-            } }
+            } @else {
+              @for (notification of notifications; track notification.id) {
+                <app-notification-item [notification]="notification"></app-notification-item>
+              }
+
+              <!-- Infinite scroll trigger -->
+              @if (notificationService.hasMore()) {
+                <div
+                  class="infinite-scroll-trigger"
+                  appInfiniteScroll
+                  (scrolled)="loadMoreNotifications()">
+                  @if (notificationService.loading()) {
+                    <div class="loading-more">
+                      <mat-spinner diameter="24"></mat-spinner>
+                      <span>Loading more...</span>
+                    </div>
+                  }
+                </div>
+              }
+            }
           </div>
           @if (!isSSEConnected && notificationsLoaded()) {
           <div class="connection-warning" (click)="$event.stopPropagation()">

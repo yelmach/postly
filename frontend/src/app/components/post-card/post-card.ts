@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { PostService } from '@/services/post.service';
 import { ReportDialog } from '@/components/report-dialog/report-dialog';
 import { ConfirmDialogService } from '@/services/confirm-dialog.service';
+import { getRelativeTime } from '@/utils/date-utils';
 
 @Component({
   selector: 'app-post-card',
@@ -195,16 +196,6 @@ export class PostCard {
   }
 
   getRelativeTime(dateString: string): string {
-    const date = new Date(dateString);
-    const now = new Date();
-    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-    if (seconds < 60) return 'just now';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-    if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
-    if (seconds < 2592000) return `${Math.floor(seconds / 604800)}w ago`;
-
-    return date.toLocaleDateString();
+    return getRelativeTime(dateString);
   }
 }

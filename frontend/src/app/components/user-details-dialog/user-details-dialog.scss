@@ -30,11 +30,10 @@
     margin-bottom: 1.5rem;
     padding: 1.25rem;
     border-radius: 16px;
-    box-shadow: var(--mat-sys-level1);
     position: relative;
     overflow: hidden;
     border: 1px solid var(--mat-sys-outline-variant);
-    background: var(--mat-sys-surface-container);
+    background: var(--mat-sys-surface-container-high);
 
     &:last-child {
       margin-bottom: 0;
@@ -201,7 +200,7 @@
     flex-direction: column;
     gap: 0.5rem;
     padding: 1rem;
-    background: var(--mat-sys-surface-container-highest);
+    background: var(--mat-sys-surface-container-high);
     border-radius: 8px;
     border: 1px solid var(--mat-sys-outline-variant);
     transition: all 0.2s ease;
