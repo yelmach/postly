@@ -2,6 +2,8 @@ package postly.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,10 +29,26 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     public UserEntity register(RegisterRequest request) {
-        String firstName = request.firstName() != null ? request.firstName().trim() : null;
-        String lastName = request.lastName() != null ? request.lastName().trim() : null;
-        String username = request.username() != null ? request.username().trim() : null;
-        String email = request.email() != null ? request.email().trim() : null;
+        if (request.firstName() == null || request.firstName().trim().isEmpty()) {
+            throw ApiException.badRequest("First name is required");
+        }
+        if (request.lastName() == null || request.lastName().trim().isEmpty()) {
+            throw ApiException.badRequest("Last name is required");
+        }
+        if (request.username() == null || request.username().trim().isEmpty()) {
+            throw ApiException.badRequest("Username is required");
+        }
+        if (request.email() == null || request.email().trim().isEmpty()) {
+            throw ApiException.badRequest("Email is required");
+        }
+        if (request.password() == null || request.password().isEmpty()) {
+            throw ApiException.badRequest("Password is required");
+        }
+
+        String firstName = request.firstName().trim();
+        String lastName = request.lastName().trim();
+        String username = request.username().trim();
+        String email = request.email().trim();
         String bio = request.bio() != null ? request.bio().trim() : null;
 
         if (userRepository.existsByUsername(username)) {
@@ -64,8 +82,12 @@ public class AuthService {
 
             return (UserEntity) authentication.getPrincipal();
 
+        } catch (DisabledException e) {
+            throw ApiException.forbidden("Your account has been disabled");
+        } catch (BadCredentialsException e) {
+            throw ApiException.unauthorized("Invalid username or password");
         } catch (Exception e) {
-            throw ApiException.unauthorized("Invalid credentials");
+            throw ApiException.internalError("Authentication failed: " + e.getMessage());
         }
     }
 }

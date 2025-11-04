@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import postly.dto.request.PostRequest;
 import postly.dto.response.PostResponse;
 import postly.service.PostService;
@@ -28,7 +29,7 @@ public class PostController {
     private PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostResponse> createPost(@RequestBody PostRequest postRequest) {
+    public ResponseEntity<PostResponse> createPost(@Valid @RequestBody PostRequest postRequest) {
         PostResponse post = postService.createPost(postRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
@@ -60,7 +61,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostResponse> updatePost(@PathVariable Long id, @RequestBody PostRequest postRequest) {
+    public ResponseEntity<PostResponse> updatePost(@PathVariable Long id, @Valid @RequestBody PostRequest postRequest) {
         PostResponse post = postService.updatePost(id, postRequest);
         return ResponseEntity.ok(post);
     }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -43,11 +44,15 @@ public class SubscriptionService {
             throw ApiException.conflict("You are already subscribed to this user");
         }
 
-        SubscriptionEntity subscription = new SubscriptionEntity(currentUser, targetUser);
-        subscriptionRepository.save(subscription);
+        try {
+            SubscriptionEntity subscription = new SubscriptionEntity(currentUser, targetUser);
+            subscriptionRepository.save(subscription);
 
-        // Create notification for the subscribed user
-        notificationService.createSubscriberNotification(targetUserId, currentUser.getId());
+            // Create notification for the subscribed user
+            notificationService.createSubscriberNotification(targetUserId, currentUser.getId());
+        } catch (DataIntegrityViolationException e) {
+            throw ApiException.conflict("You are already subscribed to this user");
+        }
     }
 
     @Transactional

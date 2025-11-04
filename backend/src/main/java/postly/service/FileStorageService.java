@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -16,6 +18,8 @@ import postly.exception.ApiException;
 
 @Service
 public class FileStorageService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FileStorageService.class);
 
     @Value("${app.upload.dir:uploads}")
     private String uploadDir;
@@ -48,16 +52,21 @@ public class FileStorageService {
         }
     }
 
-    public void deleteFile(String filePath) {
+    public boolean deleteFile(String filePath) {
         if (filePath == null || filePath.isEmpty()) {
-            return;
+            return false;
         }
 
         try {
             Path path = Paths.get(uploadDir).resolve(filePath.replace("/uploads/", "")).normalize();
-            Files.deleteIfExists(path);
+            boolean deleted = Files.deleteIfExists(path);
+            if (!deleted) {
+                logger.warn("File does not exist or could not be deleted: {}", filePath);
+            }
+            return deleted;
         } catch (IOException ex) {
-            System.err.println("Failed to delete file: " + filePath);
+            logger.error("Failed to delete file: {} - {}", filePath, ex.getMessage(), ex);
+            return false;
         }
     }
 
@@ -137,7 +146,7 @@ public class FileStorageService {
             }
         } else if (isVideo) {
             if (file.getSize() > MAX_VIDEO_SIZE) {
-                throw ApiException.badRequest("Video size exceeds maximum limit of 100MB");
+                throw ApiException.badRequest("Video size exceeds maximum limit of 50MB");
             }
             if (contentType == null || !contentType.startsWith("video/")) {
                 throw ApiException.badRequest("Invalid file type. Only videos are allowed for this extension");

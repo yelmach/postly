@@ -1,7 +1,5 @@
 package postly.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,13 +18,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) {
-        Optional<UserEntity> user = userRepository.findByUsernameOrEmail(login);
-
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException("User not found with username or email: " + login);
-        }
-
-        UserEntity userEntity = user.get();
+        UserEntity userEntity = userRepository.findByUsernameOrEmail(login)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username or email: " + login));
 
         if (userEntity.isActiveBan()) {
             String banMessage = "Your account has been banned";

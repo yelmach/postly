@@ -32,7 +32,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class NotificationService {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationService.class);
-    private static final long SSE_TIMEOUT = 1800000L; // 30 minutes
+    private static final long SSE_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
     @Autowired
     private NotificationRepository notificationRepository;
@@ -58,7 +58,6 @@ public class NotificationService {
         return notificationRepository.countByRecieverIdAndIsReadFalse(currentUser.getId());
     }
 
-    @Transactional
     public void markAsRead(Long notificationId) {
         UserEntity currentUser = getCurrentUserEntity();
         int updated = notificationRepository.markAsReadById(notificationId, currentUser.getId());
@@ -68,7 +67,6 @@ public class NotificationService {
         }
     }
 
-    @Transactional
     public void markAllAsRead() {
         UserEntity currentUser = getCurrentUserEntity();
         notificationRepository.markAllAsReadByUserId(currentUser.getId());
@@ -98,7 +96,6 @@ public class NotificationService {
         logger.info("Notification created and sent to user {}: {}", receiverId, message);
     }
 
-    @Transactional
     public void createSubscriberNotification(Long subscribedToUserId, Long subscriberId) {
         UserEntity subscriber = userRepository.findById(subscriberId)
                 .orElseThrow(() -> ApiException.notFound("Subscriber not found"));
@@ -108,7 +105,6 @@ public class NotificationService {
     }
 
     @Async
-    @Transactional
     public void createPostNotification(Long postId, Long authorId, List<Long> subscriberIds) {
         PostEntity post = postRepository.findById(postId)
                 .orElseThrow(() -> ApiException.notFound("Post not found"));

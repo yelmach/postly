@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,8 @@ import postly.repository.SubscriptionRepository;
 
 @Service
 public class PostService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PostService.class);
 
     @Autowired
     private PostRepository postRepository;
@@ -138,12 +142,18 @@ public class PostService {
         List<PostMediaEntity> mediaFiles = new ArrayList<>(post.getMediaFiles());
         postRepository.delete(post);
 
+        // Delete associated media files
+        int failedDeletions = 0;
         for (PostMediaEntity media : mediaFiles) {
-            try {
-                fileStorageService.deleteFile(media.getMediaUrl());
-            } catch (Exception e) {
-                System.err.println("Failed to delete file: " + media.getMediaUrl() + e);
+            boolean deleted = fileStorageService.deleteFile(media.getMediaUrl());
+            if (!deleted) {
+                failedDeletions++;
+                logger.warn("Failed to delete media file for post {}: {}", postId, media.getMediaUrl());
             }
+        }
+
+        if (failedDeletions > 0) {
+            logger.error("Post {} deleted but {} media file(s) could not be deleted", postId, failedDeletions);
         }
     }
 

@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import postly.dto.response.PostMediaResponse;
 import postly.dto.response.UserResponse;
+import postly.exception.ApiException;
 import postly.service.MediaUploadService;
 
 @RestController
@@ -23,12 +24,18 @@ public class MediaUploadController {
 
     @PostMapping("/upload")
     public ResponseEntity<PostMediaResponse> uploadMedia(@RequestParam("file") MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw ApiException.badRequest("File is required and cannot be empty");
+        }
         PostMediaResponse response = mediaUploadService.saveMedia(file);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/profile-picture")
     public ResponseEntity<UserResponse> updateProfilePicture(@RequestParam("file") MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw ApiException.badRequest("File is required and cannot be empty");
+        }
         UserResponse updatedUser = mediaUploadService.updateProfilePicture(file);
         return ResponseEntity.ok(updatedUser);
     }

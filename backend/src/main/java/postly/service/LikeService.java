@@ -1,6 +1,7 @@
 package postly.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,9 +36,14 @@ public class LikeService {
             likeRepository.deleteByUserIdAndPostId(currentUser.getId(), postId);
             return false;
         } else {
-            LikeEntity like = new LikeEntity(currentUser, post);
-            likeRepository.save(like);
-            return true;
+            try {
+                LikeEntity like = new LikeEntity(currentUser, post);
+                likeRepository.save(like);
+                return true;
+            } catch (DataIntegrityViolationException e) {
+                likeRepository.deleteByUserIdAndPostId(currentUser.getId(), postId);
+                return false;
+            }
         }
     }
 
