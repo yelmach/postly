@@ -1,7 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -14,11 +13,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { HttpErrorResponse } from '@angular/common/http';
 
 import { AdminService } from '@/services/admin.service';
 import { ModerationService } from '@/services/moderation.service';
-import { AuthService } from '@/services/auth.service';
 import {
   DashboardStatsResponse,
   AdminUser,
@@ -67,7 +64,6 @@ import { getAdminDisplayDate } from '@/utils/date-utils';
 export class AdminDashboard implements OnInit {
   private adminService = inject(AdminService);
   private moderationService = inject(ModerationService);
-  authService = inject(AuthService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private confirmDialog = inject(ConfirmDialogService);
@@ -128,7 +124,7 @@ export class AdminDashboard implements OnInit {
         this.stats.set(data);
         this.statsLoading.set(false);
       },
-      error: (error: HttpErrorResponse) => {
+      error: () => {
         this.statsError.set('Failed to load statistics');
         this.statsLoading.set(false);
       },
@@ -161,7 +157,7 @@ export class AdminDashboard implements OnInit {
         this.usersTotalElements.set(data.totalElements);
         this.usersLoading.set(false);
       },
-      error: (error: HttpErrorResponse) => {
+      error: () => {
         this.usersError.set('Failed to load users');
         this.usersLoading.set(false);
       },
@@ -199,7 +195,7 @@ export class AdminDashboard implements OnInit {
       width: '700px',
     });
   }
-  
+
   getAdminDisplayDate(date: Date | string): string {
     return getAdminDisplayDate(date);
   }
@@ -229,7 +225,7 @@ export class AdminDashboard implements OnInit {
             this.loadUsers();
             this.loadStats();
           },
-          error: (error: HttpErrorResponse) => {
+          error: () => {
             this.showError('Failed to unban user');
           },
         });
@@ -248,7 +244,7 @@ export class AdminDashboard implements OnInit {
             this.loadUsers();
             this.loadStats();
           },
-          error: (error: HttpErrorResponse) => {
+          error: () => {
             this.showError('Failed to delete user');
           },
         });
@@ -265,7 +261,7 @@ export class AdminDashboard implements OnInit {
             this.showSuccess('User role updated successfully');
             this.loadUsers();
           },
-          error: (error: HttpErrorResponse) => {
+          error: () => {
             this.showError('Failed to update user role');
           },
         });
@@ -296,7 +292,7 @@ export class AdminDashboard implements OnInit {
         this.postsTotalElements.set(data.totalElements);
         this.postsLoading.set(false);
       },
-      error: (error: HttpErrorResponse) => {
+      error: () => {
         this.postsError.set('Failed to load posts');
         this.postsLoading.set(false);
       },
@@ -368,7 +364,7 @@ export class AdminDashboard implements OnInit {
               this.loadPosts();
               this.loadStats();
             },
-            error: (error: HttpErrorResponse) => {
+            error: () => {
               this.showError('Failed to restore post');
             },
           });
@@ -386,7 +382,7 @@ export class AdminDashboard implements OnInit {
             this.loadPosts();
             this.loadStats();
           },
-          error: (error: HttpErrorResponse) => {
+          error: () => {
             this.showError('Failed to delete post');
           },
         });
@@ -417,7 +413,7 @@ export class AdminDashboard implements OnInit {
         this.reportsTotalElements.set(data.totalElements);
         this.reportsLoading.set(false);
       },
-      error: (error: HttpErrorResponse) => {
+      error: () => {
         this.reportsError.set('Failed to load reports');
         this.reportsLoading.set(false);
       },

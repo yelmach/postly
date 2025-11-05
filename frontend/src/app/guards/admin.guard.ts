@@ -9,7 +9,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
   const currentUser = authService.currentUser();
 
   if (!currentUser) {
-    router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+    authService.logout();
     return false;
   }
 

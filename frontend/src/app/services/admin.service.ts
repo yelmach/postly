@@ -6,12 +6,12 @@ import {
   DashboardStatsResponse,
   AdminUser,
   AdminPost,
-  PaginatedResponse,
   UserFilters,
   PostFilters,
   ReportFilters,
 } from '@/models/admin';
 import { ReportResponse } from '@/models/report';
+import { Page } from '@/models/pagination';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -22,7 +22,7 @@ export class AdminService {
     return this.http.get<DashboardStatsResponse>(`${this.apiUrl}/admin/dashboard/stats`);
   }
 
-  getAllUsers(filters: UserFilters = {}): Observable<PaginatedResponse<AdminUser>> {
+  getAllUsers(filters: UserFilters = {}): Observable<Page<AdminUser>> {
     let params = new HttpParams();
 
     if (filters.page !== undefined) {
@@ -41,12 +41,12 @@ export class AdminService {
       params = params.set('search', filters.search);
     }
 
-    return this.http.get<PaginatedResponse<AdminUser>>(`${this.apiUrl}/admin/users`, {
+    return this.http.get<Page<AdminUser>>(`${this.apiUrl}/admin/users`, {
       params,
     });
   }
 
-  getAllPosts(filters: PostFilters = {}): Observable<PaginatedResponse<AdminPost>> {
+  getAllPosts(filters: PostFilters = {}): Observable<Page<AdminPost>> {
     let params = new HttpParams();
 
     if (filters.page !== undefined) {
@@ -62,12 +62,12 @@ export class AdminService {
       params = params.set('search', filters.search);
     }
 
-    return this.http.get<PaginatedResponse<AdminPost>>(`${this.apiUrl}/admin/posts`, {
+    return this.http.get<Page<AdminPost>>(`${this.apiUrl}/admin/posts`, {
       params,
     });
   }
 
-  getAllReports(filters: ReportFilters = {}): Observable<PaginatedResponse<ReportResponse>> {
+  getAllReports(filters: ReportFilters = {}): Observable<Page<ReportResponse>> {
     let params = new HttpParams();
 
     if (filters.page !== undefined) {
@@ -83,7 +83,7 @@ export class AdminService {
       params = params.set('type', filters.type);
     }
 
-    return this.http.get<PaginatedResponse<ReportResponse>>(`${this.apiUrl}/admin/reports`, {
+    return this.http.get<Page<ReportResponse>>(`${this.apiUrl}/admin/reports`, {
       params,
     });
   }

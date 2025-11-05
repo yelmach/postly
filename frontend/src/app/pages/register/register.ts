@@ -75,7 +75,7 @@ export class Register {
     Object.keys(this.registerForm.controls).forEach((key) => {
       const control = this.registerForm.get(key);
       if (control && typeof control.value === 'string' && key !== 'password') {
-        control.setValue(control.value.trim(), { emitEvent: false });
+        control.setValue(control.value.trim());
       }
     });
 

@@ -34,13 +34,14 @@ export class Login {
     credentials: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
   });
+
+  authService = inject(AuthService);
+  router = inject(Router);
+
   hidePassword = signal(true);
   isLoading = signal(false);
   formError = signal<string>('');
   fieldErrors = signal<{ [key: string]: string }>({});
-
-  authService = inject(AuthService);
-  router = inject(Router);
 
   onFormSubmit(e: Event) {
     e.preventDefault;
@@ -50,7 +51,7 @@ export class Login {
 
     const credentialsControl = this.loginForm.get('credentials');
     if (credentialsControl && typeof credentialsControl.value === 'string') {
-      credentialsControl.setValue(credentialsControl.value.trim(), { emitEvent: false });
+      credentialsControl.setValue(credentialsControl.value.trim());
     }
 
     if (this.loginForm.invalid) {
