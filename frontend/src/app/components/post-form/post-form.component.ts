@@ -62,7 +62,11 @@ export class PostFormComponent implements AfterViewInit, OnDestroy {
       Validators.minLength(3),
       Validators.maxLength(100),
     ]),
-    content: new FormControl('', [Validators.required, Validators.minLength(10)]),
+    content: new FormControl('', [
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(50000),
+    ]),
   });
 
   formError = signal('');

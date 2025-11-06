@@ -80,7 +80,7 @@ export class Home implements OnInit {
         this.currentPage.set(nextPage);
         this.isLoadingMore.set(false);
       },
-      error: (error: HttpErrorResponse) => {
+      error: () => {
         this.snackBar.open('Failed to load more posts. Please try again.', 'Close', {
           duration: 4000,
           horizontalPosition: 'center',

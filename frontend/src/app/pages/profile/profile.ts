@@ -233,7 +233,7 @@ export class Profile implements OnInit {
         this.currentPostsPage.set(nextPage);
         this.isLoadingMorePosts.set(false);
       },
-      error: (error: HttpErrorResponse) => {
+      error: () => {
         this.snackBar.open('Failed to load more posts. Please try again.', 'Close', {
           duration: 4000,
           horizontalPosition: 'center',

@@ -142,7 +142,7 @@ export class PostDetail implements OnInit {
         this.currentCommentsPage.set(nextPage);
         this.isLoadingMoreComments.set(false);
       },
-      error: (error: HttpErrorResponse) => {
+      error: () => {
         this.snackBar.open('Failed to load more comments. Please try again.', 'Close', {
           duration: 4000,
           horizontalPosition: 'center',
@@ -155,6 +155,10 @@ export class PostDetail implements OnInit {
 
   async renderMarkdown(content: string) {
     try {
+      marked.setOptions({
+        breaks: true,
+        gfm: true,
+      });
       const html = await marked.parse(content);
       this.renderedContent.set(this.sanitizer.sanitize(1, html) || '');
     } catch (error) {
@@ -240,7 +244,7 @@ export class PostDetail implements OnInit {
       if (confirmed) {
         this.postService.deletePost(post.id).subscribe({
           next: () => {
-            this.router.navigate(['/post', post.id]);
+            this.router.navigate(['/home']);
           },
           error: (error) => {
             console.error('Failed to delete post:', error);

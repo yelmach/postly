@@ -498,6 +498,13 @@
       border-radius: var(--mat-sys-corner-medium);
       margin: 1rem 0;
     }
+
+    video {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--mat-sys-corner-medium);
+      margin: 1rem 0;
+    }
   }
 }
 

@@ -167,18 +167,14 @@ export class ReportDetailsDialog {
   }
 
   private handleError(error: HttpErrorResponse) {
-    if (error.status === 400) {
-      if (error.error?.message) {
-        this.formError.set(error.error.message);
-      } else {
-        this.formError.set('Invalid request. Please try again.');
-      }
+    if (error.error?.message) {
+      this.formError.set(error.error.message);
+    } else if (error.status === 400) {
+      this.formError.set('Invalid request. Please try again.');
     } else if (error.status === 403) {
       this.formError.set('You do not have permission to resolve reports');
     } else if (error.status === 404) {
       this.formError.set('Report not found');
-    } else if (error.error?.message) {
-      this.formError.set(error.error.message);
     } else {
       this.formError.set('Failed to resolve report. Please try again.');
     }

@@ -58,6 +58,7 @@ public class NotificationService {
         return notificationRepository.countByRecieverIdAndIsReadFalse(currentUser.getId());
     }
 
+    @Transactional
     public void markAsRead(Long notificationId) {
         UserEntity currentUser = getCurrentUserEntity();
         int updated = notificationRepository.markAsReadById(notificationId, currentUser.getId());
@@ -67,6 +68,7 @@ public class NotificationService {
         }
     }
 
+    @Transactional
     public void markAllAsRead() {
         UserEntity currentUser = getCurrentUserEntity();
         notificationRepository.markAllAsReadByUserId(currentUser.getId());
