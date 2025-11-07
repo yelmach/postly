@@ -78,14 +78,16 @@ export class PostDetail implements OnInit {
   isLoadingMoreComments = signal(false);
 
   ngOnInit() {
-    const postId = this.route.snapshot.paramMap.get('id');
-    if (postId) {
-      this.loadPost(Number(postId));
-      this.loadComments(Number(postId));
-    } else {
-      this.errorMessage.set('Invalid post ID');
-      this.isLoading.set(false);
-    }
+    this.route.paramMap.subscribe((params) => {
+      const postId = params.get('id');
+      if (postId) {
+        this.loadPost(Number(postId));
+        this.loadComments(Number(postId));
+      } else {
+        this.errorMessage.set('Invalid post ID');
+        this.isLoading.set(false);
+      }
+    });
   }
 
   loadPost(id: number) {
