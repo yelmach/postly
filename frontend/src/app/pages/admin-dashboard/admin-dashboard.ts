@@ -35,6 +35,7 @@ import { ErrorStateComponent } from '@/components/error-state/error-state.compon
 import { EmptyStateComponent } from '@/components/empty-state/empty-state.component';
 import { ConfirmDialogService } from '@/services/confirm-dialog.service';
 import { getAdminDisplayDate } from '@/utils/date-utils';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -261,8 +262,12 @@ export class AdminDashboard implements OnInit {
             this.showSuccess('User role updated successfully');
             this.loadUsers();
           },
-          error: () => {
-            this.showError('Failed to update user role');
+          error: (error: HttpErrorResponse) => {
+            if (error.error?.message) {
+              this.showError(error.error.message);
+            } else {
+              this.showError('Failed to update user role');
+            }
           },
         });
       }

@@ -142,6 +142,10 @@ public class ModerationService {
             throw ApiException.badRequest("You cannot change your own role");
         }
 
+        if (userToUpdate.getIsBanned()) {
+            throw ApiException.badRequest("User is banned, unban them first");
+        }
+
         userToUpdate.setRole(Role.ADMIN);
         userToUpdate = userRepository.save(userToUpdate);
         return UserResponse.fromUser(userToUpdate).build();

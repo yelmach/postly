@@ -161,7 +161,7 @@ public class PostService {
         PostEntity post = postRepository.findById(postId).orElseThrow(() -> ApiException.notFound("Post not found"));
         UserEntity currentUser = userService.getCurrentUserEntity();
 
-        if (post.getIsHidden() && !currentUser.isAdmin() && !post.getUser().getId().equals(currentUser.getId())) {
+        if (post.getIsHidden() && !currentUser.isAdmin()) {
             throw ApiException.notFound("Post not found");
         }
 
